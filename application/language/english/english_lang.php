@@ -267,7 +267,7 @@ $lang['kb_article_lowercase']          = 'article';
 $lang['kb_article_new_article']        = 'New Article';
 $lang['kb_article_disabled']           = 'Disabled';
 $lang['kb_article_description']        = 'Article description';
-$lang['kb_no_articles_found']          = 'No knowledge base articles found';
+$lang['kb_no_articles_found']          = 'No Company Policy articles found';
 $lang['kb_dt_article_name']            = 'Article Name';
 $lang['kb_dt_group_name']              = 'Group';
 $lang['new_group']                     = 'New Group';
@@ -277,7 +277,7 @@ $lang['kb_group_add_edit_disabled']    = 'Disabled';
 $lang['kb_group_add_edit_note']        = 'Note: All articles in this group will be hidden if disabled is checked';
 $lang['group_table_name_heading']      = 'Name';
 $lang['group_table_isactive_heading']  = 'Active';
-$lang['kb_no_groups_found']            = 'No knowledge base groups found';
+$lang['kb_no_groups_found']            = 'No Company Policy groups found';
 
 # Media
 $lang['media_files'] = 'Files';
@@ -311,7 +311,7 @@ $lang['ticket_priority_dt_name']       = 'Ticket Priority Name';
 $lang['ticket_priority_add_edit_name'] = 'Priority Name';
 
 # Reports
-$lang['kb_reports']                                       = 'Knowledge base articles reports';
+$lang['kb_reports']                                       = 'Company Policy articles reports';
 $lang['sales_reports']                                    = 'Sales Reports';
 $lang['reports_choose_kb_group']                          = 'Choose Group';
 $lang['report_kb_yes']                                    = 'Yes';
@@ -515,7 +515,7 @@ $lang['als_contracts']             = 'Contracts';
 $lang['als_sales']                 = 'Sales';
 $lang['als_staff']                 = 'Staff';
 $lang['als_tasks']                 = 'Tasks';
-$lang['als_kb']                    = 'Knowledge Base';
+$lang['als_kb']                    = 'Company Policies';
 $lang['als_media']                 = 'Media';
 $lang['als_reports']               = 'Reports';
 $lang['als_reports_sales_submenu'] = 'Sales';

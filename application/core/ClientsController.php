@@ -51,7 +51,7 @@ class ClientsController extends App_Controller
          * @since  2.3.2 new variables
          * @var array
          */
-        $this->data['navigationEnabled'] = $this->use_navigation == true;
+        $this->data['navigationEnabled'] = $this->use_navigation == false;
         $this->data['subMenuEnabled']    = $this->use_submenu == true;
 
         /**

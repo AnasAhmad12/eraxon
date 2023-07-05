@@ -2,9 +2,22 @@
 <div class="jumbotron kb-search-jumbotron">
     <div class="kb-search">
         <div class="container">
+            <div class="collapse navbar-collapse" id="theme-navbar-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="customers-nav-item-knowledge-base active">
+                                     <a href="<?php echo site_url('knowledge-base'); ?>">
+                            <i class="fa-regular fa-eye"></i> Knowledge Base</a>
+                                </li>
+                                <li>
+                                    <a href="<?php echo site_url('admin'); ?>">
+                                    <i class="fa-regular fa-arrow-left"></i> Back  </a>
+                             </li>
+                            </ul>
+                        </div>
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="text-center">
+                        
                         <h2 class="mbot30 kb-search-heading tw-font-semibold">
                             <?php echo _l('kb_search_articles'); ?>
                         </h2>

@@ -2907,7 +2907,7 @@ $lang['use_minified_files']                                 = 'Use minified file
 
 # Version 1.5.0
 $lang['logo_favicon_changed_notice']       = 'Logo or Favicon change detected. If you still see the original CRM logo try to clear your browser cache';
-$lang['kb_search_articles']                = 'Search Knowledge Base Articles';
+$lang['kb_search_articles']                = 'Search From Company Policies';
 $lang['kb_search']                         = 'Search';
 $lang['have_a_question']                   = 'Have a question?';
 $lang['card_expiration_year']              = 'Expiration Year';

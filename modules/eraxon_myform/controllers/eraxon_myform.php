@@ -24,7 +24,7 @@ class Eraxon_myform extends AdminController
     {
        // $data['advance_salary'] = $this->eraxon_myform_model->get_advance_salary();
         $data['title']   = 'Other Forms';
-        $this->load->view('others_manage',$data);
+        $this->load->view('eraxon_myform/others_manage',$data);
     }
 
 	//Show All Leads
@@ -32,7 +32,7 @@ class Eraxon_myform extends AdminController
 	{
 		$data['advance_salary'] = $this->eraxon_myform_model->get_advance_salary();
         $data['title']   = 'Advance Salary';
-		$this->load->view('advance_salary_manage',$data);
+		$this->load->view('eraxon_myform/advance_salary_manage',$data);
 	}
 
 	//add and update

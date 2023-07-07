@@ -14,10 +14,10 @@ class Eraxon_myform extends AdminController
 		$this->load->model('eraxon_myform_model');
 	}
 
-	public function index()
-	{
-		$this->load->view('manage');
-	}
+	// public function index()
+	// {
+	// 	$this->load->view('manage');
+	// }
 
     //Show All Leads
     public function others()

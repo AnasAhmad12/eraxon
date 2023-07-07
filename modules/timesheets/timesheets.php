@@ -177,16 +177,16 @@ function timesheets_module_init_menu_items() {
 				'position' => 1,
 			]);
 		}
-		if (has_permission('leave_management', '', 'view_own') || has_permission('leave_management', '', 'view') || is_admin()) {
-			$CI->app_menu->add_sidebar_children_item('timesheets', [
-				'slug' => 'timesheets_timekeeping_mnrh',
-				'name' => _l('leave'),
-				'icon' => 'fa fa-clipboard',
-				'href' => admin_url('timesheets/requisition_manage'),
-				'position' => 2,
+		// if (has_permission('leave_management', '', 'view_own') || has_permission('leave_management', '', 'view') || is_admin()) {
+		// 	$CI->app_menu->add_sidebar_children_item('timesheets', [
+		// 		'slug' => 'timesheets_timekeeping_mnrh',
+		// 		'name' => _l('leave'),
+		// 		'icon' => 'fa fa-clipboard',
+		// 		'href' => admin_url('timesheets/requisition_manage'),
+		// 		'position' => 2,
 
-			]);
-		}
+		// 	]);
+		// }
 		if (has_permission('route_management', '', 'view_own') || has_permission('route_management', '', 'view') || is_admin()) {
 			$allow_attendance_by_route = 0;
 			$data_by_route = get_timesheets_option('allow_attendance_by_route');

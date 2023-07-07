@@ -5,7 +5,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 /**
  * 
  */
-class Eraxon_myform extends AdminController
+class eraxon_myform extends AdminController
 {
 	
 	function __construct()

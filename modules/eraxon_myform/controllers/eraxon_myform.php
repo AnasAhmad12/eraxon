@@ -19,6 +19,14 @@ class Eraxon_myform extends AdminController
 		$this->load->view('manage');
 	}
 
+    //Show All Leads
+    public function others()
+    {
+       // $data['advance_salary'] = $this->eraxon_myform_model->get_advance_salary();
+        $data['title']   = 'Other Forms';
+        $this->load->view('others_manage',$data);
+    }
+
 	//Show All Leads
 	public function advance_salary()
 	{

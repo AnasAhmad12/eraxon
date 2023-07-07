@@ -3,8 +3,7 @@
 Module Name: Perfex CRM Powerful Chat
 Description: Chat module for Perfex CRM
 Version: 1.5.0
-Author: Aleksandar Stojanov
-Author URI: https://idevalex.com
+Author: Anus Ahmad
 Requires at least: 2.3.2
 */
 

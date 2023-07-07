@@ -85,6 +85,15 @@ class Dashboard extends AdminController
             $data['tickets_report'] = (new \app\services\TicketsReportByStaff())->filterBy('this_month');
         }
 
+        //http://localhost/eraxon/modules/hr_profile/assets/plugins/highcharts/variable-pie.js?v=1031
+        $this->app_scripts->add('highcharts-js','modules/hr_profile/assets/plugins/highcharts/highcharts.js');
+        $this->app_scripts->add('highcharts-3d-js','modules/hr_profile/assets/plugins/highcharts/highcharts-3d.js');
+        $this->app_scripts->add('accessibility-js','modules/hr_profile/assets/plugins/highcharts/accessibility.js');
+        $this->app_scripts->add('export-data-js','modules/hr_profile/assets/plugins/highcharts/export-data.js');
+        $this->app_scripts->add('exporting-js','modules/hr_profile/assets/plugins/highcharts/exporting.js'); 
+       
+        $this->app_scripts->add('variable-pie-js','modules/hr_profile/assets/plugins/highcharts/variable-pie.js');
+
         $data = hooks()->apply_filters('before_dashboard_render', $data);
         $this->load->view('admin/dashboard/dashboard', $data);
     }

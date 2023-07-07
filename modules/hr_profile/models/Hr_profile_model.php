@@ -239,6 +239,89 @@ class Hr_profile_model extends App_Model
 		return $chart;
 	}
 
+	/**
+	 * report by staffs Leads
+	 * @return [type] 
+	 */
+	public function report_by_leads_staffs()
+	{
+		//$months_report = $this->input->post('months_report');
+		$custom_date_select = '';
+
+		$current_year = date('Y');
+		for($_month = 1 ; $_month <= 12; $_month++){
+			$month_t = date('m',mktime(0, 0, 0, $_month, 04, 2016));
+
+			if($_month == 5){
+				$chart['categories'][] = _l('month_05');
+			}else{
+				$chart['categories'][] = _l('month_'.$_month);
+			}
+
+			$month = $current_year.'-'.$month_t;
+
+			$chart['pending_leads'][] = $this->leads_by_month($month, 'Pending');
+			$chart['approved_leads'][] = $this->leads_by_month($month, 'Approved');
+			$chart['rejected_leads'][] = $this->leads_by_month($month, 'Rejected');
+		}
+
+		return $chart;
+	}
+
+	/**
+	 * new staff by month
+	 * @param  [type] $from 
+	 * @param  [type] $to   
+	 * @return [type]       
+	 */
+	public function leads_by_month($month,$status)
+	{
+		$this->db->select('count(id) as total_leads, status');
+		// $this->db->select('count('.db_prefix().'leads.id) as total_leads,'. db_prefix() . 'leads_status.name as status_name');
+		// $this->db->join(db_prefix() . 'leads_status,'.db_prefix() . 'leads_status.id=' . db_prefix() . 'leads.status', 'left');
+		// if($status == 'Pending')
+		// { 
+		// 	$this->db->where(db_prefix().'leads_status.status_name','Pending'); 
+
+	 //    }elseif($status == 'Approved')
+	 //    {
+	 //    	$this->db->where(db_prefix().'leads_status.status_name','Approved'); 
+
+	 //    }elseif($status == 'Rejected'){
+
+		// 	$this->db->where(db_prefix().'leads_status.status_name','Rejected'); 
+	 //    }
+
+		if($status == 'Pending')
+		{ 
+			$this->db->where('status',2); 
+
+	    }elseif($status == 'Approved')
+	    {
+	    	$this->db->where('status',3); 
+
+	    }elseif($status == 'Rejected'){
+
+			$this->db->where('status',4); 
+	    }
+		
+
+		if(is_staff_member() && !is_admin())
+		{
+			//$this->db->where(db_prefix().'leads.assigned',get_staff_user_id());
+			$this->db->where('assigned',get_staff_user_id());
+		}
+		//$sql_where = "date_format(".db_prefix()."leads.dateadded, '%Y-%m') = '".$month."'";
+		$sql_where = "date_format(dateadded, '%Y-%m') = '".$month."'";
+		$this->db->where($sql_where);
+		//$result = $this->db->get(db_prefix().'leads')->row();
+		$result = $this->db->get('leads')->row();
+
+		if($result){
+			return (int)$result->total_leads;
+		}
+		return 0;
+	}
 
 	/**
 	 * new staff by month

@@ -4,7 +4,7 @@
     <div class="content">
         <?php if (($staff_p->staffid == get_staff_user_id() || is_admin()) && !$this->input->get('notifications')) { ?>
         <div class="mbot30">
-            <?php $this->load->view('admin/staff/stats'); ?>
+            <?php //$this->load->view('admin/staff/stats'); ?>
         </div>
         <?php } ?>
         <div class="row">
@@ -100,7 +100,7 @@
                             </div>
                         </div>
 
-                        <?php if (($staff_p->staffid == get_staff_user_id() || is_admin()) && !$this->input->get('notifications')) { ?>
+                        <?php if (0){//($staff_p->staffid == get_staff_user_id() || is_admin()) && !$this->input->get('notifications')) { ?>
                         <h4 class="tw-mt-4 tw-font-semibold tw-text-lg tw-text-neutral-700">
                             <?php echo _l('projects'); ?>
                         </h4>
@@ -110,15 +110,15 @@
                                 <?php echo form_hidden('staff_id', $staff_p->staffid); ?>
                             </div>
                             <?php render_datatable([
-          _l('project_name'),
-          _l('project_start_date'),
-          _l('project_deadline'),
-          _l('project_status'),
-          ], 'staff-projects', [], [
-              'data-last-order-identifier' => 'my-projects',
-              'data-default-order'         => get_table_last_order('my-projects'),
-          ]); ?>
-                        </div>
+                              _l('project_name'),
+                              _l('project_start_date'),
+                              _l('project_deadline'),
+                              _l('project_status'),
+                              ], 'staff-projects', [], [
+                                  'data-last-order-identifier' => 'my-projects',
+                                  'data-default-order'         => get_table_last_order('my-projects'),
+                              ]); ?>
+                                            </div>
                         <?php } ?>
                     </div>
 

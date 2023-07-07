@@ -378,6 +378,7 @@ $lang['hr_survey_list_view_tooltip']									= 'Preview';
 $lang['hr_survey_field_checkbox']										= 'Checkbox';
 $lang['total_contract_deleted']											= 'Total contract deleted';
 $lang['employee_chart_by_month']										= 'Staff status by months';
+$lang['employee_lead_chart_by_month']								    = 'Leads status by months';
 $lang['hr_survey_submit']												= 'Submit';
 $lang['hr_survey_no_questions']											= 'This training post does not have questions added yet.';
 $lang['hr_job_position_detail']											= 'Detailed Job';

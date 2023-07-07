@@ -68,6 +68,14 @@ function eraxon_myform_init_menu_items()
         'badge'    => [],
     ]);
 
+    $CI->app_menu->add_sidebar_children_item('myforms', [
+        'slug'     => 'pro_other_forms',
+        'name'     => 'Other Forms',
+        'href' => admin_url('eraxon_myform/others'),
+        'position' => 4,
+        'badge'    => [],
+    ]);
+
 }
 
 /*hooks()->add_action('admin_init', 'eraxon_hr_permissions');

@@ -6,7 +6,7 @@
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="customers-nav-item-knowledge-base active">
                                      <a href="<?php echo site_url('knowledge-base'); ?>">
-                            <i class="fa-regular fa-eye"></i> Knowledge Base</a>
+                            <i class="fa-regular fa-eye"></i> Company Policies</a>
                                 </li>
                                 <li>
                                     <a href="<?php echo site_url('admin'); ?>">

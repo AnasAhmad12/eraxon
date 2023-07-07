@@ -125,7 +125,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    if (has_permission('contracts', '', 'view') || has_permission('contracts', '', 'view_own')) {
+     /*if (has_permission('contracts', '', 'view') || has_permission('contracts', '', 'view_own')) {
         $CI->app_menu->add_sidebar_menu_item('contracts', [
             'name'     => _l('contracts'),
             'href'     => admin_url('contracts'),
@@ -135,7 +135,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-    /*$CI->app_menu->add_sidebar_menu_item('projects', [
+   $CI->app_menu->add_sidebar_menu_item('projects', [
         'name'     => _l('projects'),
         'href'     => admin_url('projects'),
         'icon'     => 'fa-solid fa-chart-gantt',

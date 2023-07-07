@@ -24,6 +24,7 @@ class Hr_profile extends AdminController
 	  if (!has_permission('hrm_dashboard', '', 'view')) {
 		access_denied('hr_profile');
 	  }
+	  //http://localhost/eraxon/modules/hr_profile/assets/plugins/highcharts/highcharts.js?v=1031
 	  $this->app_scripts->add('circle-progress-js','assets/plugins/jquery-circle-progress/circle-progress.min.js');
 	  $data['google_ids_calendars']  = $this->misc_model->get_google_calendar_ids();
 	  $data['title']                 = 'HR Profile';
@@ -6133,6 +6134,15 @@ public function update_staff_profile(){
 	public function report_by_staffs()
     {
         echo json_encode($this->hr_profile_model->report_by_staffs());
+    }
+
+    /**
+	 * report by staffs leads
+	 * @return [type] 
+	 */
+	public function report_by_leads_staffs()
+    {
+        echo json_encode($this->hr_profile_model->report_by_leads_staffs());
     }
 
 

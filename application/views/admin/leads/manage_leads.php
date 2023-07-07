@@ -298,10 +298,13 @@
                                'name'     => _l('leads_dt_assigned'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
                               ];
+                              
+
                               $_table_data[] = [
                                'name'     => _l('leads_dt_status'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-status'],
                               ];
+                               
                               $_table_data[] = [
                                'name'     => _l('leads_source'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-source'],
@@ -319,6 +322,10 @@
                               }
                               $custom_fields = get_custom_fields('leads', ['show_on_table' => 1]);
                               foreach ($custom_fields as $field) {
+
+                                if(is_staff_member() && !is_admin()){
+                                    unset($field['status']);
+                                }
                                   array_push($table_data, [
                                    'name'     => $field['name'],
                                    'th_attrs' => ['data-type' => $field['type'], 'data-custom-field' => 1],
@@ -355,7 +362,20 @@
 </script>
 <?php include_once(APPPATH . 'views/admin/leads/status.php'); ?>
 <?php init_tail(); ?>
+<style>
+    
+    <?php 
+        if(is_staff_member() && !is_admin())
+        {
+            echo ".lead-status-2 .dropdown{ display:none;}";
+        }
+
+
+     ?>
+
+</style>
 <script>
+
 var openLeadID = '<?php echo $leadid; ?>';
 $(function() {
     leads_kanban();

@@ -229,7 +229,7 @@ function app_init_admin_sidebar_menu_items()
         'badge'    => [],
     ]);
 
-    if (has_permission('bulk_pdf_exporter', '', 'view')) {
+   /* if (has_permission('bulk_pdf_exporter', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('utilities', [
             'slug'     => 'bulk-pdf-exporter',
             'name'     => _l('bulk_pdf_exporter'),
@@ -237,7 +237,7 @@ function app_init_admin_sidebar_menu_items()
             'position' => 10,
             'badge'    => [],
         ]);
-    }
+    }*/
 
     $CI->app_menu->add_sidebar_children_item('utilities', [
         'slug'     => 'calendar',
@@ -265,13 +265,13 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
 
-        $CI->app_menu->add_sidebar_children_item('utilities', [
+        /*$CI->app_menu->add_sidebar_children_item('utilities', [
             'slug'     => 'ticket-pipe-log',
             'name'     => _l('ticket_pipe_log'),
             'href'     => admin_url('utilities/pipe_log'),
             'position' => 30,
             'badge'    => [],
-        ]);
+        ]);*/
     }
 
     if (staff_can('view-timesheets', 'reports') || staff_can('view', 'reports')) {

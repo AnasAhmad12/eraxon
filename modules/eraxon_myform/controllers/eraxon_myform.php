@@ -8,7 +8,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class eraxon_myform extends AdminController
 {
 	
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('eraxon_myform_model');

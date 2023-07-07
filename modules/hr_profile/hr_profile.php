@@ -90,15 +90,15 @@ function hr_profile_module_init_menu_items()
 		]);
 	 }
 
-	 if(has_permission('hrm_reception_staff','','view') || has_permission('hrm_reception_staff','','view_own')){
-		 $CI->app_menu->add_sidebar_children_item('hr_profile', [
-			'slug'     => 'hr_profile_reception_of_staff',
-			'name'     => _l('hr_receiving_staff_lable'),
-			'icon'     => 'fa fa-edit',
-			'href'     => admin_url('hr_profile/reception_staff'),
-			'position' => 3,
-		]);
-	 }
+	 // if(has_permission('hrm_reception_staff','','view') || has_permission('hrm_reception_staff','','view_own')){
+		//  $CI->app_menu->add_sidebar_children_item('hr_profile', [
+		// 	'slug'     => 'hr_profile_reception_of_staff',
+		// 	'name'     => _l('hr_receiving_staff_lable'),
+		// 	'icon'     => 'fa fa-edit',
+		// 	'href'     => admin_url('hr_profile/reception_staff'),
+		// 	'position' => 3,
+		// ]);
+	 // }
 
 	 if(has_permission('hrm_hr_records','','view') || has_permission('hrm_hr_records','','view_own')){
 		 $CI->app_menu->add_sidebar_children_item('hr_profile', [
@@ -130,55 +130,55 @@ function hr_profile_module_init_menu_items()
 		]);
 	 }
 
-	 if(has_permission('hr_manage_q_a','','view')){
-		$CI->app_menu->add_sidebar_children_item('hr_profile', [
-			'slug'     => 'hr_profile_q_a',
-			'name'     => _l('hr_q_a'),
-			'icon'     => 'fa fa-question-circle',
-			'href'     => admin_url('hr_profile/knowledge_base_q_a'),
-			'position' => 9,
-		]);
-	}
+	//  if(has_permission('hr_manage_q_a','','view')){
+	// 	$CI->app_menu->add_sidebar_children_item('hr_profile', [
+	// 		'slug'     => 'hr_profile_q_a',
+	// 		'name'     => _l('hr_q_a'),
+	// 		'icon'     => 'fa fa-question-circle',
+	// 		'href'     => admin_url('hr_profile/knowledge_base_q_a'),
+	// 		'position' => 9,
+	// 	]);
+	// }
 
-	if(has_permission('hrm_contract','','view') || has_permission('hrm_contract','','view_own')){
-		$CI->app_menu->add_sidebar_children_item('hr_profile', [
-			'slug'     => 'hr_profile_contract',
-			'name'     => _l('hr_hr_contracts'),
-			'icon'     => 'fa fa-wpforms',
-			'href'     => admin_url('hr_profile/contracts'),
-			'position' => 6,
-		]);
-	}
+	// if(has_permission('hrm_contract','','view') || has_permission('hrm_contract','','view_own')){
+	// 	$CI->app_menu->add_sidebar_children_item('hr_profile', [
+	// 		'slug'     => 'hr_profile_contract',
+	// 		'name'     => _l('hr_hr_contracts'),
+	// 		'icon'     => 'fa fa-wpforms',
+	// 		'href'     => admin_url('hr_profile/contracts'),
+	// 		'position' => 6,
+	// 	]);
+	// }
 
-	if(has_permission('hrm_dependent_person','','view') || has_permission('hrm_dependent_person','','view_own')){
-		$CI->app_menu->add_sidebar_children_item('hr_profile', [
-			'slug'     => 'hr_profile_dependent_person',
-			'name'     => _l('hr_dependent_persons'),
-			'icon'     => 'fa fa-address-card-o',
-			'href'     => admin_url('hr_profile/dependent_persons'),
-			'position' => 7,
-		]);
-	}
+	// if(has_permission('hrm_dependent_person','','view') || has_permission('hrm_dependent_person','','view_own')){
+	// 	$CI->app_menu->add_sidebar_children_item('hr_profile', [
+	// 		'slug'     => 'hr_profile_dependent_person',
+	// 		'name'     => _l('hr_dependent_persons'),
+	// 		'icon'     => 'fa fa-address-card-o',
+	// 		'href'     => admin_url('hr_profile/dependent_persons'),
+	// 		'position' => 7,
+	// 	]);
+	// }
 
-	if(has_permission('hrm_procedures_for_quitting_work','','view') || has_permission('hrm_procedures_for_quitting_work','','view_own')){
-		$CI->app_menu->add_sidebar_children_item('hr_profile', [
-			'slug'     => 'hr_profile_quitting_works',
-			'name'     => _l('hr_resignation_procedures'),
-			'icon'     => 'fa fa-user-times',
-			'href'     => admin_url('hr_profile/resignation_procedures'),
-			'position' => 8,
-		]);
-	}
+	// if(has_permission('hrm_procedures_for_quitting_work','','view') || has_permission('hrm_procedures_for_quitting_work','','view_own')){
+	// 	$CI->app_menu->add_sidebar_children_item('hr_profile', [
+	// 		'slug'     => 'hr_profile_quitting_works',
+	// 		'name'     => _l('hr_resignation_procedures'),
+	// 		'icon'     => 'fa fa-user-times',
+	// 		'href'     => admin_url('hr_profile/resignation_procedures'),
+	// 		'position' => 8,
+	// 	]);
+	// }
 
-	if(has_permission('hrm_report','','view')){
-		$CI->app_menu->add_sidebar_children_item('hr_profile', [
-			'slug'     => 'hr_profile_reports',
-			'name'     => _l('hr_reports'),
-			'icon'     => 'fa fa-list-alt',
-			'href'     => admin_url('hr_profile/reports'),
-			'position' => 10,
-		]);
-	}
+	// if(has_permission('hrm_report','','view')){
+	// 	$CI->app_menu->add_sidebar_children_item('hr_profile', [
+	// 		'slug'     => 'hr_profile_reports',
+	// 		'name'     => _l('hr_reports'),
+	// 		'icon'     => 'fa fa-list-alt',
+	// 		'href'     => admin_url('hr_profile/reports'),
+	// 		'position' => 10,
+	// 	]);
+	// }
 
 	if(has_permission('hrm_setting','','view')){
 		 $CI->app_menu->add_sidebar_children_item('hr_profile', [

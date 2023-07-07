@@ -24,21 +24,20 @@
                                 <th><?php echo _l('options'); ?></th>
                             </thead>
                             <tbody>
-                            <!-- 	<?php foreach ($advance_salary as $as) { ?>
+                          	<?php foreach ($other_requests as $as) { ?>
                                 <tr>
                                 	<?php if(is_admin()){ ?>
                                 		<td><?php echo $as['firstname'].' '.$as['lastname']; ?></td>
                                 	<?php } ?>
-                                	<td><?php echo $as['reason']; ?></td>
-                                	<td><?php echo $as['amount']; ?></td>
+                                	<td><?php echo $as['request_type']; ?></td>
+                                	<td><?php echo $as['description']; ?></td>
                                 	<td><?php echo $as['requested_datetime']; ?></td>
-                                	<td><?php echo $as['amount_needed_date']; ?></td>
                                 	<td><?php if($as['status']==0){
                                 		echo "Pending";
                                 	}elseif($as['status']==1){
-                                		echo "Approved";
+                                		echo "Seen";
                                 	}else{
-                                		echo 'Rejected';
+                                		echo 'Action Taken';
                                 	}
 
                                 	?></td>
@@ -46,20 +45,19 @@
                                         <div class="tw-flex tw-items-center tw-space-x-3">
                                             <a href="#"
                                                 onclick="edit_as_request(this,<?php echo $as['id']; ?>); return false"
-                                                data-reason="<?php echo $as['reason']; ?>" 
-                                                data-amount="<?php echo $as['amount']; ?>"
-                                                data-amount_needed_date="<?php echo $as['amount_needed_date']; ?>"
+                                                data-request-type="<?php echo $as['request_type']; ?>" 
+                                                data-description="<?php echo $as['description']; ?>"
 
                                                 class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700" data-hide-from-client="0" >
                                                 <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                             </a>
-                                            <a href="<?php echo admin_url('eraxon_myform/delete_as/' . $as['id']); ?>" class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete">
+                                            <a href="<?php echo admin_url('eraxon_myform/delete_or/' . $as['id']); ?>" class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete">
                                                 <i class="fa-regular fa-trash-can fa-lg"></i>
                                             </a>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php } ?> -->
+                            <?php } ?> 
                             </tbody>
                         </table>
                     </div>
@@ -68,7 +66,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="advance_salary" tabindex="-1" role="dialog">
+<div class="modal fade" id="other_requests" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <?php echo form_open(admin_url('eraxon_myform/other_form_ad')); ?>
         <div class="modal-content">
@@ -88,13 +86,18 @@
 		                    <label for="amount">Select Request</label>
 		                   
 		                        <select class="form-control" name="request_type">
-                                    <option>Resignation</option>  
-                                    <option>Harassment</option>
-                                    <option>Complaint</option>      
+                                    <option value="">Select Request Type</option>  
+                                    <option value="resignation">Resignation</option>  
+                                    <option value="harassment">Harassment</option>
+                                    <option value="complaint">Complaint</option>      
                                 </select>
 		                   
 		                </div>
-                        <?php echo render_textarea('description', 'Add Details'); ?>
+                        <?php 
+                            $contents = '';
+                        echo render_textarea('description', 'Add Details',$contents,array(),array(),'','tinymce' ); 
+                          
+                        ?>
                         <input type="hidden" name="id_staff" value="<?php echo $current_user->staffid; ?>">
                     </div>
                 </div>
@@ -116,9 +119,8 @@
         request_type: 'required',
         description:'required',
     }, manage_advance_salary);
-    $('#advance_salary').on('hidden.bs.modal', function(event) {
+    $('#other_requests').on('hidden.bs.modal', function(event) {
         $('#additional').html('');
-        $('#advance_salary input[name="amount"]').val('');
         $('.add-title').removeClass('hide');
         $('.edit-title').removeClass('hide');
     });
@@ -134,7 +136,9 @@
 	}
 
 	function new_advance_salary() {
-    $('#advance_salary').modal('show');
+    $('#other_requests select[name="request_type"]').val('');
+    tinyMCE.activeEditor.setContent('');
+    $('#other_requests').modal('show');
     $('.edit-title').addClass('hide');
 	}
 
@@ -143,11 +147,11 @@
 function edit_as_request(invoker, id) {
     
  	$('#additional').append(hidden_input('id', id));
-    $('#advance_salary input[name="amount"]').val($(invoker).data('amount'));
-    $('#advance_salary input[name="amount_needed_date"]').val($(invoker).data('amount_needed_date'));
-    $('#advance_salary textarea[name="reason"]').val($(invoker).data('reason'));
+    $('#other_requests select[name="request_type"]').val($(invoker).data('request-type'));
+    //$('#other_requests textarea[name="description"]').val($(invoker).data('description'));
+     tinyMCE.activeEditor.setContent($(invoker).data('description'));
     
-    $('#advance_salary').modal('show');
+    $('#other_requests').modal('show');
     $('.add-title').addClass('hide');
 }
 

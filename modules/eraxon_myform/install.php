@@ -56,11 +56,9 @@ if (!$CI->db->table_exists(db_prefix() . 'other-requests')) {
     $CI->db->query('CREATE TABLE `' . db_prefix() . "other-requests` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_staff` int(11) NOT NULL,
-  `request_type` varchar(150)
+  `request_type` varchar(150) NOT NULL,
   `description` text NOT NULL,
-  `amount` DECIMAL(15,2)  NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0',
-  `amount_needed_date` DATE NOT NULL,
   `requested_datetime` DATETIME NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');

@@ -4825,6 +4825,7 @@ function init_lead(id, isEdit) {
 function validate_lead_form() {
   var validationObject = {
     name: "required",
+    phonenumber: "required",
     source: "required",
     status: {
       required: {
@@ -4847,6 +4848,7 @@ function validate_lead_form() {
       validationObject[field].email = true;
     }
 
+    
     validationObject[field].remote = {
       url: admin_url + "leads/validate_unique_field",
       type: "post",
@@ -5721,9 +5723,9 @@ function sync_proposals_data(rel_id, rel_type) {
 
 // Table announcements
 function init_table_announcements(manual) {
-  if (typeof manual == "undefined" && $("body").hasClass("dashboard")) {
+  /*if (typeof manual == "undefined" && $("body").hasClass("dashboard")) {
     return false;
-  }
+  }*/
   initDataTable(
     ".table-announcements",
     admin_url + "announcements",

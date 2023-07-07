@@ -61,6 +61,10 @@
 			readURL(this);
 		});
 
+		$("input[name='profile_cover_image']").on('change', function() {
+			readURL2(this);
+		});
+
 	});
 
 	function init_roles_permissions_v2(roleid, user_changed) {
@@ -115,6 +119,18 @@
 
 			reader.onload = function (e) {
 				$("img[id='wizardPicturePreview']").attr('src', e.target.result).fadeIn('slow');
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	function readURL2(input) {
+		"use strict";
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function (e) {
+				$("img[id='wizardPicturePreview2']").attr('src', e.target.result).fadeIn('slow');
 			}
 			reader.readAsDataURL(input.files[0]);
 		}

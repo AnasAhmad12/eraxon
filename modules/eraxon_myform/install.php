@@ -44,7 +44,10 @@ if (!$CI->db->table_exists(db_prefix() . 'advance-salary')) {
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_staff` int(11) NOT NULL,
   `reason` text NOT NULL,
+  `amount` DECIMAL(15,2)  NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0',
+  `amount_needed_date` DATE NOT NULL,
   `requested_datetime` DATETIME NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+}

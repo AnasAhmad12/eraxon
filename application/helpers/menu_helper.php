@@ -211,6 +211,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
+   
     // Utilities
     $CI->app_menu->add_sidebar_menu_item('utilities', [
         'collapse' => true,

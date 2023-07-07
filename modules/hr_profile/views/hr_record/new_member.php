@@ -28,11 +28,11 @@
 								<div role="tabpanel" class="tab-pane active" id="tab_staff_profile">
 
 									<?php if(total_rows(db_prefix().'emailtemplates',array('slug'=>'two-factor-authentication','active'=>0)) == 0){ ?>
-										<div class="checkbox checkbox-primary">
+										<!-- <div class="checkbox checkbox-primary">
 											<input type="checkbox" value="1" name="two_factor_auth_enabled" id="two_factor_auth_enabled"<?php if(isset($member) && $member->two_factor_auth_enabled == 1){echo ' checked';} ?>>
 											<label for="two_factor_auth_enabled"><i class="fa fa-question-circle" data-toggle="tooltip" data-title="<?php echo _l('two_factor_authentication_info'); ?>"></i>
 												<?php echo _l('enable_two_factor_authentication'); ?></label>
-											</div>
+											</div> -->
 										<?php } ?>
 										
 									<?php
@@ -43,11 +43,22 @@
 										$image_exist = false;
 									}
 									?>
-									<div class="col-md-12">  
+									<div class="col-md-12"> 
+									<p>Profile Image</p> 
 										<div class="picture-container pull-left">
 											<div class="picture pull-left">
 												<img src="<?php if(isset($staff_cover_image) && isset($image_exist) && isset($link_cover_image)){ echo  base_url($link_cover_image); }else{  echo site_url(HR_PROFILE_PATH.'none_avatar.jpg'); } ?>" class="picture-src" id="wizardPicturePreview" title="">
 												<input type="file" name="profile_image" class="form-control" id="profile_image" accept=".png, .jpg, .jpeg">
+											</div>
+										</div>
+									</div>
+
+									<div class="col-md-12"> 
+									<p>Cover Image</p>  
+										<div class="picture-container pull-left" >
+											<div class="picture pull-left" style="width: 100%; height: 170px; border-radius: unset;">
+												<img src="<?php if(isset($staff_cover_image) && isset($image_exist) && isset($link_cover_image)){ echo  base_url($link_cover_image); }else{  echo site_url(HR_PROFILE_PATH.'nul_image.jpg'); } ?>" class="picture-src" id="wizardPicturePreview2" title="">
+												<input type="file" name="profile_cover_image" class="form-control" id="profile_cover_image" accept=".png, .jpg, .jpeg">
 											</div>
 										</div>
 									</div>

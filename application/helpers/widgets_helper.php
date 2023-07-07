@@ -11,12 +11,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 function get_dashboard_widgets()
 {
     $widgets = [
-        [
-            'path'      => 'admin/dashboard/widgets/top_stats',
+         [
+            'path'      => 'admin/dashboard/widgets/user_profile',
             'container' => 'top-12',
         ],
         [
-            'path'      => 'admin/dashboard/widgets/user_profile',
+            'path'      => 'admin/dashboard/widgets/top_stats',
             'container' => 'top-12',
         ],
         [

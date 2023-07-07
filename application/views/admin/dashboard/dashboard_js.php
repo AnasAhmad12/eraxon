@@ -321,4 +321,6 @@ function update_tickets_report_table(el) {
     });
     return false
 }
+
+
 </script>

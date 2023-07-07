@@ -34,7 +34,7 @@
 										<?php echo staff_profile_image($member->staffid,array('staff-profile-image-thumb'),'thumb'); ?>
 									</div>
 									<h3 class="username mb-2"><?php echo html_entity_decode($member->firstname . ' ' . $member->lastname); ?></h3>
-									<div class="socials text-center mt-3">
+									<!-- <div class="socials text-center mt-3">
 										<a href="facebook: <?php echo html_escape($member->facebook); ?>" class="btn btn-circle">
 											<i class="fa fa-facebook"></i>
 										</a>
@@ -47,7 +47,7 @@
 										<a href="mailto: <?php echo html_escape($member->email); ?>" class="btn btn-circle">
 											<i class="fa fa-envelope"></i>
 										</a>
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</div>

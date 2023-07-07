@@ -56,6 +56,7 @@
                      <?php } ?>
 
                         <div class="col-md-12">  
+                          <p>Profile Image</p>
                            <div class="picture-container pull-left">
                               <div class="picture pull-left">
                                 <?php echo staff_profile_image($member->staffid,array('img','img-responsive','staff-profile-image-thumb','picture-src'),'thumb', ['id' => 'wizardPicturePreview']); ?>
@@ -64,7 +65,19 @@
                                  ?>
                                 <input type="file" name="profile_image" class="form-control" id="profile_image" accept=".png, .jpg, .jpeg">
                               </div>
+
                            </div>
+                        </div>
+
+                        <div class="col-md-12"> 
+                        <p>Cover Image</p> 
+                           <div class="picture pull-left" style="width: 100%; height: 170px; border-radius: unset;">
+                                <?php echo staff_profile_cover_image($member->staffid,array('img','img-responsive','','picture-src'),'thumb', ['id' => 'wizardPicturePreview2']); ?>
+                                <?php 
+                                 echo staff_profile_cover_image($member->staffid,array('img','img-responsive','','picture-src'),'thumb', ['id' => 'wizardPicturePreview2']);
+                                 ?>
+                                <input type="file" name="profile_cover_image" class="form-control" id="profile_cover_image" accept=".png, .jpg, .jpeg">
+                              </div>
                         </div>
 
                         <div class="clearfix"></div>

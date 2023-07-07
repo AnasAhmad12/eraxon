@@ -5270,6 +5270,7 @@ public function update_staff_profile(){
 
 				if ($id) {
 					hr_profile_handle_staff_profile_image_upload($id);
+					hr_profile_handle_staff_profile_cover_image_upload($id);
 					set_alert('success', _l('added_successfully', _l('staff_member')));
 					redirect(admin_url('hr_profile/member/' . $id));
 				}
@@ -5284,6 +5285,7 @@ public function update_staff_profile(){
 					unset($data['manage_staff']);
 				}
 				hr_profile_handle_staff_profile_image_upload($id);
+				hr_profile_handle_staff_profile_cover_image_upload($id);
 				$response = $this->hr_profile_model->update_staff($data, $id);
 				if (is_array($response)) {
 					if (isset($response['cant_remove_main_admin'])) {

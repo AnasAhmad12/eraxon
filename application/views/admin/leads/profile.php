@@ -416,8 +416,7 @@
                     <label for="lead_value"><?php echo _l('lead_value'); ?></label>
                     <div class="input-group" data-toggle="tooltip" title="<?php echo _l('lead_value_tooltip'); ?>">
                         <input type="number" class="form-control" name="lead_value" value="<?php if (isset($lead)) {
-                echo $lead->lead_value;
-            }?>">
+                             echo $lead->lead_value;            }?>">
                         <div class="input-group-addon">
                             <?php echo $base_currency->symbol; ?>
                         </div>

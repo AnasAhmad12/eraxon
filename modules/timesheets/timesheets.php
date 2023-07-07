@@ -7,8 +7,7 @@ Module Name: Timesheet Attendance Management
 Description: An complete attendance management system application with timesheet mostly work with attendance, leave, holiday and shift
 Version: 1.1.8
 Requires at least: 2.3.*
-Author: GreenTech Solutions
-Author URI: https://codecanyon.net/user/greentech_solutions
+Author: Anus Ahmad
  */
 
 define('TIMESHEETS_MODULE_NAME', 'timesheets');

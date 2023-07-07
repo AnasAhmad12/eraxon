@@ -7,8 +7,7 @@ Module Name: HR Records
 Description: The primary function of HR Records is to provide a central database containing records for all employees past and presen
 Version: 1.0.3
 Requires at least: 2.3.*
-Author: GreenTech Solutions
-Author URI: https://codecanyon.net/user/greentech_solutions
+Author: Anus Ahmad
 */
 
 define('HR_PROFILE_MODULE_NAME', 'hr_profile');

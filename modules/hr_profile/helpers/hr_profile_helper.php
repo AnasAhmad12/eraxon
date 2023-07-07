@@ -258,8 +258,6 @@ function get_hr_profile_upload_path_by_type($type)
 
 			return false;
 		}
-
-
 	/**
 	 * hr profile staff profile image upload for staffmodel
 	 * @param  integer $staff id 
@@ -320,6 +318,78 @@ function get_hr_profile_upload_path_by_type($type)
 					$CI->db->where('staffid', $staff_id);
 					$CI->db->update(db_prefix().'staff', [
 						'profile_image' => $filename,
+					]);
+					// Remove original image
+					unlink($newFilePath);
+
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * hr profile staff profile cover image upload for staffmodel
+	 * @param  integer $staff id 
+	 * @return boolean           
+	 */
+	function hr_profile_handle_staff_profile_cover_image_upload($staff_id = '')
+	{
+		if (!is_numeric($staff_id)) {
+			$staff_id = get_staff_user_id();
+		}
+		if (isset($_FILES['profile_cover_image']['name']) && $_FILES['profile_cover_image']['name'] != '') {
+
+			hooks()->do_action('before_upload_staff_profile_image');
+			$path = get_upload_path_by_type('staff') . $staff_id . '/';
+			// Get the temp file path
+			$tmpFilePath = $_FILES['profile_cover_image']['tmp_name'];
+			// Make sure we have a filepath
+			if (!empty($tmpFilePath) && $tmpFilePath != '') {
+				// Getting file extension
+				$extension          = strtolower(pathinfo($_FILES['profile_cover_image']['name'], PATHINFO_EXTENSION));
+				$allowed_extensions = [
+					'jpg',
+					'jpeg',
+					'png',
+				];
+
+				$allowed_extensions = hooks()->apply_filters('staff_profile_image_upload_allowed_extensions', $allowed_extensions);
+
+				if (!in_array($extension, $allowed_extensions)) {
+					set_alert('warning', _l('file_php_extension_blocked'));
+
+					return false;
+				}
+				_maybe_create_upload_path($path);
+				$filename    = unique_filename($path, $_FILES['profile_cover_image']['name']);
+				$newFilePath = $path . '/' . $filename;
+				// Upload the file into the company uploads dir
+				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					$CI                       = & get_instance();
+					$config                   = [];
+					$config['image_library']  = 'gd2';
+					$config['source_image']   = $newFilePath;
+					$config['new_image']      = 'thumb_' . $filename;
+					$config['maintain_ratio'] = true;
+					$config['width']          = hooks()->apply_filters('staff_profile_image_thumb_width', 320);
+					$config['height']         = hooks()->apply_filters('staff_profile_image_thumb_height', 320);
+					$CI->image_lib->initialize($config);
+					$CI->image_lib->resize();
+					$CI->image_lib->clear();
+					$config['image_library']  = 'gd2';
+					$config['source_image']   = $newFilePath;
+					$config['new_image']      = 'small_' . $filename;
+					$config['maintain_ratio'] = true;
+					$config['width']          = hooks()->apply_filters('staff_profile_image_small_width', 32);
+					$config['height']         = hooks()->apply_filters('staff_profile_image_small_height', 32);
+					$CI->image_lib->initialize($config);
+					$CI->image_lib->resize();
+					$CI->db->where('staffid', $staff_id);
+					$CI->db->update(db_prefix().'staff', [
+						'profile_cover_image' => $filename,
 					]);
 					// Remove original image
 					unlink($newFilePath);

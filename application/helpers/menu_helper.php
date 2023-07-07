@@ -14,7 +14,7 @@ function app_init_admin_sidebar_menu_items()
         'badge'    => [],
     ]);
 
-    if (
+   /* if (
         has_permission('customers', '', 'view')
         || (have_assigned_customers()
             || (!have_assigned_customers() && has_permission('customers', '', 'create')))
@@ -28,7 +28,7 @@ function app_init_admin_sidebar_menu_items()
         ]);
     }
 
-   /* $CI->app_menu->add_sidebar_menu_item('sales', [
+    $CI->app_menu->add_sidebar_menu_item('sales', [
         'collapse' => true,
         'name'     => _l('als_sales'),
         'position' => 10,

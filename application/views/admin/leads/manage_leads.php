@@ -23,7 +23,7 @@
                                 data-title="<?php echo _l('leads_summary'); ?>" data-placement="top"
                                 onclick="slideToggle('.leads-overview'); return false;"><i
                                     class="fa fa-bar-chart"></i></a>
-                            <a href="<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>"
+                           <!--  <a href="<?php echo admin_url('leads/switch_kanban/' . $switch_kanban); ?>"
                                 class="btn btn-default mleft5 hidden-xs" data-toggle="tooltip" data-placement="top"
                                 data-title="<?php echo $switch_kanban == 1 ? _l('leads_switch_to_kanban') : _l('switch_to_list_view'); ?>">
                                 <?php if ($switch_kanban == 1) { ?>
@@ -31,7 +31,7 @@
                                 <?php } else { ?>
                                 <i class="fa-solid fa-table-list"></i>
                                 <?php }; ?>
-                            </a>
+                            </a> -->
                         </div>
                         <div class="col-sm-4 col-xs-12 pull-right leads-search">
                             <?php if ($this->session->userdata('leads_kanban_view') == 'true') { ?>
@@ -140,12 +140,12 @@
                                     echo '</div>';
                                     ?>
                                         </div>
-                                        <div class="col-md-3 leads-filter-column">
+                                      <!--   <div class="col-md-3 leads-filter-column">
                                             <?php
                                     echo render_select('view_source', $sources, ['id', 'name'], '', '', ['data-width' => '100%', 'data-none-selected-text' => _l('leads_source')], [], 'no-mbot');
                                     ?>
-                                        </div>
-                                        <div class="col-md-3 leads-filter-column">
+                                        </div> -->
+                                       <!--  <div class="col-md-3 leads-filter-column">
                                             <div class="select-placeholder">
                                                 <select name="custom_view"
                                                     title="<?php echo _l('additional_filters'); ?>" id="custom_view"
@@ -173,7 +173,7 @@
                                                     <?php } ?>
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <hr class="hr-panel-separator" />
                                 </div>
@@ -367,7 +367,11 @@
     <?php 
         if(is_staff_member() && !is_admin())
         {
-            echo ".lead-status-2 .dropdown{ display:none;}";
+            echo ".lead-status-2 .dropdown{ display:none;}
+
+                  .row-options a:nth-child(2){ display:none;}
+                  .row-options a:nth-child(3){ display:none;}   
+            ";
         }
 
 

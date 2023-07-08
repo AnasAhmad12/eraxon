@@ -5,7 +5,7 @@
     echo 'lead-is-junk-or-lost';
 } ?>>
 
-    <?php if (isset($lead)) { ?>
+<!--     <?php if (isset($lead)) { ?>
     <div class="btn-group pull-right mleft5" id="lead-more-btn">
         <a href="#" class="btn btn-default dropdown-toggle lead-top-btn" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
@@ -30,9 +30,9 @@
             </li>
             <?php } ?>
             <?php
-} ?>
+} ?> -->
             <!-- mark as junk -->
-            <?php if ($lead->lost == 0) {
+     <!--        <?php if ($lead->lost == 0) {
         if ($lead->junk == 0 && (total_rows(db_prefix() . 'clients', ['leadid' => $lead->id]) == 0)) { ?>
             <li>
                 <a href="#" onclick="lead_mark_as_junk(<?php echo $lead->id; ?>); return false;">
@@ -61,8 +61,8 @@
             <?php } ?>
         </ul>
 
-    </div>
-
+    </div> -->
+<!-- 
     <div class="pull-right mleft5">
         <a data-toggle="tooltip" class="btn btn-default lead-print-btn lead-top-btn lead-view"
            onclick="print_lead_information(); return false;" data-placement="top" title="<?php echo _l('print'); ?>"
@@ -77,7 +77,7 @@
 
             <i class="fa-regular fa-pen-to-square"></i>
         </a>
-    </div>
+    </div> -->
 
     <?php
            $client                                 = false;

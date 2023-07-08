@@ -16,7 +16,7 @@ class Eraxon_myform_model extends App_Model {
     public function get_advance_salary($id = false)
     {
 
-    	if(is_staff_member() && !is_admin())
+    	if(has_permission('advance_salary','','view_own') && !is_admin())
     	{
     		 $this->db->where('id_staff', get_staff_user_id());
     	}
@@ -41,7 +41,7 @@ class Eraxon_myform_model extends App_Model {
     public function get_other_requests($id = false)
     {
 
-        if(is_staff_member() && !is_admin())
+        if(has_permission('other_form','','view_own') && !is_admin())
         {
              $this->db->where('id_staff', get_staff_user_id());
         }

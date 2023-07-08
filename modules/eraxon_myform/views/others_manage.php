@@ -5,16 +5,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tw-mb-2 sm:tw-mb-4">
+                     <?php if(has_permission('other_form','','create') || is_admin()){ ?>
                     <a href="#" onclick="new_advance_salary(); return false;" class="btn btn-primary">
                         <i class="fa-regular fa-plus tw-mr-1"></i>
                         <?php echo "Add Request"; ?>
                     </a>
+                <?php } ?>
                 </div>
                  <div class="panel_s">
                     <div class="panel-body panel-table-full">
                     	<table class="table dt-table" data-order-col="1" data-order-type="asc">
                             <thead>
-                            	<?php if(is_admin()){ ?>
+                            	<?php if(has_permission('other_form','','view')){ ?>
                                 		<th>Staff Name</th>
                                 	<?php } ?>
                                 <th>Type</th>
@@ -26,7 +28,7 @@
                             <tbody>
                           	<?php foreach ($other_requests as $as) { ?>
                                 <tr>
-                                	<?php if(is_admin()){ ?>
+                                	<?php if(has_permission('other_form','','view')){ ?>
                                 		<td><?php echo $as['firstname'].' '.$as['lastname']; ?></td>
                                 	<?php } ?>
                                 	<td><?php echo $as['request_type']; ?></td>
@@ -43,6 +45,7 @@
                                 	?></td>
                                 	<td>
                                         <div class="tw-flex tw-items-center tw-space-x-3">
+                                            <?php if(has_permission('other_form','','edit')){ ?>
                                             <a href="#"
                                                 onclick="edit_as_request(this,<?php echo $as['id']; ?>); return false"
                                                 data-request-type="<?php echo $as['request_type']; ?>" 
@@ -51,9 +54,12 @@
                                                 class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700" data-hide-from-client="0" >
                                                 <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                             </a>
+                                        <?php }
+                                        if(has_permission('other_form','','delete')  || is_admin()){ ?>
                                             <a href="<?php echo admin_url('eraxon_myform/delete_or/' . $as['id']); ?>" class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete">
                                                 <i class="fa-regular fa-trash-can fa-lg"></i>
                                             </a>
+                                        <?php } ?>
                                         </div>
                                     </td>
                                 </tr>

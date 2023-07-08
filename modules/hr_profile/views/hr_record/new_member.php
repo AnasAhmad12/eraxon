@@ -354,14 +354,7 @@
 											<?php } } ?>
 										<?php } ?>
 										<div class="clearfix form-group"></div>
-										<?php if(is_admin()){ ?>
-											<label for="closer" class="control-label"><?php echo 'Call Closer'; ?></label>
-											<select name="callcloser" class="selectpicker" id="callcloser" data-width="100%" data-none-selected-text="None selected" tabindex="-98"> 
-													<option value=""></option>                  
-													<option value="1">Yes</option>
-													<option value="0">No</option>
-												</select>
-										<?php } ?>
+										
 									</div>
 
 									<div role="tabpanel" class="tab-pane " id="tab_staff_contact">

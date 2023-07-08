@@ -379,14 +379,7 @@
                         <?php } ?>
 
                         <div class="clearfix form-group"></div>
-                          <?php if(is_admin()){ ?>
-                            <label for="closer" class="control-label"><?php echo 'Call Closer'; ?></label>
-                            <select name="callcloser" class="selectpicker" id="callcloser" data-width="100%" data-none-selected-text="None selected" tabindex="-98"> 
-                                <option value=""></option>                  
-                                <option value="1" <?php if($member->last_password_change == 1){ echo 'selected'; } ?>>Yes</option>
-                                <option value="0" <?php if($member->last_password_change == 0){ echo 'selected'; } ?>>No</option>
-                              </select>
-                          <?php } ?>
+                          
 
                   </div>
 

@@ -5,16 +5,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="tw-mb-2 sm:tw-mb-4">
+                    <?php if(has_permission('advance_salary','','create') || is_admin()){ ?>
                     <a href="#" onclick="new_advance_salary(); return false;" class="btn btn-primary">
                         <i class="fa-regular fa-plus tw-mr-1"></i>
                         <?php echo "Apply for Advance Salary"; ?>
                     </a>
+                <?php } ?>
                 </div>
                  <div class="panel_s">
                     <div class="panel-body panel-table-full">
                     	<table class="table dt-table" data-order-col="1" data-order-type="asc">
                             <thead>
-                            	<?php if(is_admin()){ ?>
+                            	<?php if(has_permission('advance_salary','','view')){ ?>
                                 		<th>Staff Name</th>
                                 	<?php } ?>
                                 <th>Reason</th>
@@ -27,7 +29,7 @@
                             <tbody>
                             	<?php foreach ($advance_salary as $as) { ?>
                                 <tr>
-                                	<?php if(is_admin()){ ?>
+                                	<?php if(has_permission('advance_salary','','view') || is_admin()){ ?>
                                 		<td><?php echo $as['firstname'].' '.$as['lastname']; ?></td>
                                 	<?php } ?>
                                 	<td><?php echo $as['reason']; ?></td>
@@ -45,6 +47,7 @@
                                 	?></td>
                                 	<td>
                                         <div class="tw-flex tw-items-center tw-space-x-3">
+                                            <?php if(has_permission('advance_salary','','edit')  || is_admin()){ ?>
                                             <a href="#"
                                                 onclick="edit_as_request(this,<?php echo $as['id']; ?>); return false"
                                                 data-reason="<?php echo $as['reason']; ?>" 
@@ -54,9 +57,12 @@
                                                 class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700" data-hide-from-client="0" >
                                                 <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                             </a>
+                                            <?php }
+                                            if(has_permission('advance_salary','','delete')  || is_admin()){ ?>
                                             <a href="<?php echo admin_url('eraxon_myform/delete_as/' . $as['id']); ?>" class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete">
                                                 <i class="fa-regular fa-trash-can fa-lg"></i>
                                             </a>
+                                        <?php } ?>
                                         </div>
                                     </td>
                                 </tr>

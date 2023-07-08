@@ -35,15 +35,15 @@
                             <label for="firstname"
                                 class="control-label"><?php echo _l('staff_add_edit_firstname'); ?></label>
                             <input type="text" class="form-control" name="firstname" value="<?php if (isset($member)) {
-    echo $member->firstname;
-} ?>">
+                                    echo $member->firstname;
+                                } ?>">
                         </div>
                         <div class="form-group">
                             <label for="lastname"
                                 class="control-label"><?php echo _l('staff_add_edit_lastname'); ?></label>
                             <input type="text" class="form-control" name="lastname" value="<?php if (isset($member)) {
-    echo $member->lastname;
-} ?>">
+                                    echo $member->lastname;
+                                } ?>">
                         </div>
                         <div class="form-group">
                             <label for="email" class="control-label"><?php echo _l('staff_add_edit_email'); ?></label>

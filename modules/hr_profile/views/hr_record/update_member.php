@@ -216,7 +216,7 @@
                       <?php } ?>
 
                         <div class="row">
-                           <div class="col-md-6">
+                           <div class="col-md-12">
                               <?php $literacy = (isset($member) ? $member->literacy : ''); ?> 
                               <div class="form-group">
                                  <label for="literacy" class="control-label"><?php echo _l('hr_hr_literacy'); ?></label>
@@ -242,7 +242,7 @@
                             <?php if(is_admin() || has_permission('hrm_hr_records','', 'edit')){ ?>
                           <?php
                           hooks()->do_action('staff_render_permissions');?>
-                           <div class="col-md-6">
+                           <!-- <div class="col-md-6">
                              <div class="form-group">
                                  <label for="hourly_rate"><?php echo _l('staff_hourly_rate'); ?></label>
                                  <div class="input-group">
@@ -252,8 +252,8 @@
                                     </span>
                                  </div>
                               </div>
-                           </div>
-
+                           </div> -->
+                            <input type="hidden" name="hourly_rate" value="0.00" >
                          <?php } ?>
 
 
@@ -458,7 +458,7 @@
                         </div>
                      </div>
 
-                     <div class="row">
+                     <!-- <div class="row">
                         <div class="col-md-6">
                            <?php
                            $account_number = (isset($member) ? $member->account_number : '');
@@ -482,9 +482,9 @@
                            $Personal_tax_code = (isset($member) ? $member->Personal_tax_code : '');
                            echo render_input('Personal_tax_code','hr_Personal_tax_code',$Personal_tax_code, 'text'); ?>
                         </div>
-                     </div>
+                     </div> -->
 
-                     <div class="row">
+                     <!-- <div class="row">
                         <div class="col-md-6">
                           <div class="form-group">
                               <label for="facebook" class="control-label"><i class="fa fa-facebook"></i> <?php echo _l('staff_add_edit_facebook'); ?></label>
@@ -507,7 +507,7 @@
                            </div>
                         </div>
 
-                     </div>
+                     </div> -->
 
                   </div>
 

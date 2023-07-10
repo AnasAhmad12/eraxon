@@ -61,7 +61,7 @@
 						<li class="list-group-item"><i class="fa fa-envelope mr-4"></i> <?php echo html_entity_decode($member->email) ?></li>
 						<li class="list-group-item"><i class="fa fa-phone mr-4"></i> <?php echo html_entity_decode($member->phonenumber) ?></li>
 						<li class="list-group-item"><i class="fa fa-graduation-cap mr-4"></i> <?php echo html_entity_decode($member->literacy) ?></li>
-						<li class="list-group-item"><i class="fa fa-intersex mr-4"></i> <?php echo html_entity_decode(_l($member->sex)) ?></li>
+						<!-- <li class="list-group-item"><i class="fa fa-intersex mr-4"></i> <?php echo html_entity_decode(_l($member->sex)) ?></li> -->
 					</ul>
 				</div>
 
@@ -124,6 +124,22 @@
 							<td><?php echo html_entity_decode($member->firstname . ' ' . $member->lastname); ?></td>
 						</tr>
 						<tr class="project-overview">
+							<td class="bold">Pseudo</td>
+							<td><?php 
+
+							$get_custom_staff_values2 = get_custom_field_value(get_staff_user_id(),'staff_pseudo','staff',true);
+
+							echo $get_custom_staff_values2; ?></td>
+						</tr>
+						<tr class="project-overview">
+							<td class="bold">father's Name</td>
+							<td><?php 
+
+							$get_custom_staff_values3 = get_custom_field_value(get_staff_user_id(),'staff_father_s_name','staff',true);
+
+							echo $get_custom_staff_values3; ?></td>
+						</tr>
+						<tr class="project-overview">
 							<td class="bold"><?php echo _l('hr_sex'); ?></td>
 							<td><?php echo _l($member->sex); ?></td>
 						</tr>
@@ -180,8 +196,44 @@
 							<td><?php echo _l($member->marital_status); ?></td>
 						</tr>
 
+						<tr class="project-overview">
+							<td class="bold">Date of Joining</td>
+							<td><?php 
+
+							$get_custom_staff_values1 = get_custom_field_value(get_staff_user_id(),'staff_date_of_joining','staff',true);
+
+							echo $get_custom_staff_values1; ?></td>
+						</tr>		
+						<tr class="project-overview">
+							<td class="bold">In Case of Emergency Contact Name</td>
+							<td><?php 
+
+							$get_custom_staff_values5 = get_custom_field_value(get_staff_user_id(),'staff_in_case_of_emergency_contact_name','staff',true);
+
+							echo $get_custom_staff_values5; ?></td>
+						</tr>
+						<tr class="project-overview">
+							<td class="bold">In Case of Emergency Contact Number</td>
+							<td><?php 
+
+							$get_custom_staff_values6 = get_custom_field_value(get_staff_user_id(),'staff_in_case_of_emergency_contact_number','staff',true);
+
+							echo $get_custom_staff_values6; ?></td>
+						</tr>
+						<tr class="project-overview">
+							<td class="bold">Referred By</td>
+							<td><?php 
+
+							$get_custom_staff_values4 = get_custom_field_value(get_staff_user_id(),'staff_referred_by','staff',true);
+
+							echo $get_custom_staff_values4; ?></td>
+						</tr>
+
+
 					</tbody>
 				</table>
+
+
 			</div>
 
 
@@ -216,7 +268,7 @@
 						</tr>
 
 
-						<tr class="project-overview">
+						<!-- <tr class="project-overview">
 							<td class="bold"><?php echo _l('hr_bank_account_number'); ?></td>
 							<td><?php echo html_entity_decode($member->account_number); ?></td>
 						</tr>
@@ -231,7 +283,7 @@
 						<tr class="project-overview">
 							<td class="bold"><?php echo _l('hr_Personal_tax_code'); ?></td>
 							<td><?php echo html_entity_decode($member->Personal_tax_code); ?></td>
-						</tr>
+						</tr> -->
 					</tbody>
 				</table>
 			</div>
@@ -240,8 +292,6 @@
 				<h4><?php //echo _l('hr_orther_infor'); ?></h4>
 				<h5 class="text-justify"><?php //echo html_entity_decode($member->orther_infor) ; ?></h5>
 			</div> -->
-
-
 		</div>
 	</div>
 </div>

@@ -2763,8 +2763,8 @@ public function delete_staff()
 		$data['tab'][] = 'profile';
 		//$data['tab'][] = 'contract';
 		//$data['tab'][] = 'dependent_person';
-	//	$data['tab'][] = 'training';
-	//	$data['tab'][] = 'staff_project';
+	    //$data['tab'][] = 'training';
+	    //$data['tab'][] = 'staff_project';
 		$data['tab'][] = 'attach';
 		$data['tab'] = hooks()->apply_filters('hr_profile_tab_name', $data['tab']);
 

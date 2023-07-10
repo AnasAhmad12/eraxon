@@ -65,6 +65,16 @@
 			readURL2(this);
 		});
 
+		<?php if(!is_admin() && !has_permission('hrm_hr_records','', 'edit') && !has_permission('hrm_hr_records','', 'create'))
+			{ ?>
+				$('input').attr('disabled','disabled');
+				$('.selectpicker').prop('disabled', true);
+ 				$('.selectpicker').selectpicker('refresh');
+ 				$('[name=password]').prop("disabled", false);
+ 				$('[type=file]').prop("disabled", false);
+ 				
+		<?php	}  ?>
+
 	});
 
 	function init_roles_permissions_v2(roleid, user_changed) {

@@ -3,6 +3,7 @@
 var weekly_payments_statistics;
 var monthly_payments_statistics;
 var user_dashboard_visibility = <?php echo $user_dashboard_visibility; ?>;
+var chart=null;
 $(function() {
 
     report_by_staffs('report_by_staffs', '', '');
@@ -333,7 +334,7 @@ function report_by_staffs(id, value, title_c){
 
        //get data for hightchart
        
-       Highcharts.setOptions({
+      Highcharts.setOptions({
         chart: {
             style: {
                 fontFamily: 'inherit !important',
@@ -342,7 +343,7 @@ function report_by_staffs(id, value, title_c){
         },
         colors: [ '#119EFA','#15f34f','#ef370dc7','#791db2d1', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263','#6AF9C4','#50B432','#0d91efc7','#ED561B']
        });
-       Highcharts.chart(id, {
+      chart = new  Highcharts.chart(id, {
         chart: {
             type: 'column'
         },

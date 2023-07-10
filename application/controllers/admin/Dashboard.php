@@ -85,7 +85,7 @@ class Dashboard extends AdminController
             $data['tickets_report'] = (new \app\services\TicketsReportByStaff())->filterBy('this_month');
         }
 
-        $this->app_scripts->add('jquery-js','https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
+        
         $this->app_scripts->add('highcharts-js','modules/hr_profile/assets/plugins/highcharts/highcharts.js');
         $this->app_scripts->add('variable-pie-js','modules/hr_profile/assets/plugins/highcharts/variable-pie.js');
         $this->app_scripts->add('exporting-js','modules/hr_profile/assets/plugins/highcharts/exporting.js');

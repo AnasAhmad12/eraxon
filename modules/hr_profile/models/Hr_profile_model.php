@@ -268,6 +268,82 @@ class Hr_profile_model extends App_Model
 		return $chart;
 	}
 
+
+	public function report_by_day_leads_staffs()
+	{
+		//$months_report = $this->input->post('months_report');
+		$custom_date_select = '';
+
+		$maxDays=date('t');
+		$current_year = date('Y');
+		$current_month = date('m');
+		$current_month_short = date('M');
+		for($_day = 1 ; $_day <= $maxDays; $_day++)
+		{
+
+			$chart['categories'][] = $_day.' / '.$current_month_short;
+
+			$dd = $current_year.'-'.$current_month.'-'.$_day;
+
+			$chart['pending_leads'][] = $this->leads_by_day($dd, 'Pending');
+			$chart['approved_leads'][] = $this->leads_by_day($dd, 'Approved');
+			$chart['rejected_leads'][] = $this->leads_by_day($dd, 'Rejected');
+
+		}
+
+		return $chart;
+	}
+
+		public function leads_by_day($day,$status)
+	{
+		$this->db->select('count(id) as total_leads');
+		// $this->db->select('count('.db_prefix().'leads.id) as total_leads,'. db_prefix() . 'leads_status.name as status_name');
+		// $this->db->join(db_prefix() . 'leads_status,'.db_prefix() . 'leads_status.id=' . db_prefix() . 'leads.status', 'left');
+		// if($status == 'Pending')
+		// { 
+		// 	$this->db->where(db_prefix().'leads_status.status_name','Pending'); 
+
+	 //    }elseif($status == 'Approved')
+	 //    {
+	 //    	$this->db->where(db_prefix().'leads_status.status_name','Approved'); 
+
+	 //    }elseif($status == 'Rejected'){
+
+		// 	$this->db->where(db_prefix().'leads_status.status_name','Rejected'); 
+	 //    }
+
+		/*if($status == 'Pending')
+		{ 
+			$this->db->where('status',2); 
+
+	    }elseif($status == 'Approved')
+	    {
+	    	$this->db->where('status',3); 
+
+	    }elseif($status == 'Rejected'){
+
+			$this->db->where('status',4); 
+	    }*/
+		
+
+		if(is_staff_member() && !is_admin())
+		{
+			//$this->db->where(db_prefix().'leads.assigned',get_staff_user_id());
+			$this->db->where('assigned',get_staff_user_id());
+		}
+		//$sql_where = "date_format(".db_prefix()."leads.dateadded, '%Y-%m') = '".$month."'";
+		$sql_where = "date_format(dateadded, '%Y-%m-%d') = '".$day."'";
+		$this->db->where($sql_where);
+		//$result = $this->db->get(db_prefix().'leads')->row();
+		$result = $this->db->get('leads')->row();
+
+		if($result){
+			return (int)$result->total_leads;
+		}
+		return 0;
+	}
+
+
 	/**
 	 * new staff by month
 	 * @param  [type] $from 

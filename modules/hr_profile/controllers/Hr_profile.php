@@ -6145,6 +6145,11 @@ public function update_staff_profile(){
         echo json_encode($this->hr_profile_model->report_by_leads_staffs());
     }
 
+    public function report_by_day_leads_staffs()
+    {
+        echo json_encode($this->hr_profile_model->report_by_day_leads_staffs());
+    }
+
 
     /**
      * import job position excel

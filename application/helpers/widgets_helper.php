@@ -11,7 +11,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 function get_dashboard_widgets()
 {
     $widgets = [
-         [
+        [
             'path'      => 'admin/dashboard/widgets/user_profile',
             'container' => 'top-12',
         ],
@@ -43,6 +43,10 @@ function get_dashboard_widgets()
         //     'path'      => 'admin/dashboard/widgets/payments_chart',
         //     'container' => 'left-8',
         // ],
+        [
+            'path'      => 'admin/dashboard/widgets/day_to_day_leads',
+            'container' => 'right-4',
+        ],
         [
             'path'      => 'admin/dashboard/widgets/leads_chart',
             'container' => 'right-4',

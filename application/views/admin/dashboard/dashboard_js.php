@@ -448,17 +448,9 @@ function report_by_day_leads_staffs(id, value, title_c){
         },
         series: [{
             name: '<?php echo 'Leads'; ?>',
-            data: response.pending_leads 
+            data: response.daily_leads 
 
-        }/*, {
-            name: '<?php echo 'Approved'; ?>',
-            data: response.approved_leads
-
-        }, {
-            name: '<?php echo 'Rejected'; ?>',
-            data: response.rejected_leads
-
-        }*/]
+        }]
        });
        
 

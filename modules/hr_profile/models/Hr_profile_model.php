@@ -285,16 +285,16 @@ class Hr_profile_model extends App_Model
 
 			$dd = $current_year.'-'.$current_month.'-'.$_day;
 
-			$chart['pending_leads'][] = $this->leads_by_day($dd, 'Pending');
-			$chart['approved_leads'][] = $this->leads_by_day($dd, 'Approved');
-			$chart['rejected_leads'][] = $this->leads_by_day($dd, 'Rejected');
+			$chart['daily_leads'][] = $this->leads_by_day($dd);
+			//$chart['approved_leads'][] = $this->leads_by_day($dd, 'Approved');
+			//$chart['rejected_leads'][] = $this->leads_by_day($dd, 'Rejected');
 
 		}
 
 		return $chart;
 	}
 
-		public function leads_by_day($day,$status)
+		public function leads_by_day($day)
 	{
 		$this->db->select('count(id) as total_leads');
 		// $this->db->select('count('.db_prefix().'leads.id) as total_leads,'. db_prefix() . 'leads_status.name as status_name');
@@ -335,7 +335,7 @@ class Hr_profile_model extends App_Model
 		$sql_where = "date_format(dateadded, '%Y-%m-%d') = '".$day."'";
 		$this->db->where($sql_where);
 		//$result = $this->db->get(db_prefix().'leads')->row();
-		$result = $this->db->get('leads')->row();
+		$result = $this->db->get(db_prefix().'leads')->row();
 
 		if($result){
 			return (int)$result->total_leads;

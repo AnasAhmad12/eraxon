@@ -343,7 +343,7 @@ function report_by_staffs(id, value, title_c){
         },
         colors: [ '#119EFA','#15f34f','#ef370dc7','#791db2d1', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263','#6AF9C4','#50B432','#0d91efc7','#ED561B']
        });
-      chart = new  Highcharts.chart(id, {
+      Highcharts.chart(id, {
         chart: {
             type: 'column'
         },
@@ -397,7 +397,7 @@ function report_by_staffs(id, value, title_c){
 }
 
 
-function report_by_day_leads_staffs(id, value, title_c){
+/*function report_by_day_leads_staffs(id, value, title_c){
     'use strict';
     
     requestGetJSON('hr_profile/report_by_day_leads_staffs').done(function (response) {
@@ -456,7 +456,7 @@ function report_by_day_leads_staffs(id, value, title_c){
        
 
    });
-}
+}*/
 
 
 </script>

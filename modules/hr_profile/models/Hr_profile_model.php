@@ -294,7 +294,7 @@ class Hr_profile_model extends App_Model
 		return $chart;
 	}
 
-		public function leads_by_day($day)
+	public function leads_by_day($day)
 	{
 		$this->db->select('count(id) as total_leads');
 		// $this->db->select('count('.db_prefix().'leads.id) as total_leads,'. db_prefix() . 'leads_status.name as status_name');

@@ -391,7 +391,7 @@ class Hr_profile_model extends App_Model
 		$sql_where = "date_format(dateadded, '%Y-%m') = '".$month."'";
 		$this->db->where($sql_where);
 		//$result = $this->db->get(db_prefix().'leads')->row();
-		$result = $this->db->get('leads')->row();
+		$result = $this->db->get(db_prefix().'leads')->row();
 
 		if($result){
 			return (int)$result->total_leads;

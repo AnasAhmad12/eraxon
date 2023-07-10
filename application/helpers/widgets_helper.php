@@ -23,6 +23,10 @@ function get_dashboard_widgets()
             'path'      => 'admin/dashboard/widgets/leads_staff',
             'container' => 'left-8',
         ],
+        [
+            'path'      => 'admin/dashboard/widgets/day_to_day_leads',
+            'container' => 'left-8',
+        ],
         // [
         //     'path'      => 'admin/dashboard/widgets/finance_overview',
         //     'container' => 'left-8',
@@ -43,10 +47,6 @@ function get_dashboard_widgets()
         //     'path'      => 'admin/dashboard/widgets/payments_chart',
         //     'container' => 'left-8',
         // ],
-        [
-            'path'      => 'admin/dashboard/widgets/day_to_day_leads',
-            'container' => 'right-4',
-        ],
         [
             'path'      => 'admin/dashboard/widgets/leads_chart',
             'container' => 'right-4',

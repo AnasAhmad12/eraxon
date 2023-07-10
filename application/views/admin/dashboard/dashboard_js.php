@@ -6,7 +6,7 @@ var user_dashboard_visibility = <?php echo $user_dashboard_visibility; ?>;
 $(function() {
 
     report_by_staffs('report_by_staffs', '', '');
-    report_by_day_leads_staffs('report_by_day_leads_staffs', '', '');
+    //report_by_day_leads_staffs('report_by_day_leads_staffs', '', '');
 
     $("[data-container]").sortable({
         connectWith: "[data-container]",

@@ -86,6 +86,16 @@ function eraxon_myform_permissions($permissions)
 {
     $config = [];
     $config2 = [];
+    $config3 = [];
+
+
+     $config3['capabilities'] = [
+                'change_status'   => 'Change Status',
+                'add_notes' => 'Add Notes',
+                'edit_leads'   => 'Edit Leads',
+                'delete' => _l('permission_delete'),
+    ];
+    
 
     $config['capabilities'] = [
                 'view_own'   => _l('permission_view_own'),
@@ -101,6 +111,11 @@ function eraxon_myform_permissions($permissions)
                 'edit'   => _l('permission_edit'),
                 'delete' => _l('permission_delete'),
     ];
+
+    register_staff_capabilities('leads_caps',$config3, 'Leads Sub Capabilities' );
     register_staff_capabilities('other_form',$config, 'Other Forms' );
-    register_staff_capabilities('advance_salary',$config, 'Advance Salary' );
+    register_staff_capabilities('advance_salary',$config2, 'Advance Salary' );
+
+   
+
 }

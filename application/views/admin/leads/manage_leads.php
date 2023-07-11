@@ -357,6 +357,7 @@
         </div>
     </div>
 </div>
+
 <script id="hidden-columns-table-leads" type="text/json">
 <?php echo get_staff_meta(get_staff_user_id(), 'hidden-columns-table-leads'); ?>
 </script>
@@ -365,10 +366,11 @@
 <style>
     
     <?php 
-        if(is_staff_member() && !is_admin())
-        {
+        if(!has_permission('leads_caps','','change_status') || !is_admin())
+       {
             echo ".lead-status-2 .dropdown{ display:none;}
-
+                    .lead-status-3 .dropdown{ display:none;}
+                    .lead-status-4 .dropdown{ display:none;}
                   .row-options a:nth-child(2){ display:none;}
                   .row-options a:nth-child(3){ display:none;}   
             ";

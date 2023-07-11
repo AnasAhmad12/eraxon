@@ -17,8 +17,8 @@
                     	<table class="table dt-table" data-order-col="1" data-order-type="asc">
                             <thead>
                             	<?php if(has_permission('other_form','','view')){ ?>
-                                		<th>Staff Name</th>
-                                	<?php } ?>
+                                <th>Staff Name</th>
+                                <?php } ?>
                                 <th>Type</th>
                                 <th>Description</th>
                                 <th>Requested Date/Time</th>

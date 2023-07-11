@@ -105,20 +105,25 @@ if (isset($lead)) {
                            ?>
                                 </a>
                             </li>-->
+                           
                             <li role="presentation">
                                 <a href="#lead_notes" aria-controls="lead_notes" role="tab" data-toggle="tab">
                                     <?php echo _l('lead_add_edit_notes');
-                        if ($total_notes > 0) {
-                            echo ' <span class="badge">' . $total_notes . '</span>';
-                        }
-                        ?>
+                                if ($total_notes > 0) {
+                                    echo ' <span class="badge">' . $total_notes . '</span>';
+                                }
+                                ?>
                                 </a>
                             </li>
+                        
+                            <?php if(is_admin()){ ?>
                             <li role="presentation">
                                 <a href="#lead_activity" aria-controls="lead_activity" role="tab" data-toggle="tab">
                                     <?php echo _l('lead_add_edit_activity'); ?>
                                 </a>
                             </li>
+
+                        <?php } ?>
                             <?php if (is_gdpr() && (get_option('gdpr_enable_lead_public_form') == '1' || get_option('gdpr_enable_consent_for_leads') == '1')) { ?>
                             <li role="presentation">
                                 <a href="#gdpr" aria-controls="gdpr" role="tab" data-toggle="tab">
@@ -315,14 +320,17 @@ if (isset($lead)) {
                 </div>
                 <div role="tabpanel" class="tab-pane" id="lead_notes">
                     <?php echo form_open(admin_url('leads/add_note/' . $lead->id), ['id' => 'lead-notes']); ?>
+                     <?php if(has_permission('leads_caps','','add_notes') || is_admin()){ ?>
                     <div class="form-group">
                         <textarea id="lead_note_description" name="lead_note_description" class="form-control"
                             rows="4"></textarea>
                     </div>
+                <?php } ?>
                     <div class="lead-select-date-contacted hide">
                         <?php echo render_datetime_input('custom_contact_date', 'lead_add_edit_datecontacted', '', ['data-date-end-date' => date('Y-m-d')]); ?>
                     </div>
-                    <div class="radio radio-primary">
+                    <input type="hidden" name="contacted_indicator" value="no">
+                    <!-- <div class="radio radio-primary">
                         <input type="radio" name="contacted_indicator" id="contacted_indicator_yes" value="yes">
                         <label
                             for="contacted_indicator_yes"><?php echo _l('lead_add_edit_contacted_this_lead'); ?></label>
@@ -330,9 +338,11 @@ if (isset($lead)) {
                     <div class="radio radio-primary">
                         <input type="radio" name="contacted_indicator" id="contacted_indicator_no" value="no" checked>
                         <label for="contacted_indicator_no"><?php echo _l('lead_not_contacted'); ?></label>
-                    </div>
+                    </div> -->
+                      <?php if(has_permission('leads_caps','','add_notes') || is_admin()){ ?>
                     <button type="submit"
                         class="btn btn-primary pull-right"><?php echo _l('lead_add_edit_add_note'); ?></button>
+                    <?php } ?>
                     <?php echo form_close(); ?>
                     <div class="clearfix"></div>
                     <hr />
@@ -375,12 +385,15 @@ if (isset($lead)) {
                                 </div>
                                 <div data-note-edit-textarea="<?php echo $note['id']; ?>" class="hide mtop15">
                                     <?php echo render_textarea('note', '', $note['description']); ?>
+
+                                  
                                     <div class="text-right">
                                         <button type="button" class="btn btn-default"
                                             onclick="toggle_edit_note(<?php echo $note['id']; ?>);return false;"><?php echo _l('cancel'); ?></button>
                                         <button type="button" class="btn btn-primary"
                                             onclick="edit_note(<?php echo $note['id']; ?>);"><?php echo _l('update_note'); ?></button>
                                     </div>
+                               
                                 </div>
                         </div>
                         <?php if ($i >= 0 && $i != $len - 1) {

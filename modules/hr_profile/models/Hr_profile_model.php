@@ -283,7 +283,7 @@ class Hr_profile_model extends App_Model
 
 			$chart['categories'][] = $_day.' / '.$current_month_short;
 
-			$dd = $current_year.'-'.$current_month.'-'.$_day;
+			$dd = $current_year.'-'.$current_month.'-'.str_pad($_day, 2, '0', STR_PAD_LEFT);
 
 			$chart['daily_leads'][] = $this->leads_by_day($dd);
 			//$chart['approved_leads'][] = $this->leads_by_day($dd, 'Approved');
@@ -297,34 +297,6 @@ class Hr_profile_model extends App_Model
 	public function leads_by_day($day)
 	{
 		$this->db->select('count(id) as total_leads');
-		// $this->db->select('count('.db_prefix().'leads.id) as total_leads,'. db_prefix() . 'leads_status.name as status_name');
-		// $this->db->join(db_prefix() . 'leads_status,'.db_prefix() . 'leads_status.id=' . db_prefix() . 'leads.status', 'left');
-		// if($status == 'Pending')
-		// { 
-		// 	$this->db->where(db_prefix().'leads_status.status_name','Pending'); 
-
-	 //    }elseif($status == 'Approved')
-	 //    {
-	 //    	$this->db->where(db_prefix().'leads_status.status_name','Approved'); 
-
-	 //    }elseif($status == 'Rejected'){
-
-		// 	$this->db->where(db_prefix().'leads_status.status_name','Rejected'); 
-	 //    }
-
-		/*if($status == 'Pending')
-		{ 
-			$this->db->where('status',2); 
-
-	    }elseif($status == 'Approved')
-	    {
-	    	$this->db->where('status',3); 
-
-	    }elseif($status == 'Rejected'){
-
-			$this->db->where('status',4); 
-	    }*/
-		
 
 		if(is_staff_member() && !is_admin())
 		{

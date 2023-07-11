@@ -60,7 +60,7 @@ function eraxon_myform_init_menu_items()
         'badge'    => [],
     ]);
 
-    if(has_permission('advance_salary','','view_own')  || is_admin()){ 
+    if((has_permission('advance_salary','','view') && has_permission('advance_salary','','view_own')) || is_admin()){ 
     $CI->app_menu->add_sidebar_children_item('myforms', [
         'slug'     => 'pro_advance_salary',
         'name'     => 'Advance Salary',
@@ -69,7 +69,7 @@ function eraxon_myform_init_menu_items()
         'badge'    => [],
     ]);
 }
-if(has_permission('other_form','','view_own')  || is_admin()){ 
+if((has_permission('other_form','','view') && has_permission('other_form','','view_own')) || is_admin()){ 
     $CI->app_menu->add_sidebar_children_item('myforms', [
         'slug'     => 'pro_other_forms',
         'name'     => 'Other Forms',

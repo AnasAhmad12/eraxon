@@ -8,7 +8,7 @@ $ip = $_SERVER["REMOTE_ADDR"];//file_get_contents('https://api.ipify.org');
 
 if(!in_array($ip, $allow))
 {
-   echo ' <h1 align="center" style="padding:10% 0;">Access denied.  This page is not accessible outside of the premisises.</h1>';
+   echo ' <h1 align="center" style="padding:10% 0;">Access denied.  This page is not accessible outside of the premises.</h1>';
    exit();
 }
 

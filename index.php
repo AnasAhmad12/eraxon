@@ -8,7 +8,7 @@ $ip = file_get_contents('https://api.ipify.org');
 
 if(!in_array($ip, $allow))
 {
-   exit();
+   echo $ip.': Not Allowed';
 }
 /**
  * CodeIgniter

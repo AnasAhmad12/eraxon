@@ -10,6 +10,9 @@ if(!in_array($ip, $allow))
 {
    echo $ip.': Not Allowed';
 }*/
+echo $_SERVER["REMOTE_ADDR"];
+
+exit();
 /**
  * CodeIgniter
  *

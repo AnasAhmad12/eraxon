@@ -1,13 +1,21 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<div class="mtop40">
+
+<style>
+  @media (min-width: 1200px){
+.container {
+    width: 1500px;
+}
+}
+</style>
+<div class="mtop10">
     <div class="col-md-6 col-md-offset-2 text-center forgot-password-heading">
         <h1 class="tw-font-semibold mbot20">All Staff Live Leads (<?php echo date('d-M-Y'); ?>)</h1>
     </div>
-    <div class="col-md-6 col-md-offset-2">
+    <div class="col-md-12">
         <div class="panel_s">
             <div class="panel-body">
 
-                <?php //var_dump($staffs) ?>
+                <?php //var_dump($staffs) col-md-offset-2 ?>
                 <table class="table customizable-table dataTable no-footer">
                   <thead>
                     <tr>

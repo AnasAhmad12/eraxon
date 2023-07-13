@@ -318,7 +318,7 @@ class Authentication extends ClientsController
             array_push($lead_data, $data);
          }
 
-          $lead_data = $this->array_msort($lead_data, array('lead_count'=>SORT_ASC));
+          $lead_data = $this->array_msort($lead_data, array('lead_count'=>SORT_DESC));
 
          
         foreach ($lead_data as $ss) 

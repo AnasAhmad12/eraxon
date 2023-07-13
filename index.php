@@ -3,14 +3,14 @@ if( ! ini_get('date.timezone') )
 {
    date_default_timezone_set('GMT');
 }
-$allow = array("58.65.163.73", "206.84.130.13");
+/*$allow = array("58.65.163.73", "206.84.130.13");
 $ip = $_SERVER["REMOTE_ADDR"];//file_get_contents('https://api.ipify.org');
 
 if(!in_array($ip, $allow))
 {
    echo ' <h1 align="center" style="padding:10% 0;">Access denied.  This page is not accessible outside of the premises.</h1>';
    exit();
-}
+}*/
 
 /**
  * CodeIgniter

@@ -22,7 +22,7 @@ class Eraxon_myform extends AdminController
     //Show All Leads
     public function others()
     {
-       $data['other_requests'] = $this->eraxon_myform_model->get_other_requests();
+        $data['other_requests'] = $this->eraxon_myform_model->get_other_requests();
         $data['title']   = 'Other Forms';
         $this->load->view('eraxon_myform/others_manage',$data);
     }

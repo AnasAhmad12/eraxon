@@ -442,3 +442,11 @@ $lang['date'] 															= 'Date';
 //New
 $lang['hr_basic_salary'] 												= 'Basic Salary';
 $lang['hr_basic_target'] 												= 'Basic Target';
+
+$lang['hr_matric'] 												        = 'Matric level';
+$lang['hr_first_year'] 												    = '1st Year';
+$lang['hr_second_year'] 												= '2nd Year';
+$lang['hr_under_matric'] 												= 'Under Matric';
+$lang['hr_fsc'] 												        = 'FSC';
+$lang['hr_ca'] 												            = 'CA Student';
+$lang['hr_bcom'] 												        = 'Bcom';

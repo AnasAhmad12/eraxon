@@ -691,4 +691,34 @@ class Authentication_model extends App_Model
 
         return $this->encryption->decrypt($string);
     }
+
+    public function live_leads_by_day($staff_id)
+    {
+
+        $current_year = date('Y');
+        $current_month = date('m');
+        $current_day = date('d');
+        $day = $current_year.'-'.$current_month.'-'.str_pad($current_day, 2, '0', STR_PAD_LEFT);
+
+
+        $this->db->select('count(id) as total_leads');
+
+       /* if(is_staff_member() && !is_admin())
+        {
+            //$this->db->where(db_prefix().'leads.assigned',get_staff_user_id());
+            $this->db->where('assigned',get_staff_user_id());
+        }*/
+
+        $this->db->where('assigned', $staff_id);
+        //$sql_where = "date_format(".db_prefix()."leads.dateadded, '%Y-%m') = '".$month."'";
+        $sql_where = "date_format(dateadded, '%Y-%m-%d') = '".$day."'";
+        $this->db->where($sql_where);
+        $result = $this->db->get(db_prefix().'leads')->row();
+        //$result = $this->db->get(db_prefix().'leads')->result_array();
+
+        if($result){
+            return (int)$result->total_leads;
+        }
+        return 0;
+    }
 }

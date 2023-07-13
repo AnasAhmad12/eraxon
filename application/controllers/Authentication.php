@@ -268,6 +268,61 @@ class Authentication extends ClientsController
         $this->layout();
     }
 
+    public function allstaffleads()
+    {
+       
+        $data['title'] = 'All Staf Lead Board' . ' - ' . get_option('companyname');
+        $this->data($data);
+        $this->view('leadboard');
+        $this->layout();
+    }
+
+        function sortByOrder($a, $b) {
+        if ($a['lead_count'] > $b['lead_count']) {
+            return 1;
+        } elseif ($a['lead_count'] < $b['lead_count']) {
+            return -1;
+        }
+        return 0;
+        }
+
+
+
+    public function ajaxLeadBoard()
+    {
+
+         $this->load->model('authentication_model');
+         $staffs = $this->staff_model->get('',array('active' => '1','role' => '6'));
+         $html= '';
+         $lead_data = array();
+
+         foreach ($staffs as $ss1) 
+         {
+            $data['sid'] = $ss1['staffid'];
+            $data['full_name'] = $ss1['full_name'];   
+            $data['lead_count'] = $this->authentication_model->live_leads_by_day($ss1['staffid']);
+             array_push($lead_data, $data);
+         }
+
+           usort($lead_data, 'sortByOrder');
+
+         
+        foreach ($lead_data as $ss) 
+        {
+           
+                $html .= '<tr>';
+                $html .=  '<td>'.staff_profile_image($ss['sid'],array('img','img-responsive','picture-src'),'thumb', ['id' => 'wizardPicturePreview','width'=>'50']).'</td>';
+                $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['full_name'].'</td>';
+                $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['lead_count'].'</td>';
+                $html .=  '</tr>';
+           
+                          
+        }
+
+        //var_dump($lead_data) ; 
+        echo $html;
+    }
+
     public function reset_password($staff, $userid, $new_pass_key)
     {
         $this->load->model('Authentication_model');

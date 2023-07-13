@@ -60,8 +60,8 @@ class Eraxon_myform_model extends App_Model {
         return $this->db->get(db_prefix() . 'other-requests')->result_array();
     }
 
-     public function add_other_request($data)
-     {
+    public function add_other_request($data)
+    {
         $this->db->insert(db_prefix() . 'other-requests', $data);
         $insert_id = $this->db->insert_id();
         if ($insert_id) {
@@ -106,7 +106,7 @@ class Eraxon_myform_model extends App_Model {
     }
 
     public function add_advance_salary($data)
-     {
+    {
         $this->db->insert(db_prefix() . 'advance-salary', $data);
         $insert_id = $this->db->insert_id();
         if ($insert_id) {

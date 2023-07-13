@@ -277,6 +277,30 @@ class Authentication extends ClientsController
         $this->layout();
     }
 
+    public function array_msort($array, $cols)
+    {
+        $colarr = array();
+        foreach ($cols as $col => $order) {
+            $colarr[$col] = array();
+            foreach ($array as $k => $row) { $colarr[$col]['_'.$k] = strtolower($row[$col]); }
+        }
+        $eval = 'array_multisort(';
+        foreach ($cols as $col => $order) {
+            $eval .= '$colarr[\''.$col.'\'],'.$order.',';
+        }
+        $eval = substr($eval,0,-1).');';
+        eval($eval);
+        $ret = array();
+        foreach ($colarr as $col => $arr) {
+            foreach ($arr as $k => $v) {
+                $k = substr($k,1);
+                if (!isset($ret[$k])) $ret[$k] = $array[$k];
+                $ret[$k][$col] = $array[$k][$col];
+            }
+        }
+        return $ret;
+
+    }
 
     public function ajaxLeadBoard()
     {
@@ -291,10 +315,10 @@ class Authentication extends ClientsController
             $data['sid'] = $ss1['staffid'];
             $data['full_name'] = $ss1['full_name'];   
             $data['lead_count'] = $this->authentication_model->live_leads_by_day($ss1['staffid']);
-             array_push($lead_data, $data);
+            array_push($lead_data, $data);
          }
 
-          $lead_data = array_msort($lead_data, array('lead_count'=>SORT_ASC));
+          $lead_data = $this->array_msort($lead_data, array('lead_count'=>SORT_ASC));
 
          
         foreach ($lead_data as $ss) 

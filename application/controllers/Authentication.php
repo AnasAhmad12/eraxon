@@ -277,16 +277,6 @@ class Authentication extends ClientsController
         $this->layout();
     }
 
-        function sortByOrder($a, $b) {
-        if ($a['lead_count'] > $b['lead_count']) {
-            return 1;
-        } elseif ($a['lead_count'] < $b['lead_count']) {
-            return -1;
-        }
-        return 0;
-        }
-
-
 
     public function ajaxLeadBoard()
     {
@@ -304,7 +294,7 @@ class Authentication extends ClientsController
              array_push($lead_data, $data);
          }
 
-           usort($lead_data, 'sortByOrder');
+          $lead_data = array_msort($lead_data, array('lead_count'=>SORT_ASC));
 
          
         foreach ($lead_data as $ss) 

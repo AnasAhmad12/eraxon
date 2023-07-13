@@ -8,7 +8,7 @@
 }
 </style>
 <div class="mtop10">
-    <div class="col-md-6 col-md-offset-2 text-center forgot-password-heading">
+    <div class="col-md-12 text-center forgot-password-heading">
         <h1 class="tw-font-semibold mbot20">All Staff Live Leads (<?php echo date('d-M-Y'); ?>)</h1>
     </div>
     <div class="col-md-12">

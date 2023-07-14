@@ -25,7 +25,8 @@
  			$data .= '</div>';
  			$data .= '</div>';
  			$data .= '<div class="col-md-2 text-right">';
- 			if($attachment['staffid'] == get_staff_user_id() || is_admin() || has_permission('hrm_hr_records', '', 'edit')){
+ 			//if($attachment['staffid'] == get_staff_user_id() || is_admin() || has_permission('hrm_hr_records', '', 'edit')){
+ 			if(is_admin()){
  				$data .= '<a href="#" class="text-danger" onclick="delete_hr_att_file_attachment(this,'.$attachment['id'].'); return false;"><i class="fa fa fa-times"></i></a>';
  			}
  			$data .= '</div>';

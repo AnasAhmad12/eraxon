@@ -5261,7 +5261,7 @@ public function update_staff_profile(){
 			}
 
 			$data['password'] = $this->input->post('password', false);
-			$data['callcloser'] = $this->input->post('callcloser', false);
+			
 			
 			if ($id == '') {
 				if (!has_permission('hrm_hr_records', '', 'create')) {
@@ -5286,7 +5286,7 @@ public function update_staff_profile(){
 					unset($data['manage_staff']);
 				}
 				hr_profile_handle_staff_profile_image_upload($id);
-				hr_profile_handle_staff_profile_cover_image_upload($id);
+				//hr_profile_handle_staff_profile_cover_image_upload($id);
 				$response = $this->hr_profile_model->update_staff($data, $id);
 				if (is_array($response)) {
 					if (isset($response['cant_remove_main_admin'])) {

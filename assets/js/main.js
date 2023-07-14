@@ -4838,6 +4838,9 @@ function validate_lead_form() {
         },
       },
     },
+    phonenumber:{
+      required:true,
+    },
   };
 
   var messages = {};

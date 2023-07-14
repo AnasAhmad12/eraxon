@@ -338,7 +338,7 @@ class Authentication extends ClientsController
             }else{
                 $html .= '<tr>'; 
             }
-                $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$counter.'</td>';
+                $html .=  '<td style="vertical-align: middle;font-size: 22px;" >'.$counter.'</td>';
                 $html .=  '<td>'.staff_profile_image($ss['sid'],array('img','img-responsive','picture-src'),'thumb', ['id' => 'wizardPicturePreview','width'=>'50']).'</td>';
 
            if($counter == 1)

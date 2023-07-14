@@ -16,3 +16,6 @@ application/logs/*
 !application/logs/index.html
 !application/logs/.htaccess
 /vendor/
+uploads/staff_profile_images/6/small_Peter - Usama-v.jpg
+uploads/staff_profile_images/6/thumb_Peter - Usama-v.jpg
+uploads/staff_profile_images/6/index.html

@@ -320,17 +320,31 @@ class Authentication extends ClientsController
 
           $lead_data = $this->array_msort($lead_data, array('lead_count'=>SORT_DESC));
 
-         
+         $counter = 1;
         foreach ($lead_data as $ss) 
         {
-           
-                $html .= '<tr>';
+           if($counter == 1)
+           {
+            $html .= '<tr style="background-color:#FFD700;">';
+            
+           }else if($counter == 2)
+           {
+            $html .= '<tr style="background-color:#E5E4E2;">';
+            
+           }else if($counter == 3)
+           {
+            $html .= '<tr style="background-color:#CD7F32;">';
+            
+            }else{
+                $html .= '<tr>'; 
+            }
+                
                 $html .=  '<td>'.staff_profile_image($ss['sid'],array('img','img-responsive','picture-src'),'thumb', ['id' => 'wizardPicturePreview','width'=>'50']).'</td>';
                 $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['full_name'].'</td>';
                 $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['lead_count'].'</td>';
                 $html .=  '</tr>';
            
-                          
+           $counter++;               
         }
 
         //var_dump($lead_data) ; 

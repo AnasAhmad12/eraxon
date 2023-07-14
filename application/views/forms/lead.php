@@ -29,7 +29,7 @@
                 <?php echo render_input('email', 'lead_add_edit_email', $lead->email); ?>
                 <?php echo render_input('website', 'lead_website', $lead->website); ?>
                 <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $lead->phonenumber); ?>
-                <?php echo render_input('company', 'lead_company', $lead->company); ?>
+                <?php //echo render_input('company', 'lead_company', $lead->company); ?>
             </div>
             <div class="col-md-6">
                 <?php echo render_textarea('address', 'lead_address', $lead->address, ['rows' => 2]); ?>

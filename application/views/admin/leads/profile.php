@@ -338,7 +338,7 @@
                 <?php }
             $value = (isset($lead) ? $lead->phonenumber : ''); ?>
                 <?php echo render_input('phonenumber', 'lead_add_edit_phonenumber', $value); ?>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="lead_value"><?php echo _l('lead_value'); ?></label>
                     <div class="input-group" data-toggle="tooltip" title="<?php echo _l('lead_value_tooltip'); ?>">
                         <input type="number" class="form-control" name="lead_value" value="<?php if (isset($lead)) {
@@ -348,9 +348,9 @@
                         </div>
                     </div>
                     </label>
-                </div>
+                </div> -->
                 <?php $value = (isset($lead) ? $lead->company : ''); ?>
-                <?php echo render_input('company', 'lead_company', $value); ?>
+                <?php //echo render_input('company', 'lead_company', $value); ?>
             </div>
             <div class="col-md-6">
                 <?php $value = (isset($lead) ? $lead->address : ''); ?>
@@ -402,7 +402,7 @@
                         <?php } else { ?>
                         <?php echo render_datetime_input('lastcontact', 'leads_dt_last_contact', _dt($lead->lastcontact), ['data-date-end-date' => date('Y-m-d')]); ?>
                         <?php } ?>
-                        <div class="checkbox-inline checkbox checkbox-primary<?php if (isset($lead)) {
+                        <!-- <div class="checkbox-inline checkbox checkbox-primary<?php if (isset($lead)) {
                    echo ' hide';
                } ?><?php if (isset($lead) && (is_lead_creator($lead->id) || has_permission('leads', '', 'edit'))) {
                    echo ' lead-edit';
@@ -414,12 +414,12 @@
                }; ?> id="lead_public">
                             <label for="lead_public"><?php echo _l('lead_public'); ?></label>
                         </div>
-                        <?php if (!isset($lead)) { ?>
+                        <?php //if (!isset($lead)) { ?>
                         <div class="checkbox-inline checkbox checkbox-primary">
                             <input type="checkbox" name="contacted_today" id="contacted_today" checked>
                             <label for="contacted_today"><?php echo _l('lead_add_edit_contacted_today'); ?></label>
-                        </div>
-                        <?php } ?>
+                        </div> -->
+                        <?php //} ?>
                     </div>
                 </div>
             </div>

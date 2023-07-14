@@ -19,6 +19,7 @@
                 <table class="table customizable-table dataTable no-footer">
                   <thead>
                     <tr>
+                      <th>Sr.no.</th>
                       <th>Image</th>
                       <th>Full Name</th>
                       <th>Total Leads</th>

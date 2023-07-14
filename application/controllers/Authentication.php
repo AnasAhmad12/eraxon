@@ -329,18 +329,35 @@ class Authentication extends ClientsController
             
            }else if($counter == 2)
            {
-            $html .= '<tr style="background-color:#E5E4E2;">';
+            $html .= '<tr style="background-color:#FFD700;">';
             
            }else if($counter == 3)
            {
-            $html .= '<tr style="background-color:#CD7F32;">';
+            $html .= '<tr style="background-color:#FFD700;">';
             
             }else{
                 $html .= '<tr>'; 
             }
                 
                 $html .=  '<td>'.staff_profile_image($ss['sid'],array('img','img-responsive','picture-src'),'thumb', ['id' => 'wizardPicturePreview','width'=>'50']).'</td>';
+
+           if($counter == 1)
+           {
+            $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['full_name'].' <i class="fa fa-trophy" style="font-size:30px;"></i></td>';
+            
+           }else if($counter == 2)
+           {
+            $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['full_name'].' <i class="fa fa-trophy" style="font-size:25px;"></i></td>';
+            
+           }else if($counter == 3)
+           {
+            $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['full_name'].' <i class="fa fa-trophy" style="font-size:20px;"></i></td>';
+            
+            }else{
                 $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['full_name'].'</td>';
+            }    
+
+                
                 $html .=  '<td style="vertical-align: middle;font-size: 22px;">'.$ss['lead_count'].'</td>';
                 $html .=  '</tr>';
            

@@ -134,7 +134,7 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
     }
-
+*/
    $CI->app_menu->add_sidebar_menu_item('projects', [
         'name'     => _l('projects'),
         'href'     => admin_url('projects'),
@@ -149,7 +149,7 @@ function app_init_admin_sidebar_menu_items()
         'icon'     => 'fa-regular fa-circle-check',
         'position' => 35,
         'badge'    => [],
-    ]);*/
+    ]);
 
     if ((!is_staff_member() && get_option('access_tickets_to_none_staff_members') == 1) || is_staff_member()) {
         $enable_badge = get_option('enable_support_menu_badges');

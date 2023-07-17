@@ -235,6 +235,14 @@
                                    <option value="in-service" <?php if($literacy == 'in-service'){ echo 'selected'; } ?> ><?php echo _l('hr_in-service'); ?></option>
                                    <option value="high_school" <?php if($literacy == 'high_school'){ echo 'selected'; } ?> ><?php echo _l('hr_high_school'); ?></option>
                                    <option value="intermediate_level_pro" <?php if($literacy == 'intermediate_level_pro'){ echo 'selected'; } ?> ><?php echo _l('hr_intermediate_level_pro'); ?></option>
+
+                                   <option value="matric_level" <?php if($literacy == 'matric_level'){ echo 'selected'; } ?> ><?php echo _l('hr_matric'); ?></option>
+                                    <option value="1st_year" <?php if($literacy == '1st_year'){ echo 'selected'; } ?> ><?php echo _l('hr_first_year'); ?></option>
+                                    <option value="2nd_year" <?php if($literacy == '2nd_year'){ echo 'selected'; } ?> ><?php echo _l('hr_second_year'); ?></option>
+                                    <option value="under_matric_level" <?php if($literacy == 'under_matric_level'){ echo 'selected'; } ?> ><?php echo _l('hr_under_matric'); ?></option>
+                                    <option value="ca_student" <?php if($literacy == 'ca_student'){ echo 'selected'; } ?> ><?php echo _l('hr_ca'); ?></option>
+                                    <option value="fsc_level" <?php if($literacy == 'fsc_level'){ echo 'selected'; } ?> ><?php echo _l('hr_fsc'); ?></option>
+                                    <option value="bcom_level" <?php if($literacy == 'bcom_level'){ echo 'selected'; } ?> ><?php echo _l('hr_bcom'); ?></option>
                                 </select>
                                 </div>
                            </div>

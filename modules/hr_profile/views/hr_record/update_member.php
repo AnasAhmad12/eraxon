@@ -188,7 +188,7 @@
                               <!--teamanage -->
                               <?php if(has_permission('hrm_hr_records','', 'edit') || has_permission('hrm_hr_records','', 'create')){ ?>
                                 <?php $value = (isset($member) ? $member->team_manage : ''); ?>
-                                <?php echo render_select('team_manage',$list_staff,array('staffid','full_name'),'hr_team_manage',$value); ?>
+                                <?php echo render_select('team_manage',$list_staff,array('staffid','full_name','email'),'hr_team_manage',$value); ?>
                              <?php } ?>
                              <!--teamanage -->
                            </div>

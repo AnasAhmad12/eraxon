@@ -207,13 +207,58 @@ class timesheets extends AdminController {
 		$data['set_col_tk'][] = ['data' => _l('staff_id'), 'type' => 'text'];
 		$data['set_col_tk'][] = ['data' => _l('staff'), 'type' => 'text', 'readOnly' => true, 'width' => 200];
 
-		for ($d = 1; $d <= $days_in_month; $d++) {
-			$time = mktime(12, 0, 0, $month, $d, $month_year);
+		$start_day = 21;
+		$end_day = 20;
+		$previous_month = $month - 1;
+		$days_in_prev_month = cal_days_in_month(CAL_GREGORIAN, $previous_month, $month_year);
+		$prev_month_year = $month_year;
+
+
+		if ($next_month == 1) {
+		    $next_month = 1;
+		    $prev_month_year--;
+		}
+
+		$staff_from = $prev_month_year.'-'.$previous_month.'-'.$start_day; 
+		$staff_to = $month_year.'-'.$month.'-'.$end_day; 
+
+		for ($d = $start_day; $d <= $days_in_prev_month; $d++) {
+			$time = mktime(12, 0, 0, $previous_month, $d, $prev_month_year);
+			if (date('m', $time) == $previous_month) {
+				array_push($data['day_by_month_tk'], date('D d', $time));
+				array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
+			}
+		}
+
+		for ($d1 = 1; $d1 <= $end_day; $d1++) {
+			$time = mktime(12, 0, 0, $month, $d1, $month_year);
 			if (date('m', $time) == $month) {
 				array_push($data['day_by_month_tk'], date('D d', $time));
 				array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
 			}
 		}
+
+		/*$start_day = 21;
+		$end_day = 20;
+		$next_month = $month + 1;
+		$next_month_year = $month_year;
+
+		if ($next_month > 12) {
+		    $next_month = 1;
+		    $next_month_year++;
+		}
+		for ($d = $start_day; $d <= $end_day; $d++) {
+		    $time = mktime(12, 0, 0, $next_month, $d, $next_month_year);
+		    array_push($data['day_by_month_tk'], date('D d', $time));
+		    array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
+		}*/
+		/*for ($d = 1; $d <= $days_in_month; $d++) {
+			$time = mktime(12, 0, 0, $month, $d, $month_year);
+			if (date('m', $time) == $month) {
+				array_push($data['day_by_month_tk'], date('D d', $time));
+				array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
+			}
+		}*/
 		$data['day_by_month_tk'] = json_encode($data['day_by_month_tk']);
 		$data_map = [];
 		$data_timekeeping_form = get_timesheets_option('timekeeping_form');
@@ -228,7 +273,8 @@ class timesheets extends AdminController {
 			$data['staff_row_tk'] = $result['staff_row_tk'];
 		} else {
 			if ($data['check_latch_timesheet'] == false) {
-				$result = $this->timesheets_model->get_attendance_manual($staffs, $month, $month_year);
+				//$result = $this->timesheets_model->get_attendance_manual($staffs, $month, $month_year,$staff_from,$staff_to);
+				$result = $this->timesheets_model->get_attendance_manual($staffs,'', '',$staff_from,$staff_to);
 				$data['staff_row_tk'] = $result['staff_row_tk'];
 			}
 		}
@@ -605,13 +651,53 @@ class timesheets extends AdminController {
 		$data['set_col_tk'][] = ['data' => _l('staff_id'), 'type' => 'text'];
 		$data['set_col_tk'][] = ['data' => _l('staff'), 'type' => 'text', 'readOnly' => true, 'width' => 200];
 
+		/*  Modified by Anus */
+		$g_month = (int)$g_month;
+		$start_day = 21;
+		$end_day = 20;
+		$previous_month = $g_month - 1;
+		$days_in_prev_month = cal_days_in_month(CAL_GREGORIAN, $previous_month, $year);
+		$prev_month_year = $year;
+
+
+		if ($g_month == 1) {
+		    $previous_month = 12;
+		    $prev_month_year--;
+		}
+
+		$days_in_prev_month = cal_days_in_month(CAL_GREGORIAN, $previous_month, $prev_month_year);
+
+		$staff_from = $prev_month_year.'-'.$previous_month.'-'.$start_day; 
+		$staff_to = $year.'-'.$g_month.'-'.$end_day; 
+
+		for ($d = $start_day; $d <= $days_in_prev_month; $d++) {
+			$time = mktime(12, 0, 0, $previous_month, $d, $prev_month_year);
+			if (date('m', $time) == $previous_month) {
+				array_push($data['day_by_month_tk'], date('D d', $time));
+				array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
+			}
+		}
+
+		for ($d1 = 1; $d1 <= $end_day; $d1++) {
+			$time = mktime(12, 0, 0, $g_month, $d1, $year);
+			if (date('m', $time) == $g_month) {
+				array_push($data['day_by_month_tk'], date('D d', $time));
+				array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
+			}
+		}
+
+
+		/*  Modified by Anus */
+
+		/* Orignial
+
 		for ($d = 1; $d <= $days_in_month; $d++) {
 			$time = mktime(12, 0, 0, $g_month, $d, (int) $year);
 			if (date('m', $time) == $g_month) {
 				array_push($data['day_by_month_tk'], date('D d', $time));
 				array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
 			}
-		}
+		}*/
 
 		$data['day_by_month_tk'] = $data['day_by_month_tk'];
 
@@ -627,7 +713,8 @@ class timesheets extends AdminController {
 			$data['staff_row_tk'] = $result['staff_row_tk'];
 		} else {
 			if ($data['check_latch_timesheet'] == false) {
-				$result = $this->timesheets_model->get_attendance_manual($staffs, $g_month, $year);
+				//$result = $this->timesheets_model->get_attendance_manual($staffs, $g_month, $year);
+				$result = $this->timesheets_model->get_attendance_manual($staffs,'', $year, $staff_from,$staff_to );
 				$data['staff_row_tk'] = $result['staff_row_tk'];
 			}
 		}

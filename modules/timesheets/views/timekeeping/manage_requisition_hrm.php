@@ -232,10 +232,10 @@ render_datatable($table_data,'table_registration_leave',
                   <label for="rel_type" class="control-label"><?php echo _l('Type'); ?></label>
                   <select name="rel_type" class="selectpicker" id="rel_type" data-width="100%" data-none-selected-text="<?php echo _l('none_type'); ?>"> 
                    <option value="1"><?php echo _l('Leave') ?></option>                  
-                   <option value="2"><?php echo _l('late') ?></option>                  
+                   <!-- <option value="2"><?php echo _l('late') ?></option>                  
                    <option value="6"><?php echo _l('early') ?></option>                  
                    <option value="3"><?php echo _l('Go_out') ?></option>                  
-                   <option value="4"><?php echo _l('Go_on_bussiness') ?></option>                  
+                   <option value="4"><?php echo _l('Go_on_bussiness') ?></option>    -->               
                  </select>
                </div>
                <div class="col-md-6 pb-4" id="type_of_leave">
@@ -245,7 +245,7 @@ render_datatable($table_data,'table_registration_leave',
                     <select name="type_of_leave" class="selectpicker" id="rel_type" data-width="100%" data-none-selected-text="<?php echo _l('none_type'); ?>">
                      <option value="8"><?php echo _l('annual_leave') ?></option>
                      <option value="2"><?php echo _l('maternity_leave') ?></option>                  
-                     <option value="4"><?php echo _l('private_work_without_pay') ?></option>
+                    <!--  <option value="4"><?php echo _l('private_work_without_pay') ?></option> -->
                      <option value="1"><?php echo _l('sick_leave') ?></option>    
                      <?php 
                      foreach ($type_of_leave as $value) { ?>
@@ -313,11 +313,11 @@ render_datatable($table_data,'table_registration_leave',
          <div class="col-md-12">
           <br>
           <?php  
-          $value_number_day = 0.5;                                   
+          $value_number_day = 1;                                   
           ?>
           <div class="form-group" app-field-wrapper="number_of_leaving_day">
             <label for="number_of_leaving_day" class="control-label"><?php echo _l('number_of_days'); ?></label>
-            <input type="number" id="number_of_leaving_day" name="number_of_leaving_day" class="form-control" onblur="get_date(this)" step="0.5" value="<?php echo html_entity_decode($value_number_day); ?>" aria-invalid="false">
+            <input type="number" id="number_of_leaving_day" name="number_of_leaving_day" class="form-control" onblur="get_date(this)" step="1" value="<?php echo html_entity_decode($value_number_day); ?>" aria-invalid="false">
           </div>
         </div>
         <div class="col-md-12 mtop10" id="number_days_off_2">
@@ -332,7 +332,9 @@ render_datatable($table_data,'table_registration_leave',
           <?php echo render_date_input('start_time','From_Date',_d($valid_cur_date)) ?>
         </div>
         <div class="col-md-6 end_time">
-          <?php echo render_date_input('end_time','To_Date',_d($valid_cur_date)) ?>
+          <?php //echo render_date_input('end_time','To_Date',_d($valid_cur_date));
+              echo render_date_input('end_time','To_Date','')
+             ?>
         </div>
       </div>
 
@@ -348,7 +350,14 @@ render_datatable($table_data,'table_registration_leave',
 
 
       <div class="row mtop10">
-        <div class="col-md-12 pb-4" id="leave_">
+        <?php 
+          $follower = 0;
+          foreach($pro as $s) { if($s['admin'] == 1){ $follower = $s['staffid']; }}
+
+          ?>
+        <input type="hidden" name="followers_id" value="<?php echo html_entity_decode($follower); ?>">
+        <input type="hidden" name="handover_recipients" value="<?php echo html_entity_decode($follower); ?>">
+        <!-- <div class="col-md-12 pb-4" id="leave_">
           <label for="followers_id" class="control-label"><?php echo _l('Follower'); ?></label>
           <select name="followers_id" id="followers_id" data-live-search="true" class="selectpicker"  data-actions-box="true" data-width="100%" data-none-selected-text="<?php echo _l('none'); ?>">
             <option value=""></option>
@@ -356,8 +365,8 @@ render_datatable($table_data,'table_registration_leave',
               <option value="<?php echo html_entity_decode($s['staffid']); ?>"><?php echo html_entity_decode($s['firstname'].' '.$s['lastname']); ?></option>
             <?php } ?>
           </select>
-        </div>
-        <div class="col-md-12 pb-4" id="leave_handover_recipients">
+        </div>  -->
+     <!--  <div class="col-md-12 pb-4" id="leave_handover_recipients">
           <br>
           <label for="handover_recipients" class="control-label"><?php echo _l('handover_recipients'); ?></label>
           <select name="handover_recipients" id="handover_recipients" data-live-search="true" class="selectpicker"  data-actions-box="true" data-width="100%" data-none-selected-text="<?php echo _l('dropdown_non_selected_tex'); ?>">
@@ -366,7 +375,7 @@ render_datatable($table_data,'table_registration_leave',
               <option value="<?php echo html_entity_decode($s['staffid']); ?>"><?php echo html_entity_decode($s['firstname'].' '.$s['lastname']); ?></option>
             <?php } ?>
           </select>
-        </div>
+        </div> --> 
       </div>
 
 

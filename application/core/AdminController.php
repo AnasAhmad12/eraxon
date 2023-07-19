@@ -212,7 +212,7 @@ class AdminController extends App_Controller
             $tickets['permission'] = 'is_staff_member';
         }
 
-        $this->app->add_quick_actions_link($tickets);
+        //$this->app->add_quick_actions_link($tickets);
 
         $this->app->add_quick_actions_link([
             'name'       => _l('staff_member'),

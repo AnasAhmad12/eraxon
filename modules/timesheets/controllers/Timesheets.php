@@ -207,17 +207,19 @@ class timesheets extends AdminController {
 		$data['set_col_tk'][] = ['data' => _l('staff_id'), 'type' => 'text'];
 		$data['set_col_tk'][] = ['data' => _l('staff'), 'type' => 'text', 'readOnly' => true, 'width' => 200];
 
+
+     	/* Modified by: Anus*/
 		$start_day = 21;
 		$end_day = 20;
 		$previous_month = $month - 1;
-		$days_in_prev_month = cal_days_in_month(CAL_GREGORIAN, $previous_month, $month_year);
 		$prev_month_year = $month_year;
 
 
-		if ($next_month == 1) {
-		    $next_month = 1;
+		if ($month == 1) {
+		    $previous_month = 12;
 		    $prev_month_year--;
 		}
+		$days_in_prev_month = cal_days_in_month(CAL_GREGORIAN, $previous_month, $prev_month_year);
 
 		$staff_from = $prev_month_year.'-'.$previous_month.'-'.$start_day; 
 		$staff_to = $month_year.'-'.$month.'-'.$end_day; 
@@ -237,6 +239,8 @@ class timesheets extends AdminController {
 				array_push($data['set_col_tk'], ['data' => date('D d', $time), 'type' => 'text']);
 			}
 		}
+		/* Modified by: Anus*/
+
 
 		/*$start_day = 21;
 		$end_day = 20;

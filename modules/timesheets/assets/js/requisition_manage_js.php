@@ -103,7 +103,8 @@
           start_time:  'required'
         });
         $("div.end_time").addClass('hide');
-        $('#requisition-form input[name="end_time"]').val("<?php echo html_entity_decode($current_date) ?>");
+        //$('#requisition-form input[name="end_time"]').val("<?php //echo html_entity_decode($current_date) ?>");
+        $('#requisition-form input[name="end_time"]').val("");
 
         $("div.start_time").removeClass('col-md-6');
         $("div.start_time").addClass('col-md-12');
@@ -122,7 +123,7 @@
           end_time: 'required'
         });
         $('.approx-fr').removeClass('hide');
-        $('#number_of_leaving_day').val(0.5);
+        $('#number_of_leaving_day').val(1);
         var val = $('select[name="type_of_leave"]').val();
         if(val == 8){
           $('div[id="number_days_off_2"]').removeClass('hide');
@@ -172,8 +173,8 @@
       if(value == 5){
         /*set date value because input is required*/
         $('#requisition-form input[name="start_time"]').val("<?php echo html_entity_decode($current_date) ?>");
-        $('#requisition-form input[name="end_time"]').val("<?php echo html_entity_decode($current_date) ?>");
-
+       // $('#requisition-form input[name="end_time"]').val("<?php //echo html_entity_decode($current_date) ?>");
+        $('#requisition-form input[name="end_time"]').val("");
         $("div.start_time ").addClass('hide');
         $("div.end_time").addClass('hide'); 
       }
@@ -459,7 +460,7 @@
     $('#requisition-form .btn-submit').attr('disabled', true);
     $('input[name="userid"]').val(staff_id);
     var current_date =  $('input[name="current_date"]').val();
-    $('input[name="number_of_leaving_day"]').val(0.5);
+    $('input[name="number_of_leaving_day"]').val(1);
     $.post(admin_url+'timesheets/get_remain_day_of/'+staff_id+'/'+type_of_leave).done(function(response){
       response = JSON.parse(response);
       $('#number_days_off_2').html(response.html);

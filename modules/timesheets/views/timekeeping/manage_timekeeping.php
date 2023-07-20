@@ -37,9 +37,9 @@
     <hr class="hr-panel-heading no-margin"/>               
     <div class="row mtop15">
       <div class="col-md-8 line-suggestion">
-       <!-- <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php //echo _l('p_x_timekeeping'); ?>" class="btn" >AL</button>-->
+        <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo _l('p_x_timekeeping'); ?>" class="btn" >AL</button>
         <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo _l('W_x_timekeeping'); ?>" class="btn" >W</button>
-        <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo _l('D_x_timekeeping'); ?>" class="btn" >D</button>
+        <!-- <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php //echo _l('D_x_timekeeping'); ?>" class="btn" >D</button> -->
         <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo _l('HD_x_timekeeping'); ?>" class="btn" >HD</button>
         <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo _l('A_x_timekeeping'); ?>" class="btn" >U</button>
         <button type="button" data-toggle="tooltip" data-placement="top" data-original-title="<?php echo _l('Le_x_timekeeping'); ?>" class="btn" >HO</button>

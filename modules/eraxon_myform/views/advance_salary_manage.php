@@ -53,7 +53,7 @@
                                                 data-reason="<?php echo $as['reason']; ?>" 
                                                 data-amount="<?php echo $as['amount']; ?>"
                                                 data-amount_needed_date="<?php echo $as['amount_needed_date']; ?>"
-
+                                                data-status="<?php echo $as['status']; ?>"
                                                 class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700" data-hide-from-client="0" >
                                                 <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                             </a>
@@ -63,6 +63,14 @@
                                                 <i class="fa-regular fa-trash-can fa-lg"></i>
                                             </a>
                                         <?php } ?>
+
+                                        <?php 
+                                            if(has_permission('advance_salary','','edit')  || is_admin()){ ?>
+                                            <!-- <a href="<?php echo admin_url('eraxon_myform/advance_release/' . $as['id']); ?>" class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 _delete">
+                                                <i class="fa fa-refresh fa-lg"></i>
+                                            </a> -->
+                                        <?php } ?>
+
                                         </div>
                                     </td>
                                 </tr>
@@ -101,6 +109,19 @@
                         <?php echo render_textarea('reason', 'Purpose of Advance Cash'); ?>
                         <input type="hidden" name="id_staff" value="<?php echo $current_user->staffid; ?>">
                     </div>
+
+            <?php  if(is_admin() || has_permission('advance_salary', '', 'edit')){ ?>
+                    <div class="col-md-12" id="status">
+                          <label for="status" class="control-label">Status</label>
+                          <select name="status" class="selectpicker" id="status" data-width="100%" data-none-selected-text="<?php echo _l('none_type'); ?>"> 
+                           <option value="0">Pending</option>                  
+                           <option value="1">Approved</option>                  
+                           <!--<option value="6"><?php echo _l('early') ?></option>                  
+                           <option value="3"><?php echo _l('Go_out') ?></option>                  
+                           <option value="4"><?php echo _l('Go_on_bussiness') ?></option>    -->               
+                         </select>
+                    </div>
+                <?php } ?>
                 </div>
             </div>
             <div class="modal-footer">
@@ -151,7 +172,8 @@ function edit_as_request(invoker, id) {
     $('#advance_salary input[name="amount"]').val($(invoker).data('amount'));
     $('#advance_salary input[name="amount_needed_date"]').val($(invoker).data('amount_needed_date'));
     $('#advance_salary textarea[name="reason"]').val($(invoker).data('reason'));
-    
+    $('#advance_salary select[name="status"]').val($(invoker).data('status')).change();
+
     $('#advance_salary').modal('show');
     $('.add-title').addClass('hide');
 }

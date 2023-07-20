@@ -370,4 +370,19 @@ class Utilities extends AdminController
         $data['title'] = _l('bulk_pdf_exporter');
         $this->load->view('admin/utilities/bulk_pdf_exporter', $data);
     }
+    public function selecthr()
+    {
+        if ($this->input->post()) 
+        {
+            $sid = $this->input->post('staffid');
+            update_option('selected_hr_for_notification',$sid);
+            set_alert('success', _l('added_successfully', "Request"));
+
+        }else{
+
+            $data['staff'] = get_option('selected_hr_for_notification');
+        }
+        $data['staffs'] = $this->staff_model->get('', ['active' => 1]);
+        $this->load->view('admin/utilities/manage_hr_notifications', $data);
+    }
 }

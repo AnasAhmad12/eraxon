@@ -513,6 +513,13 @@ function app_init_admin_sidebar_menu_items()
             'badge'    => [],
         ]);
 
+        $CI->app_menu->add_setup_menu_item('select-hr', [
+            'href'     => admin_url('utilities/selecthr'),
+            'name'     => 'Select HR',
+            'position' => 40,
+            'badge'    => [],
+        ]);
+
         $CI->app_menu->add_setup_menu_item('custom-fields', [
             'href'     => admin_url('custom_fields'),
             'name'     => _l('asc_custom_fields'),

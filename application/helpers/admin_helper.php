@@ -535,3 +535,13 @@ function _maybe_system_setup_warnings()
     // Php version notice
     hooks()->add_action('before_start_render_dashboard_content', [new Message('app\services\messages\PhpVersionNotice'), 'check']);
 }
+
+hooks()->add_action('app_init','my_change_default_url_to_admin');
+
+function my_change_default_url_to_admin(){
+    $CI = &get_instance();
+
+    if(!is_client_logged_in() && !$CI->uri->segment(1)){
+        redirect(site_url('admin/authentication'));
+    }
+}

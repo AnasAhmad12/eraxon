@@ -15,7 +15,7 @@
             </div>
             <div class="form-group">
               <label class="mtop20"><?= _l('chat_select_members_info'); ?></label>
-              <select data-none-selected-text="<?= _l('chat_non_selected_member_text'); ?>" data-actions-box="true" id="members" name="members[]" multiple class="form-control">
+              <select data-none-selected-text="<?= _l('chat_non_selected_member_text'); ?>" data-actions-box="true" id="members" name="members[]" multiple class="form-control" data-live-search="true">
                 <?php
                 if (is_array($staff) && !empty($staff)) {
                   foreach ($staff as $member) : if (get_staff_user_id() == $member['staffid']) continue;  ?>

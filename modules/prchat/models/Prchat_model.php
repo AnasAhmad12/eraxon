@@ -17,7 +17,7 @@ class Prchat_model extends App_Model
     public function getUsers()
     {
 
-        $this->db->select('staffid, firstname, lastname, profile_image, last_login, last_activity, facebook, linkedin, skype, admin, role');
+        $this->db->select('staffid, firstname, lastname,email, profile_image, last_login, last_activity, facebook, linkedin, skype, admin, role');
         $this->db->where('active', 1);
         $users = $this->db->get(db_prefix() . 'staff')->result_array();
 

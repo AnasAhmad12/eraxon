@@ -2300,9 +2300,9 @@ body #add_members_modal {
 }
 
 body #frame .active_group_members {
-  padding-top: 26px !important;
-  float: none !important;
-  width: 93% !important;
+  padding-top: 26px ;
+  float: none;
+  width: 93%;
 }
 
 #frame #sidepanel #bottom-bar #clients_show svg,

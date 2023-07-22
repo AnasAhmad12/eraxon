@@ -12,13 +12,14 @@
       <div class="horizontal-tabs mb-5">
       </div>
       <input type="hidden" name="current_month" value="<?php echo date('Y-m'); ?>">
-      <?php 
-      if (has_permission('attendance_management', '', 'view') || is_admin()) {
-       ?>
+      
        <div class="row filter_by">
         <div class="col-md-2 leads-filter-column">
           <?php echo render_input('month_timesheets','month',date('Y-m'), 'month'); ?>
         </div>
+        <?php 
+      if (has_permission('attendance_management', '', 'view') || is_admin()) {
+       ?>
         <div class="col-md-3 leads-filter-column">
           <?php echo render_select('department_timesheets',$departments,array('departmentid', 'name'),'department'); ?>
         </div>
@@ -28,11 +29,12 @@
         <div class="col-md-3 leads-filter-column">
           <?php echo render_select('staff_timesheets[]',$staffs,array('staffid',array('firstname','lastname')),'staff','',array('multiple'=>true,'data-actions-box'=>true),array(),'','',false); ?>
         </div>
+        <?php } ?>
         <div class="col-md-1 mtop25">
           <button type="button" class="btn btn-info timesheets_filter"><?php echo _l('filter'); ?></button>
         </div>                         
       </div>
-    <?php } ?>
+    
     <?php echo form_open(admin_url('timesheets/manage_timesheets'),array('id'=>'timesheets-form')); ?>
     <hr class="hr-panel-heading no-margin"/>               
     <div class="row mtop15">

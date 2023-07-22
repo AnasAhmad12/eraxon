@@ -37,10 +37,14 @@
                                 	<td><?php if($as['status']==0){
                                 		echo "Pending";
                                 	}elseif($as['status']==1){
-                                		echo "Seen";
-                                	}else{
-                                		echo 'Action Taken';
-                                	}
+                                		echo "Accepted";
+                                	}elseif($as['status']==2){
+                                        echo "Rejected";
+                                    }elseif($as['status']==3){
+                                        echo "Action Taken";
+                                    }elseif($as['status']==4){
+                                        echo "In-Progress";
+                                    }
 
                                 	?></td>
                                 	<td>
@@ -50,6 +54,7 @@
                                                 onclick="edit_as_request(this,<?php echo $as['id']; ?>); return false"
                                                 data-request-type="<?php echo $as['request_type']; ?>" 
                                                 data-description="<?php echo $as['description']; ?>"
+                                                data-status="<?php echo $as['status']; ?>"
 
                                                 class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700" data-hide-from-client="0" >
                                                 <i class="fa-regular fa-pen-to-square fa-lg"></i>
@@ -106,6 +111,20 @@
                         ?>
                         <input type="hidden" name="id_staff" value="<?php echo $current_user->staffid; ?>">
                     </div>
+
+                    <?php  if(is_admin() || has_permission('other_form', '', 'edit')){ ?>
+                    <div class="col-md-12" id="status">
+                          <label for="status" class="control-label">Status</label>
+                          <select name="status" class="selectpicker" id="status" data-width="100%" data-none-selected-text="<?php echo _l('none_type'); ?>"> 
+                           <option value="0">Pending</option>  
+                           <option value="1">Accepted</option>  
+                           <option value="2">Rejected</option>                 
+                           <option value="3">Action Taken</option>
+                           <option value="4">In-Progress</option>                  
+                                        
+                         </select>
+                    </div>
+                <?php } ?>
                 </div>
             </div>
             <div class="modal-footer">
@@ -156,6 +175,7 @@ function edit_as_request(invoker, id) {
     $('#other_requests select[name="request_type"]').val($(invoker).data('request-type'));
     //$('#other_requests textarea[name="description"]').val($(invoker).data('description'));
      tinyMCE.activeEditor.setContent($(invoker).data('description'));
+     $('#other_requests select[name="status"]').val($(invoker).data('status')).change();
     
     $('#other_requests').modal('show');
     $('.add-title').addClass('hide');

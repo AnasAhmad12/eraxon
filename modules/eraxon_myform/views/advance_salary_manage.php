@@ -115,7 +115,8 @@
                           <label for="status" class="control-label">Status</label>
                           <select name="status" class="selectpicker" id="status" data-width="100%" data-none-selected-text="<?php echo _l('none_type'); ?>"> 
                            <option value="0">Pending</option>                  
-                           <option value="1">Approved</option>                  
+                           <option value="1">Approved</option>
+                           <option value="2">Reject</option>                  
                            <!--<option value="6"><?php echo _l('early') ?></option>                  
                            <option value="3"><?php echo _l('Go_out') ?></option>                  
                            <option value="4"><?php echo _l('Go_on_bussiness') ?></option>    -->               

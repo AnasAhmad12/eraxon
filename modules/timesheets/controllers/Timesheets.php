@@ -560,6 +560,14 @@ class timesheets extends AdminController {
 		if (isset($data['staff'])) {
 			$staff = $data['staff'];
 		}
+		/*   modified By Anas */
+		if (has_permission('attendance_management', '', 'view_own') || is_admin()) 
+		{ 
+			$ssid = get_staff_user_id();
+			$staff = $ssid;
+
+		}
+		/*   modified By Anas */
 		$staff_querystring = '';
 		$job_position_querystring = '';
 		$department_querystring = '';
@@ -709,7 +717,18 @@ class timesheets extends AdminController {
 		$data_timekeeping_form = get_timesheets_option('timekeeping_form');
 		$data['staff_row_tk'] = [];
 
+		/*if (has_permission('attendance_management', '', 'view_own') || is_admin()) 
+		{ 
+			$ssid = get_staff_user_id();
+			$staffs = $this->timesheets_model->getStaff($ssid, $newquerystring);
+
+		}else
+		{
+			$staffs = $this->timesheets_model->getStaff('', $newquerystring);
+		}*/
 		$staffs = $this->timesheets_model->getStaff('', $newquerystring);
+
+
 		$data['staffs_setting'] = $this->staff_model->get();
 		$data['staffs'] = $staffs;
 		if ($data_timekeeping_form == 'timekeeping_task' && $data['check_latch_timesheet'] == false) {
@@ -718,7 +737,7 @@ class timesheets extends AdminController {
 		} else {
 			if ($data['check_latch_timesheet'] == false) {
 				//$result = $this->timesheets_model->get_attendance_manual($staffs, $g_month, $year);
-				$result = $this->timesheets_model->get_attendance_manual($staffs,'', $year, $staff_from,$staff_to );
+			$result = $this->timesheets_model->get_attendance_manual($staffs,'', $year, $staff_from,$staff_to );
 				$data['staff_row_tk'] = $result['staff_row_tk'];
 			}
 		}

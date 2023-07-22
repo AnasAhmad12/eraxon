@@ -561,7 +561,7 @@ class timesheets extends AdminController {
 			$staff = $data['staff'];
 		}
 		/*   modified By Anas */
-		if (has_permission('attendance_management', '', 'view_own') || is_admin()) 
+		if (has_permission('attendance_management', '', 'view_own')) 
 		{ 
 			$ssid = get_staff_user_id();
 			$staff = $ssid;

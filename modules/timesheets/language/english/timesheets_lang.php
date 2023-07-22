@@ -688,6 +688,7 @@ $lang['specific_time_period']  = 'Specific Period';
 $lang['handover_recipients']  = 'Handover';
 $lang['private_work_without_pay']  = 'Private work without pay';
 $lang['you_are_added_to_follow_the_leave_application']  = 'You are added to following the leave application';
+$lang['you_are_added_to_follow_the_advance_salary_application']  = 'You are added to following the advance salary application';
 $lang['amount_of_money']  = 'Amount of Money';
 $lang['advance_payment_reason']  = 'Advance payment reason';
 $lang['advance_payment_request']  = 'Advance payment request';

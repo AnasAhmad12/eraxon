@@ -35,15 +35,37 @@ class Eraxon_myform extends AdminController
             if (!$this->input->post('id')) {
                 $data['requested_datetime'] = date('Y-m-d H:i:s'); 
                 $data['status'] = 0; 
+                $request_type = $this->input->post('request_type');
                 $id = $this->eraxon_myform_model->add_other_request($data);
 
-                if (!$inline) {
+                
                     if ($id) {
                         set_alert('success', _l('added_successfully', "Request"));
+                         $followers_id = get_option('selected_hr_for_notification');
+                        $staffid = get_current_user() ;
+                        $subject = "Requested for ".$request_type;
+                        $link = 'eraxon_myform/others';
+
+                        if ($followers_id != '') {
+                            if ($staffid != $followers_id) {
+                                $notification_data = [
+                                    'description' => $subject,
+                                    'touserid' => $followers_id,
+                                    'link' => $link,
+                                ];
+
+                                $notification_data['additional_data'] = serialize([
+                                    $subject,
+                                ]);
+
+                                if (add_notification($notification_data)) {
+                                    pusher_trigger_notification([$followers_id]);
+                                }
+
+                            }
+                        }
                     }
-                } else {
-                    echo json_encode(['success' => $id ? true : false, 'id' => $id]);
-                }
+                
             } else {
                 $id = $data['id'];
                 unset($data['id']);
@@ -92,13 +114,35 @@ class Eraxon_myform extends AdminController
                 $data['status'] = 0; 
                 $id = $this->eraxon_myform_model->add_advance_salary($data);
 
-                if (!$inline) {
+              
                     if ($id) {
                         set_alert('success', _l('added_successfully', "Advance Salary"));
+
+                        $followers_id = get_option('selected_hr_for_notification');
+                        $staffid = get_current_user() ;
+                        $subject = "Requested an advance salary";
+                        $link = 'eraxon_myform/advance_salary';
+
+                        if ($followers_id != '') {
+                            if ($staffid != $followers_id) {
+                                $notification_data = [
+                                    'description' => $subject,
+                                    'touserid' => $followers_id,
+                                    'link' => $link,
+                                ];
+
+                                $notification_data['additional_data'] = serialize([
+                                    $subject,
+                                ]);
+
+                                if (add_notification($notification_data)) {
+                                    pusher_trigger_notification([$followers_id]);
+                                }
+
+                            }
+                        }
                     }
-                } else {
-                    echo json_encode(['success' => $id ? true : false, 'id' => $id]);
-                }
+               
             } else {
                 $id = $data['id'];
                 unset($data['id']);

@@ -48,7 +48,7 @@ function search_exif($exif, $field)
                                 foreach($teams as $lkey => $tt)
                                 {
                                     //echo search_exif($tt['staff'],$cid);
-                                    if(search_exif($tt['staff'],$cid) || is_admin())
+                                    if(search_exif($tt['staff'],$cid) || search_exif($tt,$cid) || is_admin())
                                     {
                                         echo "<a href='".admin_url('hr_profile/member/').$tt['staffid']."'>".staff_profile_image($tt['staffid'],array('staff-profile-image'),'small',["data-toggle"=>"tooltip","data-original-title"=>$tt['full_name']." (Team Lead)"])."</a> ";
 

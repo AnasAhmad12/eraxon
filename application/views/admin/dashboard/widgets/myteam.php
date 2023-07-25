@@ -60,7 +60,7 @@ function search_exif($exif, $field)
                                             // echo $staf['full_name'].' ';
                                         }
                                     }else{
-                                        break;
+                                        continue;
                                     }
                                    
                                 }

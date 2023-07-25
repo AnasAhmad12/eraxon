@@ -50,13 +50,13 @@ function search_exif($exif, $field)
                                     //echo search_exif($tt['staff'],$cid);
                                     if(search_exif($tt['staff'],$cid) || is_admin())
                                     {
-                                        echo "<a href='".admin_url('hr_profile/member/').$tt['staffid']."'>".staff_profile_image($tt['staffid'],array('img','img-responsive','staff-profile-image'),'small',["data-toggle"=>"tooltip","data-original-title"=>$tt['full_name']." (Team Lead)"])."</a> ";
+                                        echo "<a href='".admin_url('hr_profile/member/').$tt['staffid']."'>".staff_profile_image($tt['staffid'],array('staff-profile-image'),'thumb',["data-toggle"=>"tooltip","data-original-title"=>$tt['full_name']." (Team Lead)"])."</a> ";
 
                                         //echo $tt['full_name'].'<br>';
 
                                         foreach ($tt['staff'] as $staf) 
                                         {
-                                             echo "<a href='".admin_url('hr_profile/member/').$staf['staffid']."'>".staff_profile_image($staf['staffid'],array('img','img-responsive','staff-profile-image'),'small',["data-toggle"=>"tooltip","data-original-title"=>$staf['full_name']])."</a> ";
+                                             echo "<a href='".admin_url('hr_profile/member/').$staf['staffid']."'>".staff_profile_image($staf['staffid'],array('staff-profile-image'),'thumb',["data-toggle"=>"tooltip","data-original-title"=>$staf['full_name']])."</a> ";
                                             // echo $staf['full_name'].' ';
                                         }
                                     }else{

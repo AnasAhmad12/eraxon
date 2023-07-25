@@ -242,7 +242,14 @@ function staff_profile_image_url($staff_id, $type = 'small')
  */
 function staff_profile_image($id, $classes = ['staff-profile-image'], $type = 'small', $img_attrs = [])
 {
-    $url = base_url('assets/images/user-placeholder.jpg');
+    if($type == 'small')
+    {
+        $url = base_url('assets/images/small-user-placeholder.jpg');
+    }else
+    {
+        $url = base_url('assets/images/user-placeholder.jpg');
+    }
+    
 
     $id = trim($id);
 

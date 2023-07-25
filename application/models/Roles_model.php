@@ -142,6 +142,14 @@ class Roles_model extends App_Model
         return false;
     }
 
+
+    public function get_roleid_by_name($name)
+    {
+        $this->db->like('name', $name,'both');
+
+        return $this->db->get(db_prefix() . 'roles')->row()->roleid;
+    }
+
     public function get_contact_permissions($id)
     {
         $this->db->where('userid', $id);

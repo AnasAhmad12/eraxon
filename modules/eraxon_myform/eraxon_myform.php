@@ -15,9 +15,57 @@ Author: Anas Ahmad
 
 define('Eraxon_myform', 'eraxon_myform');
 
+//Profile Performance Tab
+
+hooks()->add_filter('hr_profile_tab_name', 'myform_add_tab_name', 20);
+hooks()->add_filter('hr_profile_tab_content', 'myform_add_tab_content', 20);
+hooks()->add_action('hr_profile_load_js_file', 'myform_load_js_file');
+
+/**
+ * myform add tab name
+ * @param  [type] $row  
+ * @param  [type] $aRow 
+ * @return [type]       
+ */
+function myform_add_tab_name($tab_names)
+{
+    $tab_names[] = 'performance';
+    return $tab_names;
+}
+
+
+/**
+ * myform add tab content
+ * @param  [type] $tab_content_link 
+ * @return [type]                   
+ */
+function myform_add_tab_content($tab_content_link)
+{
+    if(!(strpos($tab_content_link, 'hr_record/includes/performance') === false)){
+        $tab_content_link = 'eraxon_myform/include/myform_performance_tab_content';
+  }
+    
+    return $tab_content_link;
+}
+
+/**
+ * myform load js file
+ * @param  [type] $group_name 
+ * @return [type]             
+ */
+function myform_load_js_file($group_name)
+{
+     
+    echo  require 'modules/eraxon_myform/assets/js/performance_js.php';
+
+}
+
+
+
+
+
+
 hooks()->add_action('admin_init','eraxon_myform_init_menu_items');
-
-
 register_activation_hook(Eraxon_myform,'eraxon_myform_activation_hook');
 
 function eraxon_myform_activation_hook()

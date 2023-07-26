@@ -154,7 +154,7 @@ class Eraxon_myform extends AdminController
         }
 	}
 
-	  public function delete_as($id)
+	public function delete_as($id)
     {
         if (!is_admin()) {
             access_denied('Delete Advance Salary Request');
@@ -171,5 +171,15 @@ class Eraxon_myform extends AdminController
             set_alert('warning', _l('problem_deleting', _l('lead_source_lowercase')));
         }
         redirect(admin_url('eraxon_myform/advance_salary'));
+    }
+
+    public function report_by_leads_staffs($id)
+    {
+        echo json_encode($this->eraxon_myform_model->report_by_leads_staffs($id));
+    }
+
+    public function report_by_day_leads_staffs($id)
+    {
+        echo json_encode($this->eraxon_myform_model->report_by_day_leads_staffs($id));
     }
 }

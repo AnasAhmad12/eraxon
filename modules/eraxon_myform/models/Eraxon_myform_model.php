@@ -151,4 +151,104 @@ class Eraxon_myform_model extends App_Model {
 
         return false;
     }
+
+    public function report_by_leads_staffs($id)
+    {
+        
+        $custom_date_select = '';
+
+        $current_year = date('Y');
+        for($_month = 1 ; $_month <= 12; $_month++){
+            $month_t = date('m',mktime(0, 0, 0, $_month, 04, 2016));
+
+            if($_month == 5){
+                $chart['categories'][] = _l('month_05');
+            }else{
+                $chart['categories'][] = _l('month_'.$_month);
+            }
+
+            $month = $current_year.'-'.$month_t;
+
+            $chart['pending_leads'][] = $this->leads_by_month($month, 'Pending',$id);
+            $chart['approved_leads'][] = $this->leads_by_month($month, 'Approved',$id);
+            $chart['rejected_leads'][] = $this->leads_by_month($month, 'Rejected',$id);
+        }
+
+        return $chart;
+    }
+
+    public function leads_by_month($month,$status,$id)
+    {
+        $this->db->select('count(id) as total_leads, status');
+
+        if($status == 'Pending')
+        { 
+            $this->db->where('status',2); 
+
+        }elseif($status == 'Approved')
+        {
+            $this->db->where('status',3); 
+
+        }elseif($status == 'Rejected'){
+
+            $this->db->where('status',4); 
+        }
+        
+            
+        $this->db->where('assigned',$id);
+     
+        //$sql_where = "date_format(".db_prefix()."leads.dateadded, '%Y-%m') = '".$month."'";
+        $sql_where = "date_format(dateadded, '%Y-%m') = '".$month."'";
+        $this->db->where($sql_where);
+        //$result = $this->db->get(db_prefix().'leads')->row();
+        $result = $this->db->get(db_prefix().'leads')->row();
+
+        if($result){
+            return (int)$result->total_leads;
+        }
+        return 0;
+    }
+
+    public function report_by_day_leads_staffs($id)
+    {
+        //$months_report = $this->input->post('months_report');
+        $custom_date_select = '';
+
+        $maxDays=date('t');
+        $current_year = date('Y');
+        $current_month = date('m');
+        $current_month_short = date('M');
+        for($_day = 1 ; $_day <= $maxDays; $_day++)
+        {
+
+            $chart['categories'][] = $_day.' / '.$current_month_short;
+
+            $dd = $current_year.'-'.$current_month.'-'.str_pad($_day, 2, '0', STR_PAD_LEFT);
+
+            $chart['daily_leads'][] = $this->leads_by_day($dd,$id);
+            //$chart['approved_leads'][] = $this->leads_by_day($dd, 'Approved');
+            //$chart['rejected_leads'][] = $this->leads_by_day($dd, 'Rejected');
+
+        }
+
+        return $chart;
+    }
+
+    public function leads_by_day($day,$id)
+    {
+        $this->db->select('count(id) as total_leads');
+
+        $this->db->where('assigned',$id);
+        
+        $sql_where = "date_format(dateadded, '%Y-%m-%d') = '".$day."'";
+        $this->db->where($sql_where);
+        //$result = $this->db->get(db_prefix().'leads')->row();
+        $result = $this->db->get(db_prefix().'leads')->row();
+
+        if($result){
+            return (int)$result->total_leads;
+        }
+        return 0;
+    }
+
 }

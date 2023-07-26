@@ -24,3 +24,7 @@ modules/hr_profile/uploads/att_file/6/Steve - Employment Offer Letter.pdf
 backups/.htaccess
 backups/database_backup_2023-07-19-17-30-13-v3-0-5.zip
 backups/index.html
+modules/hr_payroll/libraries/.lic
+modules/hr_payroll/libraries/.licint
+modules/hr_payroll/uploads/payslip/1-test.txt
+modules/hr_payroll/libraries/.licint

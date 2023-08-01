@@ -89,6 +89,7 @@
   function new_job_position(){  
    'use strict';
 
+    $('input[name="deduction_id[]"], input[name="allowance_id[]"]').prop('checked', false);
     $('#new_job_positions').modal('show');  
     $('#additional_proposal').closest('form').find("input[type=text], textarea").val("");
     tinyMCE.activeEditor.setContent("");
@@ -134,6 +135,24 @@
         $('#basic_target').val(response.basic_target);
         //console.log(response);
       });
+      $.post(admin_url + 'hr_profile/get_job_allowances_deductions_ids/' + id).done(function(response) {
+        var ids = JSON.parse(response);
+        var deduction_ids = ids.deduction_ids;
+        var allowance_ids = ids.allowance_ids;
+        $('input[name="deduction_id[]"], input[name="allowance_id[]"]').prop('checked', false);
+        $('input[name="deduction_id[]"]').each(function() {
+            if ($.inArray($(this).val(), deduction_ids) !== -1) {
+                $(this).prop('checked', true);
+            }
+        });
+
+        $('input[name="allowance_id[]"]').each(function() {
+            if ($.inArray($(this).val(), allowance_ids) !== -1) {
+                $(this).prop('checked', true);
+            }
+        });
+      });
+    
 
       $.post(admin_url + 'hr_profile/get_list_job_position_tags_file/'+id).done(function(response) {
         response = JSON.parse(response);

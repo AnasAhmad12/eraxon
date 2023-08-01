@@ -224,6 +224,43 @@
 									</div>
 								</div>
 							</div>
+							<div class="row">
+								<div class="col-md-6 mtop30">
+									<h4>Allowances</h4>
+									<hr>
+										<?php
+										if(!empty($allownces)){
+											foreach ($allownces as $allownce):
+										?>
+											<div class="row">
+												<div class="col-md-6">
+													<label for="" class="control-label"><?php echo $allownce->name; ?></label>
+												</div>
+												<div class="col-md-6">
+													<input type="checkbox" id="allowance_<?php echo $allownce->id; ?>" name="allowance_id[]" value="<?php echo $allownce->id; ?>">
+												</div>
+											</div>
+										<?php endforeach; } ?>
+										
+								</div>
+								<div class="col-md-6 mtop30">
+									<h4>Deductions</h4>
+									<hr>
+									<?php 
+									if(!empty($deductions)){
+                                        foreach ($deductions as $deduction):
+									?>
+										<div class="row">
+											<div class="col-md-6">
+												<label for="" class="control-label"><?php echo $deduction->name; ?></label>
+											</div>
+											<div class="col-md-6">
+												<input type="checkbox" id="deduction_<?php echo $deduction->id; ?>" name="deduction_id[]" value="<?php echo $deduction->id; ?>">
+											</div>
+										</div>
+									<?php endforeach; } ?>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">

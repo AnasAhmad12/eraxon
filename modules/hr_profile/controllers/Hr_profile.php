@@ -15,6 +15,7 @@ class Hr_profile extends AdminController
 	  $this->load->model('hr_profile_model');
 	  $this->load->model('departments_model');
 	  $this->load->model('staff_model');
+	  $this->load->model('eraxon_payroll/eraxon_payroll_model');
 	}
 
 
@@ -1344,6 +1345,8 @@ class Hr_profile extends AdminController
 		$data['hr_profile_get_department_name'] = $this->departments_model->get();
 		$data['get_job_position'] = $this->hr_profile_model->get_job_position();
 		$data['title'] = _l('hr_job_descriptions');
+		$data['allownces'] = $this->eraxon_payroll_model->get_allownces();
+        $data['deductions'] = $this->eraxon_payroll_model->get_deductions();
 		
 		$this->load->view('hr_profile/job_position_manage/position_manage/position_manage', $data);
 	}
@@ -1358,6 +1361,12 @@ class Hr_profile extends AdminController
 
 		if ($this->input->post()) {
 			$message          = '';
+			$allowance_ids = array();
+            $deduction_ids = array();
+            $allowance_ids = $this->input->post('allowance_id');
+            $deduction_ids = $this->input->post('deduction_id');
+            unset($_POST['allowance_id']);
+            unset($_POST['deduction_id']);
 			$data             = $this->input->post();
 			if (!$this->input->post('id')) {
 				$data['job_position_description']     = $this->input->post('job_position_description', false);
@@ -1373,7 +1382,7 @@ class Hr_profile extends AdminController
 					}
 				}
 
-
+				$this->hr_profile_model->add_job_allowance_deduction($id,$allowance_ids,$deduction_ids);
 				if ($id) {
 					$message = _l('added_successfully', _l('job_position'));
 					set_alert('success', $message);
@@ -1410,6 +1419,9 @@ class Hr_profile extends AdminController
 						}
 					}
 				}
+
+				$this->eraxon_payroll_model->delete_deductions_allowances($id);
+                $this->hr_profile_model->add_job_allowance_deduction($id,$allowance_ids,$deduction_ids);
 
 				if ($success) {
 					$message = _l('updated_successfully', _l('job_position'));
@@ -1517,6 +1529,8 @@ class Hr_profile extends AdminController
 			  $data['count_salary_allowance'] = count($data_salary_scale['allowance']);
 
 			  $data['job_position_attachment'] = $this->hr_profile_model->get_hr_profile_attachments_file($id, 'job_position');
+			  $data['allowances'] = $this->hr_profile_model->get_job_allowances($id);
+              $data['deductions'] = $this->hr_profile_model->get_job_deductions($id);
 
 			}
 
@@ -1531,6 +1545,12 @@ class Hr_profile extends AdminController
 		
 		$this->load->view('hr_profile/job_position_manage/view_edit_jobposition', $data);
 	}
+
+	public function get_job_allowances_deductions_ids($job_id)
+    {
+        $deduction_ids = $this->hr_profile_model->get_job_allowances_deductions_ids($job_id);
+        echo json_encode($deduction_ids);
+    }
 
 	
 	/**

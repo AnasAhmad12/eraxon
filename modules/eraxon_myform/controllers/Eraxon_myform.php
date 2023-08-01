@@ -12,6 +12,7 @@ class Eraxon_myform extends AdminController
 	{
 		parent::__construct();
 		$this->load->model('eraxon_myform_model');
+        $this->load->library('myform_datatables');
 	}
 
 	// public function index()
@@ -182,4 +183,6 @@ class Eraxon_myform extends AdminController
     {
         echo json_encode($this->eraxon_myform_model->report_by_day_leads_staffs($id));
     }
+
+    
 }

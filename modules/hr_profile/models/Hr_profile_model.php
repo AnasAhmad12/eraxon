@@ -7014,6 +7014,62 @@ public function add_attachment_to_database($rel_id, $rel_type, $attachment, $ext
 
     	return $staff_id;   
     }
+    public function add_job_allowance_deduction($jid,$allowance_ids, $deduction_ids) {
+        // Start a transaction
+        $this->db->trans_start();
+        // Insert allowances
+        if(!empty($allowance_ids))
+        {
+            foreach ($allowance_ids as $id) {
+                $this->db->insert(db_prefix().'job_allowance_deduction', array('jobid'=>$jid,'allowance_id' => $id,'deduction_id'=>0));
+            }
+        }
+        // Insert deductions
+        if(!empty($deduction_ids))
+        {
+            foreach ($deduction_ids as $id) {
+                $this->db->insert(db_prefix().'job_allowance_deduction', array('jobid'=>$jid,'deduction_id' => $id,'allowance_id' =>0));
+            }
+        }
+        // Complete the transaction
+        $this->db->trans_complete();
+        // Check if the transaction was successful
+        if ($this->db->trans_status() === FALSE) {
+            // The query failed, return false
+            return false;
+        }
+        // The query was successful, return true
+        return true;
+    }
+    public function get_job_allowances($job_id) {
+        $this->db->select('a.*');
+        $this->db->from(db_prefix().'allowance a');
+        $this->db->join(db_prefix().'job_allowance_deduction ja', 'a.id = ja.allowance_id');
+        $this->db->where('ja.jobid', $job_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_job_deductions($job_id) {
+        $this->db->select('d.*');
+        $this->db->from(db_prefix().'deductions d');
+        $this->db->join(db_prefix().'job_allowance_deduction ja', 'd.id = ja.deduction_id');
+        $this->db->where('ja.jobid', $job_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_job_allowances_deductions_ids($job_id) {
+        $this->db->select('deduction_id');
+        $this->db->from(db_prefix().'job_allowance_deduction');
+        $this->db->where('jobid', $job_id);
+        $query = $this->db->get();
+        $deduction_ids =array_column($query->result_array(), 'deduction_id');
+        $this->db->select('allowance_id');
+        $this->db->from(db_prefix().'job_allowance_deduction');
+        $this->db->where('jobid', $job_id);
+        $query = $this->db->get();
+        $allowance_ids  =array_column($query->result_array(), 'allowance_id');
+        return array('deduction_ids' => $deduction_ids, 'allowance_ids' => $allowance_ids);
+    }
 	
 //end file
 }

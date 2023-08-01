@@ -4838,15 +4838,16 @@ function validate_lead_form() {
         },
       },
     },
-    phonenumber:{
+   /* phonenumber:{
       required:true,
-    },
+    },*/
   };
 
   var messages = {};
   $.each(leadUniqueValidationFields, function (key, field) {
     validationObject[field] = {};
 
+   
     if (field == "email") {
       validationObject[field].email = true;
     }

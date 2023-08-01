@@ -59,6 +59,46 @@
 
 																	</td>
 																</tr>
+																<tr class="project-overview">
+																	<td class="bold">Allowances</td>
+																	<td>
+																		<?php
+
+																			if (!empty($allowances)) {
+																				$names = array();
+
+																				foreach($allowances as $allownce) {
+																					$names[] = $allownce->name;
+																				}
+
+																				echo implode(' | ', $names);
+																			} else {
+																				echo "No allowance added.";
+																			}
+
+																		?>
+																	</td>
+																</tr>
+																<tr class="project-overview">
+																	<td class="bold">Deductions</td>
+																	<td>
+																		<?php
+
+																			if (!empty($deductions)) {
+																				$names = array();
+
+																				foreach($deductions as $deduction) {
+																					$names[] = $deduction->name;
+																				}
+
+																				echo implode(' | ', $names);
+																			} else {
+																				echo "No deduction added.";
+																			}
+
+																		?>
+																	</td>
+																</tr>
 															</tbody>
 														</table>
 													</div>

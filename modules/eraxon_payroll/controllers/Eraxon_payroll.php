@@ -12,6 +12,7 @@ class Eraxon_payroll extends AdminController
         parent::__construct();
         $this->load->model('eraxon_payroll_model');
         $this->load->model('timesheets/timesheets_model');
+        $this->load->model('eraxon_wallet/eraxon_wallet_model');
     }
 
     public function allownces()
@@ -246,11 +247,19 @@ class Eraxon_payroll extends AdminController
 
     public function generate_salary_slip()
     {
-        $data['salar_details'] = $this->eraxon_payroll_model->get_salary_details();
+        if($this->input->get('m'))
+        {
+            $month_year = $this->input->get('m');
+            $month_year = date('Y-m',strtotime($month_year));
+        }else{
+
+            $month_year = Date('Y-m');
+        }
         
+        $data['salar_details'] = $this->eraxon_payroll_model->get_salary_details($month_year);
+         
         $this->load->model('roles_model');
         $data['roles'] = $this->roles_model->get();
-        // var_dump($data);exit;
         $this->load->view('eraxon_payroll/generate_salary_slip', $data);
     }
 
@@ -265,8 +274,7 @@ class Eraxon_payroll extends AdminController
             redirect(admin_url("eraxon_payroll/generate_salary_slip"));
             exit;
         }
-        
-        
+      
         
         // Create DateTime object for the first day of the selected month
         $selected_month = DateTime::createFromFormat('Y-m', $month_year);
@@ -290,14 +298,29 @@ class Eraxon_payroll extends AdminController
         // var_dump($staff);exit;
         foreach ($staff as $member) 
         {
+            $joining_check = 0;
+            $joining_days = 0;
             $employee_id = $member->staffid;
             $basic_salary = $member->basic_salary;
+            $staff_wallet = $this->eraxon_wallet_model->get_wallet_row_by_staff_id($member->staffid);
+            $payable_basic_salary = $staff_wallet->total_balance;
+
+            $transaction = array(
+                    'wallet_id' => $staff_wallet->id,
+                    'amount_type' => 'Salary ('.$month_year.')',
+                    'amount' => $staff_wallet->total_balance,
+                    'in_out' => 'out',
+                    'created_datetime' => date('Y-m-d H:i:s'),
+                    );
+            $transaction_id = $this->eraxon_wallet_model->add_transaction($transaction);
+            
             $date_string = $month_year . '-01';
             $date = new DateTime($date_string);
             $date = $date->format('Y-m-d');
+            $this->eraxon_payroll_model->delete_salary_details($employee_id, $date);
             $allowances_amount =0;
             $deductions_amount =0;
-
+        
             $data = array(
                 'employee_id' => $employee_id,
                 'basic_salary' => $basic_salary,
@@ -309,14 +332,17 @@ class Eraxon_payroll extends AdminController
                 'gross_salary' => 0,
                 'net_salary' => 0,
                 'status' => "unpaid",
-                'ack_status' => "",
+                'ack_status' => "unseen",
                 'date' => $date,
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-                'created_by' => '',
-                'updated_by' => '',
+                'employee_timesheet' => NULL,
+                'sandwitch_timesheet' => NULL,
             );
             $id = $this->eraxon_payroll_model->add_salary_detail($data);
+            //add deduction transaction id into salary details
+            $this->eraxon_wallet_model->add_deduct_transaction($id,$transaction_id);
+
             $job_position_id = $member->job_position;
             $allowances = $this->eraxon_payroll_model->get_allowances_details($job_position_id);
             $deductions = $this->eraxon_payroll_model->get_deductions_details($job_position_id);
@@ -329,25 +355,60 @@ class Eraxon_payroll extends AdminController
             {
                 $deductions_amount = $this->calculate_deductions($id,$basic_salary,$deductions);
             }
+            //calculating joining date if mid of month calculate attendance accordingly
+            $joining_date = get_custom_field_value($employee_id,'staff_date_of_joining','staff',true);
+            if (!empty($joining_date)) 
+            {
+                $joiningDate = new DateTime($joining_date);
+                $start = new DateTime($startDate);
+                $s = new DateTime($startDate);
+                $end = new DateTime($endDate);
+                
+                if ($joiningDate > $start && $joiningDate < $end) 
+                {
+                    $start = $joining_date; 
+                    $joining_check=1;
+                    $interval = $s->diff($joiningDate);
+                    $joining_days = $interval->days;
+                }else
+                {
+                    $start = $startDate;
+                }
+                // echo $joining_days;exit;
+            }
 
-            $short_hours = $this->calculate_short_hours($employee_id,$startDate,$endDate);
+
+            $short_hours = $this->calculate_short_hours_v2($employee_id,$start,$endDate);
+
             if($short_hours)
             {
                 $per_day_salary = $basic_salary/30;
-                $total_leaves_amount = $per_day_salary*$short_hours['total_leaves'];
-                $half_leaves_amount = $per_day_salary*$short_hours['half_leaves'];
-                $gross_salary = $basic_salary + $allowances_amount;
-                $net_salary = ($gross_salary - $deductions_amount) - $total_leaves_amount;
+                if(!empty($joining_check))
+                {
+                    $payable_basic_salary = $payable_basic_salary-($joining_days * $per_day_salary);
+                }
+
+                $total_absent_amount = $per_day_salary * ($short_hours['absents']);
+                $half_days_amount = $per_day_salary * ($short_hours['half_days']*0.5);
+                $total_leaves_amount = $total_absent_amount + $half_days_amount;
+
+
+
+                $gross_salary = $payable_basic_salary + $allowances_amount;
+                $net_salary = ($gross_salary - $deductions_amount) - $total_leaves_amount - $short_hours['late_amount'];
                 $data = array(
                     'salary_details_id'=>$id,
-                    'paid'=>$short_hours['paid'],
-                    'leaves'=>$short_hours['leaves'],
-                    'basic_salary'=>$basic_salary,
-                    'total_leaves'=>$short_hours['total_leaves'],
-                    'sandwitch'=>$short_hours['sandwitch'],
-                    'half_leaves'=>$short_hours['half_leaves'],
-                    'total_amount'=>$total_leaves_amount,
-                    'total_half_leaves_amount'=>$half_leaves_amount,
+                    'presents' => $short_hours['presents'],
+                    'absents' => $short_hours['absents'],
+                    'paid_leaves' => $short_hours['paid_leave'], 
+                    'half_days' => $short_hours['half_days'],
+                    'sandwitch' => $short_hours['sandwitch'],
+                    'late' => $short_hours['late'],
+                    'late_amount' => $short_hours['late_amount'],
+                    'basic_salary' => $payable_basic_salary,
+                    'absent_amount' => $total_absent_amount,
+                    'half_days_amount' => $half_days_amount,
+                    'total_amount' => $total_leaves_amount,
                     'created_at'=>date('Y-m-d H:i:s'),
                 );
                 $this->eraxon_payroll_model->add_salary_details_to_attendance($data);
@@ -356,17 +417,20 @@ class Eraxon_payroll extends AdminController
             $data = array(
                 'total_allowances' => $allowances_amount,
                 'total_deductions' => $deductions_amount,
-                'total_attendance' => $short_hours['total_leaves'],
-                'total_halfdays' => $short_hours['half_leaves'],
+                'total_attendance' => $total_leaves_amount,
+                'total_halfdays' => $half_days_amount,
+                'total_late' => $short_hours['late_amount'],
                 'gross_salary' => $gross_salary,
                 'net_salary' => $net_salary,
                 'updated_at' => date('Y-m-d H:i:s'),
+                'employee_timesheet' => json_encode($short_hours['employee_timesheet']),
+                'sandwitch_timesheet' =>json_encode($short_hours['sandwitch_timesheet']),
             );
             $this->eraxon_payroll_model->update_salary_details($id,$data);
         }
         $message = "Salary generated successfully";
         set_alert('success', $message);
-        redirect(admin_url("eraxon_payroll/generate_salary_slip"));
+       // redirect(admin_url("eraxon_payroll/generate_salary_slip"));
     }
 
     public function salary_slip_detail($id='')
@@ -376,6 +440,11 @@ class Eraxon_payroll extends AdminController
             $data['salary_details'] = $this->eraxon_payroll_model->salary_slip_details($id);
             $data['allowances'] = $this->eraxon_payroll_model->salary_details_to_allowances($id);
             $data['deductions'] = $this->eraxon_payroll_model->salary_details_to_deductions($id);
+            $data['slip_id'] = $id;
+            $this->app_scripts->add('jspdf-debug-js','modules/eraxon_payroll/assets/js/jspdf.debug.js');
+            $this->app_scripts->add('html2canvas-js','modules/eraxon_payroll/assets/js/html2canvas.js');
+            $this->app_scripts->add('html2pdf-js','modules/eraxon_payroll/assets/js/html2pdf.bundle.min.js');
+            $this->app_scripts->add('es6-promise-js','modules/eraxon_payroll/assets/js/es6-promise.auto.min.js');            
         }
         $this->load->view('eraxon_payroll/salary_slip_detail', $data);
 
@@ -646,153 +715,711 @@ class Eraxon_payroll extends AdminController
         );
         return $data;
     }
-    public function set_col_tk($from_day, $to_day, $month, $month_year, $absolute_type = true, $stafflist = '', $work_shift_id = '') {
-		$list_data = [];
-		$data_day_by_month = [];
-		$data_time = [];
-		$data_day_by_month_tk = [];
-		$data_set_col = [];
-		$data_set_col_tk = [];
-		$data_object = [];
-		$data_shift_type = $this->timesheets_model->get_shift_type();
-		$new_list_shift = [];
 
-		if ($absolute_type == true) {
-			if ($stafflist) {
-				array_push($data_day_by_month, 'staffid');
-				array_push($data_day_by_month, _l('staff'));
-				array_push($list_data, [
-					'data' => 'staffid', 'type' => 'text', 'readOnly' => true,
-				]);
-				array_push($list_data, [
-					'data' => 'staff', 'type' => 'text', 'readOnly' => true,
-				]);
-			}
-			for ($d = $from_day; $d <= $to_day; $d++) {
-				$time = mktime(12, 0, 0, $month, $d, $month_year);
+    public function calculate_short_hours_v2($employee_id,$startDate,$endDate)
+    {
 
-				if (date('m', $time) == $month) {
-					array_push($data_time, $time);
-					array_push($data_day_by_month_tk, date('D d', $time));
-					array_push($data_day_by_month, date('D d', $time));
-					array_push($data_set_col, ['data' => date('D d', $time), 'type' => 'text']);
-					array_push($data_set_col_tk, ['data' => date('D d', $time), 'type' => 'text']);
+        //Present = P
+        //Absent = A
+        //Half Day = HD
+        //Holiday = H
+        //Sunday = S
+        //Applied Leave = AL
+        //Paid Leave = PL
+        //Exception = E
 
-					array_push($data_set_col_tk, ['data' => date('D d', $time), 'type' => 'text']);
-					array_push($list_data, [
-						'data' => date('D d', $time),
-						'editor' => "chosen",
-						'chosenOptions' => [
-							'data' => $new_list_shift,
-						],
-					]);
-				}
-			}
-			if ($stafflist) {
-				$this->load->model('staff_model');
-				foreach ($stafflist as $key => $value) {
-					$data_staff = $this->staff_model->get($value);
-					$staff_id = $data_staff->staffid;
-					$staff_name = $data_staff->firstname . ' ' . $data_staff->lastname;
-					$data_shift_staff = [];
+        $timeSheet = array();
+        $employee_timeSheet = array();
+        $SandwitchDates = array();
+        $paid_leave =0;
+        $absents = 0;
+        $sandwitch = 0;
+        $half_days = 0;
+        $presents = 0;
+        $late = 0;
+        $late_amount = 0;
 
-					$row_data_staff = new stdClass();
-					$row_data_staff->staffid = $staff_id;
-					$row_data_staff->staff = $staff_name;
-					foreach ($data_time as $k => $time) {
-						$times = date('D d', $time);
-						$date_s = date('Y-m-d', $time);
-						$row_data_staff->$times = $this->timesheets_model->get_id_shift_type_by_date_and_master_id($staff_id, $date_s, $work_shift_id);
-					}
-					$data_object[] = $row_data_staff;
-				}
-			} else {
-				$row_data_staff = new stdClass();
-				foreach ($data_time as $k => $time) {
-					$times = date('D d', $time);
-					$date_s = date('Y-m-d', $time);
-					$id_shift_type = '';
-					$staff_id = '';
-					$first_staff = $this->timesheets_model->get_first_staff_work_shift($work_shift_id);
-					if ($first_staff) {
-						$staff_id = $first_staff->staff_id;
-					}
-					$data_s = $this->timesheets_model->get_id_shift_type_by_date_and_master_id($staff_id, $date_s, $work_shift_id);
-					$row_data_staff->$times = $data_s;
-				}
-				$data_object[] = $row_data_staff;
-			}
-		} else {
-			$day_list = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-			if ($stafflist) {
-				array_push($data_day_by_month, 'staffid');
-				array_push($data_day_by_month, _l('staff'));
-				array_push($list_data, [
-					'data' => 'staffid', 'type' => 'text', 'readOnly' => true,
-				]);
-				array_push($list_data, [
-					'data' => 'staff', 'type' => 'text', 'readOnly' => true,
-				]);
-			}
-			foreach ($day_list as $key => $value) {
-				array_push($data_day_by_month_tk, $value);
-				array_push($data_day_by_month, $value);
-				array_push($data_set_col, ['data' => $value, 'type' => 'text']);
-				array_push($data_set_col_tk, ['data' => $value, 'type' => 'text']);
-				array_push($list_data, [
-					'data' => $value,
-					'editor' => "chosen",
-					'chosenOptions' => [
-						'data' => $new_list_shift,
-					],
-				]);
-			}
-			if ($stafflist) {
-				$this->load->model('staff_model');
-				foreach ($stafflist as $key => $value) {
-					$data_staff = $this->staff_model->get($value);
-					$staff_id = $data_staff->staffid;
-					$staff_name = $data_staff->firstname . ' ' . $data_staff->lastname;
+        $half_day_check = 0;
+        $counter = 1;
+        $exception = 0;
+        //total months dates
+        $list_date = $this->timesheets_model->get_list_date($startDate, $endDate);
 
-					$data_shift_staff = [];
-					$row_data_staff = new stdClass();
-					$row_data_staff->staffid = $staff_id;
-					$row_data_staff->staff = $staff_name;
-					for ($i = 1; $i <= 7; $i++) {
-						$shift_type_id = '';
-						$data_shift_type = $this->timesheets_model->get_shift_type_id_by_number_day($work_shift_id, $i, $staff_id);
-						if ($data_shift_type) {
-							$shift_type_id = $data_shift_type->shift_id;
-						}
-						$day_name = $day_list[$i - 1];
-						$row_data_staff->$day_name = $shift_type_id;
-					}
-					$data_object[] = $row_data_staff;
-				}
-			} else {
-				$row_data_staff = new stdClass();
-				for ($i = 1; $i <= 7; $i++) {
-					$shift_type_id = '';
-					$data_shift_type = $this->timesheets_model->get_shift_type_id_by_number_day($work_shift_id, $i);
+        $data['list_date'] = $list_date;
+        
 
-					if ($data_shift_type) {
-						$shift_type_id = $data_shift_type->shift_id;
-					}
-					$day_name = $day_list[$i - 1];
-					$row_data_staff->$day_name = $shift_type_id;
-				}
-				$data_object[] = $row_data_staff;
-			}
-		}
-		$obj = new stdClass();
-		$obj->day_by_month = $data_day_by_month;
-		$obj->day_by_month_tk = $data_day_by_month_tk;
-		$obj->set_col = $data_set_col;
-		$obj->set_col_tk = $data_set_col_tk;
-		$obj->list_data = $list_data;
-		$obj->data_object = $data_object;
-		return $obj;
-	}
+        foreach ($list_date as $kdbm => $day) 
+        {
+            $employee_timeSheet[$counter]['staff_id'] = $employee_id; 
+            $employee_timeSheet[$counter]['date'] = $day; 
+            $dateObj = new DateTime($day);
+            $dayOfWeek = $dateObj->format('w');
+            if($dayOfWeek == 0)
+            {
+                $exception_array = $this->eraxon_payroll_model->check_exception_for_salary($day);
+                $data['overall'] = $exception_array;
+
+                if(count($exception_array) > 0)
+                {
+                    $exception = 1;
+
+                }else
+                {
+                     $exception = 0;
+                }
+
+                $data['exception'] = $exception;
+            }
+            if ($dayOfWeek == 0 && $exception == 0) 
+            {
+
+                //check exception here
+                $employee_timeSheet[$counter]['hours'] = 0;
+                $employee_timeSheet[$counter]['attendance'] = 'S';
+            
+            }else
+            {
+                //employee working days and hours
+                $hours = '';
+
+
+                if($exception == 1)
+                {
+                    $start_date = $exception_array[0]['time_start_work'];
+                    $end_date = $exception_array[0]['time_end_work'];
+                    $start = new DateTime($start_date);
+                    $end = new DateTime($end_date);
+                    $interval = $start->diff($end);
+                    $hours = $interval->h;
+                    $minutes = $interval->i;
+                    $total_minutes = $hours * 60 + $minutes;
+                    $sixty_percent_time = $total_minutes * 0.6;
+                    //if less than this hours there will be short hours
+                    $hours = $sixty_percent_time / 60;
+
+                        $data['start_date'] = $start_date;
+                        $data['end_date'] = $end_date;
+                        $data['total_minutes'] = $total_minutes;
+                        $data['sixty_percent_time'] = $sixty_percent_time;
+                        $data['hours'] = $hours;
+                        $data['day'] = $exception_array[0]['exceptions'];
+
+                    $data['addintotimesheet'] = $this->eraxon_payroll_model->add_check_in_out_value_to_timesheet($employee_id,$exception_array[0]['exceptions']);
+
+                    $exception = 0;
+                    
+                }else
+                {
+                    //get shift by employee and day i.e 05 monday is shift 2
+                    $list_shift = $this->timesheets_model->get_shift_work_staff_by_date($employee_id, $day);
+                    $ss = !empty($list_shift) ? $list_shift[0] : 0;
+                    $data_shift_type = $this->timesheets_model->get_shift_type($ss);
+
+                    if ($data_shift_type) 
+                    {
+                        $start_date = $data_shift_type->time_start_work;
+                        $end_date = $data_shift_type->time_end_work;
+                        $start = new DateTime($start_date);
+                        $end = new DateTime($end_date);
+                        $interval = $start->diff($end);
+                        $hours = $interval->h;
+                        $minutes = $interval->i;
+                        $total_minutes = $hours * 60 + $minutes;
+                        $sixty_percent_time = $total_minutes * 0.6;
+                        //if less than this hours there will be short hours
+                        $hours = $sixty_percent_time / 60;
+
+
+                        $data['start_date'] = $start_date;
+                        $data['end_date'] = $end_date;
+                        $data['total_minutes'] = $total_minutes;
+                        $data['sixty_percent_time'] = $sixty_percent_time;
+                        $data['hours'] = $hours;
+                        
+                    }
+                }
+
+                    //Check and add Holiday
+                    $check_holiday = $this->timesheets_model->check_holiday($employee_id, $day);
+                    if(!empty($check_holiday))
+                    {
+                        $employee_timeSheet[$counter]['hours'] = 0;
+                        $employee_timeSheet[$counter]['attendance'] = 'H';
+
+                    }else
+                    {
+
+                        $timeSheet = $this->eraxon_payroll_model->get_timesheet_by_employee_id($employee_id,$startDate,$endDate);
+        
+                        $data['timesheet'] = $timeSheet;
+                        $result = array_filter($timeSheet, function ($item) use ($day) {
+                                return $item->date_work == $day;
+                            });
+
+                        if(!empty($result))
+                        {
+                            foreach($result as $res)
+                            {
+                                
+                                $type = $res->type;
+                                if($type == "W")
+                                {
+                                    //working hours is less than 60 % of working hours
+                                    if($res->value < $hours)
+                                    {
+                                        $employee_timeSheet[$counter]['hours'] = $res->value;
+                                        $employee_timeSheet[$counter]['attendance'] = 'HD';
+                                        $half_day_check = 1;
+                                        
+                                    }else
+                                    {
+                                        $employee_timeSheet[$counter]['hours'] = $res->value;
+                                        $employee_timeSheet[$counter]['attendance'] = 'P';
+                                    } 
+                                }else if($type == "U" || $type == "AL" || $type == "SI" || $type == "M" || $type == "CL")
+                                {
+                                    $employee_timeSheet[$counter]['hours'] = 0;
+                                    $employee_timeSheet[$counter]['attendance'] = 'AL';
+
+                                }else if($type == "L")
+                                {
+                                    if($res->value > 0.33 && $half_day_check == 0)
+                                    {
+                                        $employee_timeSheet[$counter]['Late'] = $res->value;
+                                        $late++;
+                                        $late_amount += 200;
+                                    }else{
+                                        $half_day_check = 0;
+                                    }
+
+                                }else if($type != "L" && $type != 'E'){
+
+                                    $employee_timeSheet[$counter]['hours'] = 0;
+                                    $employee_timeSheet[$counter]['attendance'] = 'A';
+                                }
+                            }
+                        }else
+                        {
+                            $employee_timeSheet[$counter]['hours'] = 0;
+                            $employee_timeSheet[$counter]['attendance'] = 'A';
+                        }
+                    }
+
+                
+            }
+
+            $counter++;
+        }
+
+        //check Sandwitch
+        $SandwitchDates = $employee_timeSheet;
+
+         $holiday = array();
+            $holiday_counter = 0;
+            for ($i=1; $i <=count($SandwitchDates) ; $i++) 
+            { 
+                if($SandwitchDates[$i]['attendance'] == 'H')
+                {
+                    $holiday_counter++;
+                    if($i == 1)
+                    {
+                        $nextDay = $i + 1;
+
+                        if($SandwitchDates[$nextDay]['attendance'] == 'A')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'A';
+                                $sandwitch++;
+
+                            }else if($SandwitchDates[$nextDay]['attendance'] == 'HD')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'HD';
+                                $sandwitch++;
+                            }  
+
+
+                    }else if($i == count($SandwitchDates))
+                    {
+                        $previousDay = $i - 1;
+
+                        if($SandwitchDates[$previousDay]['attendance'] == 'A')
+                        {
+                            $SandwitchDates[$i]['attendance'] = 'A';
+                            $sandwitch++;
+
+                        }else if($SandwitchDates[$previousDay]['attendance'] == 'HD')
+                        {
+                            $SandwitchDates[$i]['attendance'] = 'HD';
+                            $sandwitch++;
+                        } 
+
+                    }else
+                    {
+                        $previousDay = $i - 1;
+                        $nextDay = $i + 1;
+                        $hnextDay = $nextDay;
+                        $hcheck = 0;
+                        
+                        if($SandwitchDates[$previousDay]['attendance'] == 'A')
+                        {
+                            $hcheck = 1;
+
+                        }else if($SandwitchDates[$previousDay]['attendance'] == 'HD')
+                        {
+                            $hcheck = 2;
+                        } 
+
+                        while(true)
+                        {
+                            if($SandwitchDates[$hnextDay]['attendance'] == 'H')
+                            {
+                               $hnextDay++; 
+
+                            }else{
+
+                               break; 
+                            }
+                        }
+
+                        if($SandwitchDates[$hnextDay]['attendance'] == 'A')
+                        {
+                            $hcheck = 1;
+
+                        }else if($SandwitchDates[$hnextDay]['attendance'] == 'HD')
+                        {
+                            if($hcheck == 2)
+                            {
+                                $hcheck = 2;
+                            }
+                            
+                        }
+                        $hnextDay--;
+                        for ($h=$hnextDay; $h>= $i ; $h--) 
+                        { 
+                            if($hcheck == 1)
+                            {
+                                $SandwitchDates[$h]['attendance'] = 'A';
+                                $holiday[] = $SandwitchDates[$h]['date'];
+                                $sandwitch++;
+
+                            }else if($hcheck == 2)
+                            {
+                                $SandwitchDates[$h]['attendance'] = 'HD';
+                                $holiday[] = $SandwitchDates[$h]['date'];
+                                $sandwitch++;
+                            }
+                        }
+
+
+                        
+                        $data['holiday'] = $holiday;
+                    }
+                }
+                    
+            }
+
+            for ($i=1; $i <=count($SandwitchDates) ; $i++) 
+            { 
+                $attendanceDate = $SandwitchDates[$i]['date'];
+                $attendanceStatus = $SandwitchDates[$i]['attendance'];
+
+                //Check Sandwitch for sundays
+                if($attendanceStatus == 'S')
+                {
+                    //check Exception
+                    $exception_array = $this->eraxon_payroll_model->check_exception_for_salary($attendanceDate);
+                    if(count($exception_array) > 0)
+                    {
+                        continue;
+                    }else
+                    {   
+                        if($i == 1)
+                        {
+                            $nextDay = $i + 1;
+
+                            if($SandwitchDates[$nextDay]['attendance'] == 'A')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'A';
+                                $sandwitch++;
+
+                            }else if($SandwitchDates[$nextDay]['attendance'] == 'HD')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'HD';
+                                $sandwitch++;
+                            }                         
+
+                        }else if($i == count($SandwitchDates))
+                        {
+                            $previousDay = $i - 1;
+                            if($SandwitchDates[$previousDay]['attendance'] == 'A')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'A';
+                                $sandwitch++;
+
+                            }else if($SandwitchDates[$previousDay]['attendance'] == 'HD')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'HD';
+                                $sandwitch++;
+                            } 
+
+                        }else
+                        {
+                            $previousDay = $i - 1;
+                            $nextDay = $i + 1;
+                            $scheck1 = 0;
+
+                            //check Previous
+                            if($SandwitchDates[$previousDay]['attendance'] == 'A')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'A';
+                                $scheck1 = 1;
+                                $sandwitch++;
+
+                            }else if($SandwitchDates[$previousDay]['attendance'] == 'HD')
+                            {
+                                $SandwitchDates[$i]['attendance'] = 'HD';
+                                $sandwitch++;
+                            }
+
+                            if($scheck1 == 0)
+                            {
+                                 //check next
+                                if($SandwitchDates[$nextDay]['attendance'] == 'A')
+                                {
+                                    $SandwitchDates[$i]['attendance'] = 'A';
+                                    $sandwitch++;
+
+                                }else if($SandwitchDates[$nextDay]['attendance'] == 'HD')
+                                {
+                                    $SandwitchDates[$i]['attendance'] = 'HD';
+                                    $sandwitch++;
+                                } 
+                            }
+                                         
+
+                        }
+                    }
+
+                   
+                }
+
+            }
+            
+
+        $data['SandwitchDates'] = $SandwitchDates;
+        $data['counter'] = $holiday_counter;
+        $data['attendance'] = $employee_timeSheet;
+
+       
+
+        for ($i=1; $i <=count($SandwitchDates) ; $i++) 
+        {
+            if($SandwitchDates[$i]['attendance'] == 'P')
+            {
+                $presents++;
+
+            }else if($SandwitchDates[$i]['attendance'] == 'A' )
+            {
+                $absents ++;
+
+            }else if($SandwitchDates[$i]['attendance'] == 'AL' )
+            {
+                $paid_leave++;
+
+            }else if($SandwitchDates[$i]['attendance'] == 'HD' )
+            {
+                $half_days++;
+            }
+        } 
+        $data = array(
+            'paid_leave'=>$paid_leave,
+            'presents'=>$presents,
+            'half_days'=>$half_days,
+            'absents'=>$absents,
+            'sandwitch' => $sandwitch,
+            'late' => $late,
+            'late_amount' => $late_amount, 
+            'employee_timesheet' => $employee_timeSheet,
+            'sandwitch_timesheet' => $SandwitchDates
+
+        );
+
+        return $data;
+        //$this->load->view('eraxon_payroll/dump_data', $data);
+        
+    }
+
+    public function bonuses_settings()
+    {
+        $data['bonuses'] = $this->eraxon_payroll_model->get_bonuses();
+        $data['employees'] = $this->eraxon_payroll_model->get_employees();
+        $general_bonuses = array_map(function($item) {
+            return $item['bonus_id'];
+        }, $this->eraxon_payroll_model->get_general_bonuses());
+        $data['general_bonuses'] = $general_bonuses;
+        $data['employee_bonuses'] = $this->eraxon_payroll_model->get_employee_bonuses();
+        $this->load->view('eraxon_payroll/bonuses_settings', $data);
+    }
+
+    public function save_bonuses_settings()
+    {
+        $bonuses = $this->input->post('bonuses');
+        $employee_bonuses = $this->input->post('employee_bonuses');
+        $employee = $this->input->post('employee');
+
+        // Call the model methods to handle the database operations
+        $this->eraxon_payroll_model->update_general_bonuses($bonuses);
+        $this->eraxon_payroll_model->update_employee_bonuses($employee, $employee_bonuses);
+        $message = "Bonuses updated successfully";
+        set_alert('success', $message);
+        redirect(admin_url("eraxon_payroll/bonuses_settings"));
+    }
+
+    public function delete_employee_bonuses($employee_id)
+    {
+        $this->eraxon_payroll_model->delete_employee_bonuses($employee_id);
+        $message = "Bonus deleted successfully";
+        set_alert('success', $message);
+        redirect(admin_url('eraxon_payroll/bonuses_settings'));
+    }
+
+    public function generate_bonus_slip()
+    {
+        $data['bonus_details'] = $this->eraxon_payroll_model->get_bonus_details();
+        
+        $this->load->model('roles_model');
+        $data['roles'] = $this->roles_model->get();
+        $this->load->view('eraxon_payroll/generate_bonuses_slip',$data);
+    }
+
+    // public function generate_bonus_slips()
+    // {
+    //     $month_year =  $this->input->post('month_timesheets');
+    //     $role_id =  $this->input->post('role_id');
+    //     if(empty( $month_year) || empty($role_id))
+    //     {
+    //         $message = "Please select a valid date and role.";
+    //         set_alert('error', $message);
+    //         redirect(admin_url("eraxon_payroll/generate_bonus_slip"));
+    //         exit;
+    //     }
+
+    //     $staff = $this->eraxon_payroll_model->get_staff($role_id);
+
+    // }
+
+    public function generate_bonus_slips()
+    {
+        $month_year =  $this->input->post('month_timesheets');
+        $role_id =  $this->input->post('role_id');
+        if(empty( $month_year) || empty($role_id))
+        {
+            $message = "Please select a valid date and role.";
+            set_alert('error', $message);
+            redirect(admin_url("eraxon_payroll/generate_bonus_slip"));
+            exit;
+        }
+
+        $staff = $this->eraxon_payroll_model->get_staff($role_id);
+        
+        if (!empty($staff)) {
+            foreach($staff as $staff_member){
+                $staff_id = $staff_member->staffid; // assuming staffid is the id of the staff member
+                $date_string = $month_year . '-01';
+                $date = new DateTime($date_string);
+                $date = $date->format('Y-m-d');
+                $this->eraxon_payroll_model->delete_bonus_slip($staff_id, $date);
+
+                $leads = $this->eraxon_payroll_model->get_leads_for_staff($staff_id, $month_year);
+                $leads_count = $leads;
+                $targets = $this->eraxon_payroll_model->get_active_targets();
+                
+                $data = array(
+                    'performance_bonus'=>0,
+                    'bonus'=>0,
+                    'employee_id'=>$staff_id,
+                    'total_bonus'=>0,
+                    'month_year'=>$date,
+                    'leads_achieved'=>$leads_count,
+                    'accumulative_bonus'=>0,
+                    'created_at'=>date('Y-m-d H:i:s'),
+                );
+                $insert_id = $this->eraxon_payroll_model->insert_bonus_slip($data);
+                // Initialize bonus to 0
+                $leadsbonus = $accumulative_bonus = 0;
+                if (!empty($targets)) {
+                    foreach($targets as $target){
+                        
+                        if($leads_count > $target->target){
+                            $leadsbonus = $target->bonus;
+                            // Assuming accumulative_bonus is a percentage
+                            $accumulative_bonus = $leadsbonus * ($target->accumulative_bonus / 100);
+                            $leadsbonus = $leadsbonus - $accumulative_bonus;
+                            $data = array(
+                                'leads_achieved'=>$leads_count,
+                                'target_name'=>$target->name,
+                                'target_leads'=>$target->target,
+                                'target_bonus'=>$target->bonus,
+                                'accumulative_bonus'=>$target->accumulative_bonus,
+                                'bonus_slip_id'=>$insert_id,
+                            );
+                            $this->eraxon_payroll_model->insert_bonus_slip_target_bonus($data);
+                            break;
+                        }
+                    }
+                }
+                /** caculating general and specific emplyee bonuses */
+                $general_bonuses = $this->eraxon_payroll_model->g_bonuses();                
+                $employee_bonuses = $this->eraxon_payroll_model->e_bonuses($staff_id);  
+                $merged_bonuses = [];
+                if (!empty($general_bonuses)) {
+                    foreach ($general_bonuses as $bonus) {
+                        $key = $bonus['bonus_id'];
+                        $merged_bonuses[$key] = $bonus;
+                    }
+                }
+                
+                if (!empty($employee_bonuses)) {
+                    foreach ($employee_bonuses as $bonus) {
+                        $key = $bonus['bonus_id'];
+                        $merged_bonuses[$key] = $bonus;
+                    }
+                }     
+                $total_bonus_amount = 0;
+
+                if (!empty($merged_bonuses)) {
+                    foreach ($merged_bonuses as $bonus) {
+                        $total_bonus_amount += $bonus['amount'];
+                        $data = array(
+                            'bonus_id'=>$bonus["bonus_id"],
+                            'bonus_name'=>$bonus['name'],
+                            'bonus_amount'=>$bonus["amount"],
+                            'bonus_slip_id'=>$insert_id,
+                        );
+                        $this->eraxon_payroll_model->insert_bonus_slip_bonus($data);
+                    }
+                }
+                $total_bonus = $leadsbonus + $total_bonus_amount;
+                $data = array(
+                    'performance_bonus'=>$leadsbonus,
+                    'bonus'=>$total_bonus_amount,
+                    'total_bonus'=>$total_bonus,
+                    'accumulative_bonus'=>$accumulative_bonus,
+                );
+                $this->eraxon_payroll_model->update_bonus_slip($data, $insert_id);
+                
+            }
+        }
+        redirect(admin_url('eraxon_payroll/generate_bonus_slip'));
+    }
+
+    public function salary_settings()
+    {
+        if ($this->input->post()) 
+        {
+            $data = $this->input->post();
+            $ins = $this->eraxon_payroll_model->add_exception($data);
+            if($ins)
+            {
+                set_alert('success', _l('added_successfully', "Request"));
+            }
+            
+
+        }
+
+            $data['exceptions'] = $this->eraxon_payroll_model->get_exception();
+  
+        $this->load->view('eraxon_payroll/salary_settings', $data);
+    }
+
+    public function delete_exception($id)
+    {
+        if (!$id) {
+            redirect(admin_url('eraxon_payroll/salary_settings'));
+        }
+        $response = $this->eraxon_payroll_model->delete_exception($id);
+
+        if($response)
+        {
+            set_alert('success', _l('deleted', "Request deleted Successfully"));
+
+        }else
+        {
+             set_alert('warning', _l('problem_deleting', _l('lead_source_lowercase')));
+        }
+        redirect(admin_url('eraxon_payroll/salary_settings'));
+    }
+
+    public function salary_pdf_view($id='')
+    {
+         if(!empty($id))
+        {
+            $this->load->library('Pdf');
+            $data['salary_details'] = $this->eraxon_payroll_model->salary_slip_details($id);
+            $data['allowances'] = $this->eraxon_payroll_model->salary_details_to_allowances($id);
+            $data['deductions'] = $this->eraxon_payroll_model->salary_details_to_deductions($id);
+
+        }
+        $this->load->view('eraxon_payroll/salary_slip_detail_pdf', $data);
+    }
+
+    public function salary_slip_status()
+    {
+        if ($this->input->post()) 
+        {
+            $data = $this->input->post();
+            $slip_id = $data['id'];
+            $data2 = array('status' => $data['status']);
+            
+            $success = $this->eraxon_payroll_model->update_salary_slip_status($slip_id,$data2);
+            if ($success) {
+
+                    if($data['status'] == 'paid')
+                    {
+                        $this->eraxon_wallet_model->add_salary_deposit_into_wallet($slip_id); 
+                    }
+                   
+                    echo 1;
+                   // set_alert('success', _l('updated_successfully',"Stutus updated!"));
+                }
+        }
+    }
+
+    public function salary_slip_detail_delete($id)
+    {
+        $success =$this->eraxon_payroll_model->delete_salary_details_by_id($id);
+        if ($success) 
+        {
+            set_alert('success', _l('updated_successfully',"Slip Deleted!"));
+        }
+        redirect(admin_url('eraxon_payroll/generate_salary_slip'));
+
+    }
+
+    public function my_salary()
+    {
+        $data['salar_details'] = $this->eraxon_payroll_model->get_salary_details();
+         
+        $this->load->model('roles_model');
+        $data['roles'] = $this->roles_model->get();
+        $this->load->view('eraxon_payroll/my_salary', $data);
+    }
+
+    public function my_salary_slip_status($sid)
+    {
+            $slip_id = $sid;
+            $data = array('ack_status' => 'acknowledged');
+            
+            $success = $this->eraxon_payroll_model->update_my_salary_slip_status($slip_id,$data);
+            if ($success) {
+                    set_alert('success', _l('updated_successfully',"Stutus updated!"));
+                    redirect(admin_url('eraxon_payroll/my_salary'));
+                }
+        
+    }
+   
+
+
+
 
 
 

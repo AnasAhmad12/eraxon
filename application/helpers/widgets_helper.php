@@ -60,7 +60,7 @@ function get_dashboard_widgets()
             'container' => 'right-4',
         ],
         [
-            'path'      => 'admin/dashboard/widgets/salary_slip',
+            'path'      => 'admin/dashboard/widgets/my_wallet',
             'container' => 'right-4',
         ],
         [

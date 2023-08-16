@@ -63,3 +63,24 @@ if (!$CI->db->table_exists(db_prefix() . 'other-requests')) {
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
 }
+
+if (!$CI->db->table_exists(db_prefix() . 'docks')) {
+  $CI->db->query('CREATE TABLE `' . db_prefix() . "docks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `dock_name` varchar(150) NOT NULL,
+  `amount` decimal(50,4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+}
+
+if (!$CI->db->table_exists(db_prefix() . 'teamlead_docks')) {
+  $CI->db->query('CREATE TABLE `' . db_prefix() . "teamlead_docks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_id` int(11) NOT NULL,
+  `dock_id` INT(11) NOT NULL,
+  `dock_name` varchar(150) NOT NULL,
+  `dock_amount` decimal(50,4) NOT NULL,
+  `added_datetime` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+}

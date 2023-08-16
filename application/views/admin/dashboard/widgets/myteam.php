@@ -39,7 +39,7 @@ function search_exif($exif, $field)
                     <div class="row">
                         <div class="col-md-12">
                             
-                            <h4><p class="padding-5 bold"><?php echo "My Team"; ?></p></h4>
+                            <h4><p class="padding-5 bold"><i class="fa fa-people-group"></i> <?php echo "My Team"; ?></p></h4>
                             <hr class="hr-panel-heading-dashboard">
                             
                             <!-- <h3>Under Construction</h3> -->

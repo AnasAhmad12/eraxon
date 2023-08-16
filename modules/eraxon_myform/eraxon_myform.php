@@ -125,6 +125,38 @@ function eraxon_myform_init_menu_items()
         'position' => 4,
         'badge'    => [],
     ]);
+
+
+     $CI->app_menu->add_sidebar_menu_item('teamlead', [
+        'collapse' => true,
+        'name'     => 'Team Lead',
+        'position' => 52,
+        'icon'     => 'fa fa-file-contract',
+        'badge'    => [],
+    ]);
+
+    if(has_permission('teamlead','','add_dock'))
+    {
+         $CI->app_menu->add_sidebar_children_item('teamlead', [
+            'slug'     => 'team_lead_menu1',
+            'name'     => 'Add Docks',
+            'href' => admin_url('eraxon_myform/team_lead_manage_dock'),
+            'position' => 4,
+            'badge'    => [],
+        ]);
+    }
+    if(has_permission('teamlead','','manage_dock'))
+    {
+      $CI->app_menu->add_sidebar_children_item('teamlead', [
+        'slug'     => 'team_lead_menu2',
+        'name'     => 'Manage Docks',
+        'href' => admin_url('eraxon_myform/manage_docks'),
+        'position' => 4,
+        'badge'    => [],
+        ]);
+    }
+
+
  }
 
 
@@ -135,9 +167,15 @@ function eraxon_myform_permissions($permissions)
     $config = [];
     $config2 = [];
     $config3 = [];
+    $config4 = [];
 
 
-     $config3['capabilities'] = [
+    $config4['capabilities'] = [
+                'add_dock'   => 'Add Dock',
+                'manage_dock' => 'Manage Dock',
+    ];
+
+    $config3['capabilities'] = [
                 'change_status'   => 'Change Status',
                 'add_notes' => 'Add Notes',
                 'edit_leads'   => 'Edit Leads',
@@ -163,7 +201,7 @@ function eraxon_myform_permissions($permissions)
     register_staff_capabilities('leads_caps',$config3, 'Leads Sub Capabilities' );
     register_staff_capabilities('other_form',$config, 'Other Forms' );
     register_staff_capabilities('advance_salary',$config2, 'Advance Salary' );
-
+    register_staff_capabilities('teamlead',$config4, 'Team Lead' );
    
 
 }

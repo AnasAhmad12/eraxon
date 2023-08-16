@@ -12,7 +12,10 @@ class Eraxon_myform extends AdminController
 	{
 		parent::__construct();
 		$this->load->model('eraxon_myform_model');
-        $this->load->library('myform_datatables');
+        $this->load->model('staff_model');
+        $this->load->model('roles_model');
+        $this->load->model('eraxon_wallet/eraxon_wallet_model');
+       
 	}
 
 	// public function index()
@@ -172,6 +175,107 @@ class Eraxon_myform extends AdminController
             set_alert('warning', _l('problem_deleting', _l('lead_source_lowercase')));
         }
         redirect(admin_url('eraxon_myform/advance_salary'));
+    }
+
+
+    //Show All Docks
+    public function manage_docks()
+    {
+        $data['all_docks'] = $this->eraxon_myform_model->get_all_docks();
+        $data['title']   = 'Manage Docks';
+        $this->load->view('eraxon_myform/admin_dock_manage',$data);
+    }
+
+    //add or update Dock
+    public function add_dock()
+    {
+        if ($this->input->post()) {
+            $data = $this->input->post();
+            if (!$this->input->post('id')) {
+               
+                $id = $this->eraxon_myform_model->add_dock($data);
+
+                if ($id) {
+                    set_alert('success', _l('added_successfully', "Dock Data"));
+
+                }
+               
+            } else {
+                $id = $data['id'];
+                unset($data['id']);
+                $success = $this->eraxon_myform_model->update_dock($data, $id);
+                if ($success) {
+                    set_alert('success', _l('updated_successfully',"Dock Data"));
+                }
+            }
+        }
+    }
+
+    public function delete_dock($id)
+    {
+        if (!$id) {
+            redirect(admin_url('eraxon_myform/manage_docks'));
+        }
+        $response = $this->eraxon_myform_model->delete_dock($id);
+        if (is_array($response) && isset($response['referenced'])) {
+            set_alert('warning', _l('is_referenced', _l('lead_source_lowercase')));
+        } elseif ($response == true) {
+            set_alert('success', _l('deleted', "Request deleted Successfully"));
+        } else {
+            set_alert('warning', _l('problem_deleting', _l('lead_source_lowercase')));
+        }
+        redirect(admin_url('eraxon_myform/manage_docks'));
+    }
+
+    public function team_lead_manage_dock()
+    {
+        $role_id = $this->roles_model->get_roleid_by_name('CSR');
+        $data['staff_members'] = $this->staff_model->get('', ['active' => 1,'role' => $role_id]);
+        $data['docks'] = $this->eraxon_myform_model->get_all_docks();
+
+        $this->load->view('eraxon_myform/teamlead_dock_manage',$data);
+
+    }
+
+    public function team_lead_add_dock()
+    {
+        
+        if ($this->input->post()) {
+            $data = $this->input->post();
+            if (!$this->input->post('id')) {
+               $data['added_datetime'] = date('Y-m-d H:i:s');
+                $id = $this->eraxon_myform_model->teamlead_add_dock($data);
+
+                if ($id) {
+                    set_alert('success', _l('added_successfully', "Dock Added"));
+
+                    $wallet_id = $this->eraxon_wallet_model->get_walletid_by_staff_id($data['staff_id']);
+                    $transaction = array(
+                    'wallet_id' => $wallet_id,
+                    'amount_type' => 'dock ('.$data['dock_name'].')',
+                    'amount' => $data['dock_amount'],
+                    'in_out' => 'out',
+                    'created_datetime' => date('Y-m-d H:i:s'),
+                    );
+                   $tid =  $this->eraxon_wallet_model->add_transaction($transaction);
+                    redirect(admin_url('eraxon_myform/team_lead_manage_dock'));
+                }
+               
+                } else {
+                $id = $data['id'];
+                unset($data['id']);
+                $success = $this->eraxon_myform_model->teamlead_update_dock($data, $id);
+                if ($success) {
+                    set_alert('success', _l('updated_successfully',"Dock Data"));
+                }
+            }
+
+        }
+    }
+
+    public function team_lead_manage_all_dock()
+    {
+        
     }
 
     public function report_by_leads_staffs($id)

@@ -670,6 +670,7 @@ $lang['check_out_successfull']  = 'Check out successfully';
 $lang['check_out_not_successfull']  = 'Check out not successfully';
 $lang['shift_type_name']  = 'Name';
 $lang['import_timesheets']  = 'Import timesheets';
+$lang['import_timesheets_biometric']  = 'Import timesheets from biometric';
 $lang['the_total_was_off']  = 'Total was off';
 $lang['total_annual_leave']  = 'Total annual leave';
 $lang['U_value']  = 'Unexcused leave';

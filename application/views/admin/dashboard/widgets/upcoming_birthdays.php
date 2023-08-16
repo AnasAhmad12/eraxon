@@ -15,7 +15,7 @@ $data_dash = $this->hr_profile_model->get_hr_profile_dashboard_data();
                     <div class="row">
                         <div class="col-md-12">
                             
-                            <h4><p class="padding-5 bold"><?php echo _l('hr_birthday_in_month'); ?></p></h4>
+                            <h4><p class="padding-5 bold"><i class="fa fa-birthday-cake"></i> <?php echo _l('hr_birthday_in_month'); ?></p></h4>
                             <hr class="hr-panel-heading-dashboard">
                             <table class="table dt-table scroll-responsive">
                                 <thead>

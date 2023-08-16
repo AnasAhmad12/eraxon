@@ -66,6 +66,8 @@
         <?php } //elseif($data_timekeeping_form == 'csv_clsx'){ 
           if (is_admin()) {
           ?>
+          <button type="button" class="btn btn-info pull-right display-block mtop5 check_in_out_timesheet" data-toggle="modal" data-target="#import_timesheets_biometric_modal" data-original-title="<?php echo _l('import_timesheets_biometric'); ?>"><?php echo _l('import_timesheets_biometric'); ?></button>
+
           <button type="button" class="btn btn-info pull-right display-block mtop5 check_in_out_timesheet" data-toggle="modal" data-target="#import_timesheets_modal" data-original-title="<?php echo _l('import_timesheets'); ?>"><?php echo _l('import_timesheets'); ?></button>
         <?php } ?>
       </div>
@@ -162,6 +164,31 @@
   </div>
   <?php echo form_close(); ?>
 </div>
+
+
+<div class="modal fade" id="import_timesheets_biometric_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <?php echo form_open_multipart(admin_url('timesheets/import_biometric_timesheets'),array('id'=>'import-timesheets-form')); ?>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="exampleModalLabel"><?php echo _l('import_timesheets'); ?></h4>
+      </div>
+      <div class="modal-body">
+        <?php echo render_input('file_timesheets', 'file', '', 'file', ['accept'=>".xlsx, .xls, .csv"]); ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo _l('close'); ?></button>
+        <a href="<?php echo site_url('modules/timesheets/uploads/timesheets/import_timesheets.xlsx'); ?>" class="btn btn-primary"><?php echo _l('download_sample'); ?></a>
+        <button class="btn btn-primary"><?php echo _l('submit'); ?></button>
+      </div>
+    </div>
+  </div>
+  <?php echo form_close(); ?>
+</div>
+
 <?php init_tail(); ?>
 </body>
 </html>

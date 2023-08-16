@@ -561,7 +561,7 @@ class timesheets extends AdminController {
 			$staff = $data['staff'];
 		}
 		/*   modified By Anas */
-		if (has_permission('attendance_management', '', 'view_own')) 
+		if (has_permission('attendance_management', '', 'view_own') && !is_admin()) 
 		{ 
 			$ssid = get_staff_user_id();
 			$staff = $ssid;
@@ -4337,6 +4337,67 @@ public function check_in_ts() {
 		}
 		redirect(admin_url('timesheets/timekeeping'));
 	}
+
+
+/**
+ * import timesheets
+ * @return
+ */
+	public function import_biometric_timesheets() {
+		if (!class_exists('XLSXReader_fin')) {
+			require_once module_dir_path(TIMESHEETS_MODULE_NAME) . '/assets/plugins/XLSXReader/XLSXReader.php';
+		}
+		require_once module_dir_path(TIMESHEETS_MODULE_NAME) . '/assets/plugins/XLSXWriter/xlsxwriter.class.php';
+
+		$total_row_false = 0;
+		$total_rows = 0;
+		$dataerror = 0;
+		$total_row_success = 0;
+		if (isset($_FILES['file_timesheets']['name']) && $_FILES['file_timesheets']['name'] != '') {
+// Get the temp file path
+			$tmpFilePath = $_FILES['file_timesheets']['tmp_name'];
+// Make sure we have a filepath
+			if (!empty($tmpFilePath) && $tmpFilePath != '') {
+				$rows = [];
+// Setup our new file path
+				$newFilePath = $tmpDir . $_FILES['file_timesheets']['name'];
+				if (move_uploaded_file($tmpFilePath, $newFilePath)) {
+					$xlsx = new XLSXReader_fin($newFilePath);
+					$sheetNames = $xlsx->getSheetNames();
+					$data = $xlsx->getSheetData($sheetNames[1]);
+
+					for ($row = 1; $row < count($data); $row++) {
+						$flag = 0;
+						$rd = [];
+
+						$ddate = (string)$data[$row][2];
+						$din = (string)$data[$row][3];
+						$dout = (string)$data[$row][4];
+
+						$dtime_in = $ddate.' '.$din;
+						$dtime_out = $ddate.' '.$dout;
+
+						$rd['staffid'] = isset($data[$row][0]) ? $data[$row][0] : '';
+						$rd['time_in'] = isset($din) ? $dtime_in : '';
+						$rd['time_out'] = isset($dout) ? $dtime_out : '';
+						if ($rd['staffid'] == '' && $rd['time_in'] == '' && $rd['time_out'] == '') {
+							$flag = 1;
+						}
+						if ($flag == 0) {
+							$rows[] = $rd;
+						}
+					}
+					$this->timesheets_model->import_timesheets($rows);
+					//update_option('biometric_attendance',json_encode($rows));
+					set_alert('success', _l('import_timesheets'));
+				}
+			} else {
+				set_alert('warning', _l('import_upload_failed'));
+			}
+		}
+		redirect(admin_url('timesheets/timekeeping'));
+	}
+
 
 /**
  * Sets the leave.

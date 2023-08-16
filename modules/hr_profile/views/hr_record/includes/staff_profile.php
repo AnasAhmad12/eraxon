@@ -127,7 +127,7 @@
 							<td class="bold">Pseudo</td>
 							<td><?php 
 
-							$get_custom_staff_values2 = get_custom_field_value(get_staff_user_id(),'staff_pseudo','staff',true);
+							$get_custom_staff_values2 = get_custom_field_value($member->staffid,'staff_pseudo','staff',true);
 
 							echo $get_custom_staff_values2; ?></td>
 						</tr>
@@ -135,7 +135,7 @@
 							<td class="bold">father's Name</td>
 							<td><?php 
 
-							$get_custom_staff_values3 = get_custom_field_value(get_staff_user_id(),'staff_father_s_name','staff',true);
+							$get_custom_staff_values3 = get_custom_field_value($member->staffid,'staff_father_s_name','staff',true);
 
 							echo $get_custom_staff_values3; ?></td>
 						</tr>
@@ -200,7 +200,7 @@
 							<td class="bold">Date of Joining</td>
 							<td><?php 
 
-							$get_custom_staff_values1 = get_custom_field_value(get_staff_user_id(),'staff_date_of_joining','staff',true);
+							$get_custom_staff_values1 = get_custom_field_value($member->staffid,'staff_date_of_joining','staff',true);
 
 							echo $get_custom_staff_values1; ?></td>
 						</tr>		
@@ -208,7 +208,7 @@
 							<td class="bold">In Case of Emergency Contact Name</td>
 							<td><?php 
 
-							$get_custom_staff_values5 = get_custom_field_value(get_staff_user_id(),'staff_in_case_of_emergency_contact_name','staff',true);
+							$get_custom_staff_values5 = get_custom_field_value($member->staffid,'staff_in_case_of_emergency_contact_name','staff',true);
 
 							echo $get_custom_staff_values5; ?></td>
 						</tr>
@@ -216,7 +216,7 @@
 							<td class="bold">In Case of Emergency Contact Number</td>
 							<td><?php 
 
-							$get_custom_staff_values6 = get_custom_field_value(get_staff_user_id(),'staff_in_case_of_emergency_contact_number','staff',true);
+							$get_custom_staff_values6 = get_custom_field_value($member->staffid,'staff_in_case_of_emergency_contact_number','staff',true);
 
 							echo $get_custom_staff_values6; ?></td>
 						</tr>
@@ -224,7 +224,7 @@
 							<td class="bold">Referred By</td>
 							<td><?php 
 
-							$get_custom_staff_values4 = get_custom_field_value(get_staff_user_id(),'staff_referred_by','staff',true);
+							$get_custom_staff_values4 = get_custom_field_value($member->staffid,'staff_referred_by','staff',true);
 
 							echo $get_custom_staff_values4; ?></td>
 						</tr>

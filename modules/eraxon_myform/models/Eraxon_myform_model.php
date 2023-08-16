@@ -6,9 +6,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
  * hr payroll model
  */
 class Eraxon_myform_model extends App_Model {
+
 	public function __construct() {
 		parent::__construct();
 	}
+
+      /**
+     * Get All Docks
+     */
+    public function get_all_docks()
+    {
+        $this->db->order_by('id', 'asc');
+
+        return $this->db->get(db_prefix() . 'docks')->result_array();
+    }
 
 	  /**
      * Get All Advance Salary
@@ -251,4 +262,59 @@ class Eraxon_myform_model extends App_Model {
         return 0;
     }
 
+    public function add_dock($data)
+    {
+        $this->db->insert(db_prefix() . 'docks', $data);
+        $insert_id = $this->db->insert_id();
+        if ($insert_id) {
+            log_activity('New Dock Added [TypeID: ' . $insert_id . ', ID: ' . $data['dock_name'] . ']');
+        }
+
+        return $insert_id;
+    }
+
+    public function update_dock($data, $id)
+    {
+
+        $this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'docks', $data);
+        if ($this->db->affected_rows() > 0) {
+            log_activity('Dock Data Updated [TypeID: ' . $id . ', Name: ' . $data['dock_name'] . ']');
+
+            return true;
+        }
+
+        return false;
+    
+    }
+
+    public function delete_dock($id)
+    {        
+        $this->db->where('id', $id);
+        $this->db->delete(db_prefix() . 'docks');
+        if ($this->db->affected_rows() > 0) {
+            
+            log_activity('Dock Data Deleted [SourceID: ' . $id . ']');
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public function teamlead_add_dock($data)
+    {
+        $this->db->insert(db_prefix() . 'teamlead_docks', $data);
+
+        $insert_id = $this->db->insert_id();
+        if ($insert_id) {
+            log_activity('Dock added to staff [TypeID: ' . $insert_id . ', Staff: ' . $data['staff_id'] . ', Dock Name: ' . $data['dock_name'] . ', Dock Amount: ' . $data['dock_amount'] . ']');
+        }
+
+        return $insert_id;
+    }
+
+
+   
 }

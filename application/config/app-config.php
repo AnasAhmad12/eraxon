@@ -17,7 +17,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 * environments.
 *
 */
-define('APP_BASE_URL', 'http://localhost/eraxon/');
+define('APP_BASE_URL', 'https://portal.eraxon.com');
 
 /*
 * --------------------------------------------------------------------------
@@ -42,15 +42,15 @@ define('APP_DB_HOSTNAME', 'localhost');
 /**
  * The username used to connect to the database
  */
-define('APP_DB_USERNAME', 'root');
+define('APP_DB_USERNAME', 'eraxonco_portal');
 /**
  * The password used to connect to the database
  */
-define('APP_DB_PASSWORD', '');
+define('APP_DB_PASSWORD', '?5elfB9p}fPd');
 /**
  * The name of the database you want to connect to
  */
-define('APP_DB_NAME', 'eraxon_portal'); //eraxon
+define('APP_DB_NAME', 'eraxonco_portal');
 
 /**
  * @since  2.3.0

@@ -1,5 +1,7 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); 
 
+if ($this->db->table_exists(db_prefix() . 'wallet')) 
+{
 $this->load->model('eraxon_wallet/eraxon_wallet_model');
 $current_balance = $this->eraxon_wallet_model->get_wallettotal_balance_by_staff_id(get_staff_user_id());
 
@@ -57,3 +59,4 @@ $last_three_transactions = $this->eraxon_wallet_model->wallet_last_three_transac
         </div>
     </div>
 </div>
+<?php } ?>

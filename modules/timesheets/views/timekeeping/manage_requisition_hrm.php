@@ -30,13 +30,13 @@ $valid_cur_date = $this->timesheets_model->get_next_shift_date(get_staff_user_id
               <div class="scroller arrow-right"><i class="fa fa-angle-right"></i></div>
               <div class="horizontal-tabs">
                 <ul class="nav nav-tabs nav-tabs-horizontal mbot15" role="tablist">
-                  <?php if($currentDate > $targetDate){ ?>
+                  
                   <li role="presentation" class="<?php if(!isset($tab)){ echo 'active';} ?>">
                    <a href="#registration_on_leave" aria-controls="registration_on_leave" role="tab" data-toggle="tab">
                      <span class="glyphicon glyphicon-align-justify"></span>&nbsp;<?php echo _l('registration_on_leave'); ?>
                    </a>
                  </li>
-                 <?php } if($data_timekeeping_form == 'timekeeping_manually'){ ?>
+                 <?php if($data_timekeeping_form == 'timekeeping_manually'){ ?>
                   <!-- <li role="presentation" class="<?php if(isset($tab)){ echo 'active';} ?>">
                    <a href="#additional_timesheets" aria-controls="additional_timesheets" role="tab" data-toggle="tab">
                     <span class="glyphicon glyphicon-pencil"></span>&nbsp;<?php echo _l('additional_timesheets'); ?>
@@ -52,9 +52,11 @@ $valid_cur_date = $this->timesheets_model->get_next_shift_date(get_staff_user_id
           <div role="tabpanel" class="tab-pane <?php if(!isset($tab)){ echo 'active';} ?>" id="registration_on_leave">
             <div class="row">
               <div class="col-md-12 mtop15">
+                <?php if($currentDate > $targetDate){ ?>
                 <a href="#" onclick="new_requisition(); return false;" class="btn mright5 btn-info pull-left display-block" data-toggle="sidebar-right" data-target=".requisition_m"  >
                   <?php echo _l('Create_requisition'); ?>
                 </a>
+              <?php } ?>
                <!--  <a href="<?php echo admin_url('timesheets/calendar_leave_application'); ?>" class="btn btn-default">
                   <i class="fa fa-calendar menu-icon"></i>&nbsp;
                   <?php echo _l('ts_calendar_view'); ?>

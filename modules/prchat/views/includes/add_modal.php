@@ -17,7 +17,7 @@
                   foreach ($staff as $member) : if (get_staff_user_id() == $member['staffid']) {
                     continue;
                   } ?>
-                  <option data-subtext="<?= ($member['admin'] ? 'admin' : ''); ?>" data-icon="fa fa-user-o" value="<?= $member['staffid'] ?>"><?= $member['firstname'] . ' ' . $member['lastname']; ?>
+                  <option data-subtext="<?= ($member['admin'] ? 'admin' : ''); ?>" data-icon="fa fa-user-o" value="<?= $member['staffid'] ?>"><?= $member['firstname'] . ' ' . $member['lastname']. ' ' . $member['email']; ?>
                 </option>
               <?php endforeach;
             } ?>

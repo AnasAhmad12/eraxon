@@ -21,8 +21,8 @@ $valid_cur_date = $this->timesheets_model->get_next_shift_date(get_staff_user_id
                       $currentDate = date('Y-m-d');
                       $targetDate = date('Y-m-d', strtotime("+3 months", strtotime($joining_date)));
 
-                      //echo 'joining_date: '.$joining_date.'<br>';
-                      //echo 'targeted_date: '.$targetDate.'<br>';
+                      echo 'joining_date: '.$joining_date.'<br>';
+                      echo 'targeted_date: '.$targetDate.'<br>';
                       
                    ?>
             <div class="horizontal-scrollable-tabs preview-tabs-top">

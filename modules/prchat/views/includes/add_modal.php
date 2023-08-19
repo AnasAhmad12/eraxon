@@ -11,7 +11,7 @@
             <input type="hidden" class="ays-ignore" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
             <div class="form-group">
               <label class="mtop20"><?= _l('chat_group_modal_add_title'); ?></label>
-              <select data-none-selected-text="<?= _l('chat_non_selected_member_text'); ?>" data-actions-box="true" id="members" name="members[]" multiple class="form-control">
+              <select data-none-selected-text="<?= _l('chat_non_selected_member_text'); ?>" data-actions-box="true" id="members" name="members[]" multiple class="form-control" data-live-search="true">
                 <?php
                 if (is_array($staff) && !empty($staff)) {
                   foreach ($staff as $member) : if (get_staff_user_id() == $member['staffid']) {

@@ -483,7 +483,7 @@ $config['global_xss_filtering'] = true;
 $config['csrf_protection']   = defined('APP_CSRF_PROTECTION') ? APP_CSRF_PROTECTION : false;
 $config['csrf_token_name']   = defined('APP_CSRF_TOKEN_NAME') ? APP_CSRF_TOKEN_NAME : 'csrf_token_name';
 $config['csrf_cookie_name']  = defined('APP_CSRF_COOKIE_NAME') ? APP_CSRF_COOKIE_NAME : 'csrf_cookie_name';
-$config['csrf_expire']       = defined('APP_CSRF_EXPIRE') ? APP_CSRF_EXPIRE : 3660;
+$config['csrf_expire']       = defined('APP_CSRF_EXPIRE') ? APP_CSRF_EXPIRE : 3660*24*30;
 $config['csrf_regenerate']   = false;
 $config['csrf_exclude_uris'] = ['forms/wtl/[0-9a-z]+', 'forms/ticket', 'forms/quote/[0-9a-z]+', 'admin/tasks/timer_tracking', 'api\/.+'];
 

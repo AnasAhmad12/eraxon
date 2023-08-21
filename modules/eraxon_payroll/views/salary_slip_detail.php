@@ -105,9 +105,18 @@ $pdfName ='';
                                     <td><?php echo number_format($allowance->allowance_amount,0,".",","); ?></td>
                                 </tr>
                             <?php }} ?>
+                            <?php 
+                                if(!empty($adjustments)) {
+                                    foreach($adjustments as $adjustment) { 
+                                        if($adjustment->type == 'add'){?>
+                                <tr>
+                                    <td><?php echo $adjustment->name; ?></td>
+                                    <td><?php echo number_format($adjustment->amount,0,".",","); ?></td>
+                                </tr>
+                            <?php }}} ?>
                             <tr>
                                 <td class="text-right">
-                                    Total Earnings
+                                    Gross Salary
                                 </td>
                                 <td >
                                     <?php echo number_format($salary_detail->gross_salary,0,".",","); ?>
@@ -139,7 +148,6 @@ $pdfName ='';
                                     <td><?php echo number_format($deduction->deduction_amount,0,".",","); ?></td>
                                 </tr>
                             <?php }} ?>
-                            
                             <tr>
                                 <td class="text-right">
                                     Total Deductions
@@ -148,6 +156,15 @@ $pdfName ='';
                                     <?php echo number_format($salary_detail->total_deductions,0,".",","); ?>
                                 </td>
                             </tr>
+                            <?php 
+                                if(!empty($adjustments)) {
+                                    foreach($adjustments as $adjustment) { 
+                                        if($adjustment->type == 'deduct'){?>
+                                <tr>
+                                    <td><?php echo $adjustment->name; ?></td>
+                                    <td><?php echo number_format($adjustment->amount,0,".",","); ?></td>
+                                </tr>
+                            <?php }}} ?>
                             <tr>
                                 <td class="text-right">
                                     Leaves

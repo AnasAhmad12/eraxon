@@ -91,6 +91,10 @@
                                                 <?php
                                                     if(has_permission('generate_salary_slip','','view') || is_admin()){
                                                 ?>
+                                                       <a href="<?php echo admin_url('eraxon_payroll/payroll_adjustment/' . $salar_detail->id); ?>" class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 ">
+                                                            <!-- <i class="fa-regular fa-trash-can fa-lg"></i> -->
+                                                            Add Adjustment
+                                                        </a> 
                                                         <a href="<?php echo admin_url('eraxon_payroll/salary_slip_detail/' . $salar_detail->id); ?>" class="tw-mt-px tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700 ">
                                                             <!-- <i class="fa-regular fa-trash-can fa-lg"></i> -->
                                                             View
@@ -100,7 +104,7 @@
                                                             Delete
                                                         </a>
                                                 <?php } ?>
-                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                             <?php

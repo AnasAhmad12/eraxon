@@ -356,7 +356,7 @@ class Eraxon_payroll extends AdminController
                 $deductions_amount = $this->calculate_deductions($id,$basic_salary,$deductions);
             }
             //calculating joining date if mid of month calculate attendance accordingly
-            $joining_date = get_custom_field_value($employee_id,'staff_date_of_joining','staff',true);
+            $joining_date = get_custom_field_value($employee_id,'staff_date_of_appointment','staff',true);
             if (!empty($joining_date)) 
             {
                 $joiningDate = new DateTime($joining_date);
@@ -440,6 +440,7 @@ class Eraxon_payroll extends AdminController
             $data['salary_details'] = $this->eraxon_payroll_model->salary_slip_details($id);
             $data['allowances'] = $this->eraxon_payroll_model->salary_details_to_allowances($id);
             $data['deductions'] = $this->eraxon_payroll_model->salary_details_to_deductions($id);
+            $data['adjustments'] = $this->eraxon_payroll_model->salary_details_to_adjustments($id);
             $data['slip_id'] = $id;
             $this->app_scripts->add('jspdf-debug-js','modules/eraxon_payroll/assets/js/jspdf.debug.js');
             $this->app_scripts->add('html2canvas-js','modules/eraxon_payroll/assets/js/html2canvas.js');
@@ -1353,7 +1354,7 @@ class Eraxon_payroll extends AdminController
     {
          if(!empty($id))
         {
-            $this->load->library('Pdf');
+            //$this->load->library('Pdf');
             $data['salary_details'] = $this->eraxon_payroll_model->salary_slip_details($id);
             $data['allowances'] = $this->eraxon_payroll_model->salary_details_to_allowances($id);
             $data['deductions'] = $this->eraxon_payroll_model->salary_details_to_deductions($id);
@@ -1416,11 +1417,30 @@ class Eraxon_payroll extends AdminController
                 }
         
     }
+
+    public function payroll_adjustment($salary_slip_id)
+    {
+        $data['salary_details'] = $this->eraxon_payroll_model->salary_slip_details($salary_slip_id);
+        $data['salary_slip_id'] = $salary_slip_id;
+        $this->load->view('eraxon_payroll/payroll_adjustment', $data);
+    }
+
+    public function add_payroll_adjustment()
+    {
+        if ($this->input->post()) 
+        {
+            $data = $this->input->post();
+            $data['created_at'] = date('Y-m-d H:i:s');
+            $slip_id = $data['salary_details_id']; 
+
+            $id = $this->eraxon_payroll_model->add_payroll_adjustment($slip_id,$data);
+             if ($id) 
+             {
+                set_alert('success', _l('added_successfully', "Request"));
+                redirect(admin_url("eraxon_payroll/generate_salary_slip"));
+             } 
+        }
+        redirect(admin_url("eraxon_payroll/generate_salary_slip"));
+    }
    
-
-
-
-
-
-
 }

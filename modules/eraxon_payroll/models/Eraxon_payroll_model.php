@@ -309,6 +309,16 @@ class Eraxon_payroll_model extends App_Model
         return $query->result();
     }
 
+     public function salary_details_to_adjustments($id)
+    {
+        $this->db->select('*');
+        $this->db->from(db_prefix() . 'salary_details_to_adjustments');
+        $this->db->where('salary_details_id', $id);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
     public function delete_salary_details($employee_id, $date)
     {
         // check if record exists
@@ -701,6 +711,75 @@ class Eraxon_payroll_model extends App_Model
 
         return false;
     
+    }
+
+    public function add_into_gross_and_net($sid,$data)
+    {
+        $this->db->where('id',$sid);
+        $salary_slip_row =  $this->db->get(db_prefix().'salary_details')->row();
+
+        $gross_salary = $salary_slip_row->gross_salary;
+        $net_salary   = $salary_slip_row->net_salary;
+
+        if($data['type'] == 'add')
+        {
+            $gross_salary += $data['amount'];
+            $net_salary += $data['amount'];
+            $update_data = array(
+                'gross_salary' => $gross_salary,
+                'net_salary'   => $net_salary,
+            );
+
+        }else{
+
+            $net_salary -= $data['amount'];
+            $update_data = array(
+                'net_salary'   => $net_salary,
+            );
+        }
+
+        $this->db->where('id',$sid);
+        $this->db->update(db_prefix().'salary_details',$update_data);                            
+                                    
+    }
+
+
+     public function deduct_into_gross_and_net($sid,$data)
+    {
+        $this->db->where('id',$sid);
+        $salary_slip_row =  $this->db->get(db_prefix().'salary_details')->row();
+
+
+        $gross_salary = $salary_slip_row->gross_salary;
+        $net_salary   = $salary_slip_row->net_salary;
+
+        if($data['type'] == 'add')
+        {
+            $gross_salary -= $data['amount'];
+            $net_salary -= $data['amount'];
+            $update_data = array(
+                'gross_salary' => $gross_salary,
+                'net_salary'   => $net_salary,
+            );
+
+        }else{
+
+            $net_salary += $data['amount'];
+            $update_data = array(
+                'net_salary'   => $net_salary,
+            );
+        }
+
+        $this->db->where('id',$sid);
+        $this->db->update(db_prefix().'salary_details',$update_data);                            
+                                    
+    }
+
+    public function add_payroll_adjustment($sid, $data)
+    {
+        $this->db->insert(db_prefix().'salary_details_to_adjustments', $data);
+        $this->add_into_gross_and_net($sid,$data);
+        $payroll_adjustment = $this->db->insert_id();
     }
     
 

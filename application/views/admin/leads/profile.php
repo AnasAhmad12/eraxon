@@ -266,7 +266,7 @@
                ) {
                    $assigned_attrs['disabled'] = true;
                }
-               echo render_select('assigned', $members, ['staffid', ['firstname', 'lastname']], 'lead_add_edit_closed', $selected, $assigned_attrs); ?>
+               echo render_select('assigned', $members, ['staffid', ['firstname', 'lastname','email']], 'lead_add_edit_closed', $selected, $assigned_attrs); ?>
             </div>
 
             <div class="col-md-4">

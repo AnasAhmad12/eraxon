@@ -129,6 +129,33 @@ class Leads extends AdminController
         $data['status_id']     = $this->input->get('status_id') ? $this->input->get('status_id') : get_option('leads_default_status');
         $data['base_currency'] = get_base_currency();
 
+        $member1 = $data['members'];
+        /*$mcount = 1;
+               foreach($member1 as $key => $m)
+               {
+                 if(in_array($m['staffid'],array(55,54,53,4,31,8,58)))
+                 {
+                    $member1[$key]['firstname'] = $mcount.'-'.$m['firstname'];
+                    $mcount++;
+                 }
+               }
+        arsort($member1, SORT_NATURAL | SORT_FLAG_CASE);  */  
+
+        $teamleads = array();
+        $csr = array();
+
+        foreach($member1 as $key => $m)
+               {
+                 if(in_array($m['staffid'],array(55,54,53,4,31,8,58)))
+                 {
+                    $teamleads[$key] = $member1[$key];
+                 }else{
+                    $csr[$key] = $member1[$key];
+                 }
+               }
+        $mergedArray = $teamleads+ $csr;       
+        $data['member1'] =  $mergedArray;     
+
         if (is_numeric($id)) {
             $leadWhere = (has_permission('leads', '', 'view') ? [] : '(assigned = ' . get_staff_user_id() . ' OR addedfrom=' . get_staff_user_id() . ' OR is_public=1)');
 

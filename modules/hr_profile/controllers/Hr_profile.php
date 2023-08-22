@@ -3006,13 +3006,18 @@ public function delete_staff()
 		$data['tabs']['view'] = 'hr_record/includes/'.$data['group'];
 
 		$data['tabs']['view'] = hooks()->apply_filters('hr_profile_tab_content', $data['tabs']['view']);
+
+		if($group == 'performance')
+		{
+			$this->app_scripts->add('highcharts-js','modules/hr_profile/assets/plugins/highcharts/highcharts.js');
+	        $this->app_scripts->add('variable-pie-js','modules/hr_profile/assets/plugins/highcharts/variable-pie.js');
+	        $this->app_scripts->add('exporting-js','modules/hr_profile/assets/plugins/highcharts/exporting.js');
+	        $this->app_scripts->add('accessibility-js','modules/hr_profile/assets/plugins/highcharts/accessibility.js'); 
+	        $this->app_scripts->add('export-data-js','modules/hr_profile/assets/plugins/highcharts/export-data.js');
+	        $this->app_scripts->add('highcharts-3d-js','modules/hr_profile/assets/plugins/highcharts/highcharts-3d.js'); 
+		}
 		
-		$this->app_scripts->add('highcharts-js','modules/hr_profile/assets/plugins/highcharts/highcharts.js');
-        $this->app_scripts->add('variable-pie-js','modules/hr_profile/assets/plugins/highcharts/variable-pie.js');
-        $this->app_scripts->add('exporting-js','modules/hr_profile/assets/plugins/highcharts/exporting.js');
-        $this->app_scripts->add('accessibility-js','modules/hr_profile/assets/plugins/highcharts/accessibility.js'); 
-        $this->app_scripts->add('export-data-js','modules/hr_profile/assets/plugins/highcharts/export-data.js');
-        $this->app_scripts->add('highcharts-3d-js','modules/hr_profile/assets/plugins/highcharts/highcharts-3d.js');   
+		  
 
 		$this->load->view('hr_record/member', $data);
 	}

@@ -3,8 +3,15 @@
 	$(function()
 	{
 		var  sid= $("#report_by_staffs").data('staffid');
-		report_by_staffs('report_by_staffs', '', '',sid);
-		report_by_day_leads_staffs('report_by_day_leads_staffs', '', '',sid);
+
+        if($('#report_by_staffs').length)
+        {
+            report_by_staffs('report_by_staffs', '', '',sid);
+        }
+		if($('#report_by_day_leads_staffs').length)
+        {
+		    report_by_day_leads_staffs('report_by_day_leads_staffs', '', '',sid);
+        }
 	});
 
 function report_by_staffs(id, value, title_c,sid){

@@ -185,7 +185,7 @@
                                 href="<?php echo admin_url('staff/timesheets'); ?>"><?php echo _l('my_timesheets'); ?></a>
                         </li>
                         <li class="header-edit-profile"><a
-                                href="<?php echo admin_url('staff/edit_profile'); ?>"><?php echo _l('nav_edit_profile'); ?></a>
+                                href="<?php echo admin_url('staff/edit_profile'); ?>">Change Password<?php //echo _l('nav_edit_profile'); ?></a>
                         </li>
                         <?php if (!is_language_disabled()) { ?>
                         <li class="dropdown-submenu pull-left header-languages">

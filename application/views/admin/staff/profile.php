@@ -3,7 +3,7 @@
 <div id="wrapper">
     <div class="content">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-7" style="display:none;">
                 <h4 class="tw-mt-0 tw-font-semibold tw-text-lg tw-text-neutral-700">
                     <?php echo $title; ?>
                 </h4>
@@ -184,12 +184,12 @@
                     </div>
                 </div>
                 <?php echo form_close(); ?>
-                <h4 class="tw-font-semibold tw-text-lg tw-text-neutral-700 mtop30">
+                <h4 class="tw-font-semibold tw-text-lg tw-text-neutral-700 mtop30" style="display:none;">
                     <?php echo _l('staff_two_factor_authentication'); ?>
                 </h4>
                 <?php echo form_open('admin/staff/update_two_factor', ['id' => 'two_factor_auth_form']); ?>
 
-                <div class="panel_s">
+                <div class="panel_s" style="display:none;">
                     <div class="panel-body">
                         <div class="radio radio-primary">
                             <input type="radio" id="two_factor_auth_disabled" name="two_factor_auth" value="off"

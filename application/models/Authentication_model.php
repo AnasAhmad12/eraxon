@@ -709,7 +709,7 @@ class Authentication_model extends App_Model
             $this->db->where('assigned',get_staff_user_id());
         }*/
 
-        $this->db->where('assigned', $staff_id);
+        $this->db->where('addedfrom', $staff_id);
         //$sql_where = "date_format(".db_prefix()."leads.dateadded, '%Y-%m') = '".$month."'";
         $sql_where = "date_format(dateadded, '%Y-%m-%d') = '".$day."'";
         $this->db->where($sql_where);

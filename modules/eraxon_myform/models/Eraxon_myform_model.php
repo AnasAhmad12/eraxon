@@ -206,7 +206,7 @@ class Eraxon_myform_model extends App_Model {
         }
         
             
-        $this->db->where('assigned',$id);
+        $this->db->where('addedfrom',$id);
      
         //$sql_where = "date_format(".db_prefix()."leads.dateadded, '%Y-%m') = '".$month."'";
         $sql_where = "date_format(dateadded, '%Y-%m') = '".$month."'";
@@ -249,7 +249,7 @@ class Eraxon_myform_model extends App_Model {
     {
         $this->db->select('count(id) as total_leads');
 
-        $this->db->where('assigned',$id);
+        $this->db->where('addedfrom',$id);
         
         $sql_where = "date_format(dateadded, '%Y-%m-%d') = '".$day."'";
         $this->db->where($sql_where);

@@ -54,6 +54,7 @@
                                                 data-amount="<?php echo $as['amount']; ?>"
                                                 data-amount_needed_date="<?php echo $as['amount_needed_date']; ?>"
                                                 data-status="<?php echo $as['status']; ?>"
+                                                data-staffid="<?php echo $as['id_staff']; ?>" 
                                                 class="tw-text-neutral-500 hover:tw-text-neutral-700 focus:tw-text-neutral-700" data-hide-from-client="0" >
                                                 <i class="fa-regular fa-pen-to-square fa-lg"></i>
                                             </a>
@@ -107,7 +108,7 @@
 		                </div>
                         <?php echo render_date_input('amount_needed_date', 'Date Cash Advance is Needed'); ?>
                         <?php echo render_textarea('reason', 'Purpose of Advance Cash'); ?>
-                        <input type="hidden" name="id_staff" value="<?php echo $current_user->staffid; ?>">
+                        
                     </div>
 
             <?php  if(is_admin() || has_permission('advance_salary', '', 'edit')){ ?>
@@ -122,6 +123,10 @@
                            <option value="4"><?php echo _l('Go_on_bussiness') ?></option>    -->               
                          </select>
                     </div>
+                <?php }else{ ?>
+
+                    <input type="hidden" name="id_staff" value="<?php echo $current_user->staffid; ?>">
+
                 <?php } ?>
                 </div>
             </div>
@@ -170,6 +175,7 @@
 function edit_as_request(invoker, id) {
     
  	$('#additional').append(hidden_input('id', id));
+    $('#additional').append(hidden_input('id_staff', $(invoker).data('staffid')));
     $('#advance_salary input[name="amount"]').val($(invoker).data('amount'));
     $('#advance_salary input[name="amount_needed_date"]').val($(invoker).data('amount_needed_date'));
     $('#advance_salary textarea[name="reason"]').val($(invoker).data('reason'));

@@ -152,6 +152,25 @@ class Eraxon_myform extends AdminController
                 unset($data['id']);
                 $success = $this->eraxon_myform_model->update_advance_salary($data, $id);
                 if ($success) {
+
+                    if($data['status'] == 1)
+                    {
+                        $wallet_id = $this->eraxon_wallet_model->get_walletid_by_staff_id($data['id_staff']);
+
+                        $transaction = array(
+                        'wallet_id' => $wallet_id,
+                        'amount_type' => 'Advance Salary',
+                        'amount' => $data['amount'],
+                        'in_out' => 'out',
+                        'created_datetime' => date('Y-m-d H:i:s')
+
+                        );
+
+                        $tans_id = $this->eraxon_wallet_model->add_transaction($transaction);
+                    }
+                    
+
+
                     set_alert('success', _l('updated_successfully',"Advance Salary"));
                 }
             }

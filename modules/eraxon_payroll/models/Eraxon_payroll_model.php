@@ -457,7 +457,7 @@ class Eraxon_payroll_model extends App_Model
     {
         $this->db->select('*');
         $this->db->from(db_prefix().'leads');
-        $this->db->where('assigned', $staff_id);
+        $this->db->where('addedfrom', $staff_id);
         $this->db->where('status', 3);
         $this->db->where('YEAR(dateadded)', date('Y', strtotime($month_year)));
         $this->db->where('MONTH(dateadded)', date('m', strtotime($month_year)));

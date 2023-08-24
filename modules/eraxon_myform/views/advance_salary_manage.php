@@ -30,7 +30,7 @@
                             	<?php foreach ($advance_salary as $as) { ?>
                                 <tr>
                                 	<?php if(has_permission('advance_salary','','view') || is_admin()){ ?>
-                                		<td><?php echo $as['firstname'].' '.$as['lastname']; ?></td>
+                                		<td><?php echo $as['firstname'].' '.$as['lastname'].' ('.get_custom_field_value($as['staffid'],'staff_pseudo','staff',true).')'; ?></td>
                                 	<?php } ?>
                                 	<td><?php echo $as['reason']; ?></td>
                                 	<td><?php echo $as['amount']; ?></td>

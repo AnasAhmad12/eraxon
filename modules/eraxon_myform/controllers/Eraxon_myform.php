@@ -167,10 +167,25 @@ class Eraxon_myform extends AdminController
                         );
 
                         $tans_id = $this->eraxon_wallet_model->add_transaction($transaction);
+                        $trans = array('trans_id'=> $tans_id);
+                        $success = $this->eraxon_myform_model->update_advance_salary($trans, $id);
+                       
+
+                    }else
+                    {
+                        $adv_data = $this->eraxon_myform_model->get_advance_salary($id);
+
+                            if($adv_data->trans_id > 0 )
+                            {
+                                $condition = $this->eraxon_wallet_model->delete_transaction($adv_data->trans_id);
+                                if($condition)
+                                {
+                                    $trans = array('trans_id'=> 0);
+                                    $s = $this->eraxon_myform_model->update_advance_salary($trans, $id);
+                                }
+                            }
                     }
-                    
-
-
+                   
                     set_alert('success', _l('updated_successfully',"Advance Salary"));
                 }
             }

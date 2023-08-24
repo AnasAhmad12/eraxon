@@ -9,6 +9,7 @@ class Eraxon_myform_model extends App_Model {
 
 	public function __construct() {
 		parent::__construct();
+        $this->load->model('eraxon_wallet/eraxon_wallet_model');
 	}
 
       /**
@@ -156,7 +157,10 @@ class Eraxon_myform_model extends App_Model {
         if ($this->db->affected_rows() > 0) {
             
             log_activity('Advance Salary Deleted [SourceID: ' . $id . ']');
-
+            if($current->trans_id > 0 )
+            {
+                $condition = $this->eraxon_wallet_model->delete_transaction($current->trans_id);
+            }
             return true;
         }
 

@@ -47,7 +47,9 @@
                                 	?></td>
                                 	<td>
                                         <div class="tw-flex tw-items-center tw-space-x-3">
-                                            <?php if(has_permission('advance_salary','','edit')  || is_admin()){ ?>
+                                            <?php if(has_permission('advance_salary','','edit')  || is_admin()){ 
+
+                                                ?>
                                             <a href="#"
                                                 onclick="edit_as_request(this,<?php echo $as['id']; ?>); return false"
                                                 data-reason="<?php echo $as['reason']; ?>" 

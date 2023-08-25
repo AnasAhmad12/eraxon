@@ -169,6 +169,26 @@ class Eraxon_myform extends AdminController
                         $tans_id = $this->eraxon_wallet_model->add_transaction($transaction);
                         $trans = array('trans_id'=> $tans_id);
                         $success = $this->eraxon_myform_model->update_advance_salary($trans, $id);
+
+                        $followers_id = $data['id_staff'];
+                        $subject = "Advance Salary is Approved. Please collect your amount.";
+                        $link = 'eraxon_myform/advance_salary';
+
+                            $notification_data = [
+                                    'description' => $subject,
+                                    'touserid' => $followers_id,
+                                    'link' => $link,
+                                ];
+
+                                $notification_data['additional_data'] = serialize([
+                                    $subject,
+                                ]);
+
+                                if (add_notification($notification_data)) {
+                                    pusher_trigger_notification([$followers_id]);
+                                }
+
+                          
                        
 
                     }else
@@ -184,6 +204,26 @@ class Eraxon_myform extends AdminController
                                     $s = $this->eraxon_myform_model->update_advance_salary($trans, $id);
                                 }
                             }
+                            $status = '';
+
+                            if($data['status'] == 0){ $status = 'pending'; }else{ $status = 'rejected'; }
+                            $followers_id = $data['id_staff'];
+                            $subject = "Advance Salary is ".$status;
+                            $link = 'eraxon_myform/advance_salary';
+
+                            $notification_data = [
+                                    'description' => $subject,
+                                    'touserid' => $followers_id,
+                                    'link' => $link,
+                                ];
+
+                                $notification_data['additional_data'] = serialize([
+                                    $subject,
+                                ]);
+
+                                if (add_notification($notification_data)) {
+                                    pusher_trigger_notification([$followers_id]);
+                                }
                     }
                    
                     set_alert('success', _l('updated_successfully',"Advance Salary"));

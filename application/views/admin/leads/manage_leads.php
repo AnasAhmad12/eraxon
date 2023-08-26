@@ -298,8 +298,11 @@
                                'name'     => _l('leads_dt_assigned'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
                               ];
-                              
-
+                              /*$_table_data[] = [
+                               'name'     => _l('lead_add_edit_addform'),
+                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-addfrom'],
+                              ];
+                                */
                               $_table_data[] = [
                                'name'     => _l('leads_dt_status'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-status'],
@@ -366,7 +369,7 @@
 <style>
     
     <?php 
-        if(!has_permission('leads_caps','','change_status') || !is_admin())
+        if(!has_permission('leads_caps','','change_status'))
        {
             echo ".lead-status-2 .dropdown{ display:none;}
                     .lead-status-3 .dropdown{ display:none;}

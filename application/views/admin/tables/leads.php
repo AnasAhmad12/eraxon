@@ -23,6 +23,7 @@ $aColumns = array_merge($aColumns, ['company',
     'lead_value',
     '(SELECT GROUP_CONCAT(name SEPARATOR ",") FROM ' . db_prefix() . 'taggables JOIN ' . db_prefix() . 'tags ON ' . db_prefix() . 'taggables.tag_id = ' . db_prefix() . 'tags.id WHERE rel_id = ' . db_prefix() . 'leads.id and rel_type="lead" ORDER by tag_order ASC LIMIT 1) as tags',
     'firstname as assigned_firstname',
+    db_prefix() . 'leads.addedfrom as addedfrom',
     db_prefix() . 'leads_status.name as status_name',
     db_prefix() . 'leads_sources.name as source_name',
     'lastcontact',
@@ -177,6 +178,7 @@ foreach ($rResult as $aRow) {
     }
 
     $row[] = $assignedOutput;
+    $row[] = get_custom_field_value($aRow['addedfrom'],'staff_pseudo','staff',true);
 
     if ($aRow['status_name'] == null) {
         if ($aRow['lost'] == 1) {

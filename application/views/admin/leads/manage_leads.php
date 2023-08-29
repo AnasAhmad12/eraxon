@@ -295,14 +295,14 @@
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-tags'],
                               ];
                               $_table_data[] = [
-                               'name'     => _l('leads_dt_assigned'),
+                               'name'     => 'Closed By',//_l('leads_dt_assigned'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-assigned'],
                               ];
-                              /*$_table_data[] = [
-                               'name'     => _l('lead_add_edit_addform'),
+                              $_table_data[] = [
+                               'name'     => 'Added By',
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-addfrom'],
                               ];
-                                */
+                                
                               $_table_data[] = [
                                'name'     => _l('leads_dt_status'),
                                'th_attrs' => ['class' => 'toggleable', 'id' => 'th-status'],

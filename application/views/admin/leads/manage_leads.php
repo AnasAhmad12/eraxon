@@ -118,7 +118,7 @@
                                         </div>
                                         <?php if (has_permission('leads', '', 'view')) { ?>
                                         <div class="col-md-3 leads-filter-column">
-                                            <?php echo render_select('view_assigned', $staff, ['staffid', ['firstname', 'lastname']], '', '', ['data-width' => '100%', 'data-none-selected-text' => _l('leads_dt_assigned')], [], 'no-mbot'); ?>
+                                            <?php echo render_select('view_assigned', $staff, ['staffid', ['firstname', 'lastname','email']], '', '', ['data-width' => '100%', 'data-none-selected-text' => 'Added By'], [], 'no-mbot'); ?>
                                         </div>
                                         <?php } ?>
                                         <div class="col-md-3 leads-filter-column">
@@ -300,7 +300,7 @@
                               ];
                               $_table_data[] = [
                                'name'     => 'Added By',
-                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-addfrom'],
+                               'th_attrs' => ['class' => 'toggleable', 'id' => 'th-addedfrom'],
                               ];
                                 
                               $_table_data[] = [

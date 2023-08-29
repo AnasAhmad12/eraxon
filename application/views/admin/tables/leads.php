@@ -73,7 +73,11 @@ if (!$filter || ($filter && $filter != 'lost' && $filter != 'junk')) {
 }
 
 if (has_permission('leads', '', 'view') && $this->ci->input->post('assigned')) {
-    array_push($where, 'AND assigned =' . $this->ci->db->escape_str($this->ci->input->post('assigned')));
+    array_push($where, 'AND addedfrom =' . $this->ci->db->escape_str($this->ci->input->post('assigned')));
+}
+
+if (has_permission('leads', '', 'view') && $this->ci->input->post('addedform')) {
+    array_push($where, 'AND addedfrom =' . $this->ci->db->escape_str($this->ci->input->post('addedform')));
 }
 
 if ($this->ci->input->post('status')

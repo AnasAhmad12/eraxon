@@ -213,7 +213,7 @@ class App
         $params = hooks()->apply_filters('table_params', $params, $table);
 
         foreach ($params as $key => $val) {
-            $$key = $val;
+            $key = $val;
         }
 
         $customFieldsColumns = [];

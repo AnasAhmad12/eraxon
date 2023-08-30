@@ -3,7 +3,7 @@ if( ! ini_get('date.timezone') )
 {
    date_default_timezone_set('GMT');
 }
-$allow = array("58.65.163.73", "206.84.130.13","154.192.18.76");
+$allow = array("58.65.163.73", "206.84.130.13","203.175.73.5");
 $ip = $_SERVER["REMOTE_ADDR"];//file_get_contents('https://api.ipify.org');
 
 if(!in_array($ip, $allow))

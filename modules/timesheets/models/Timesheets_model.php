@@ -8082,6 +8082,9 @@ class timesheets_model extends app_model {
 				$update_days_off = abs($day_off->days_off + $dd);
 				$update_remain = abs($day_off->total) - $update_days_off;
 
+			$this->db->where('id', $id);
+		    $this->db->update(db_prefix() . 'timesheets_requisition_leave', ['number_of_days' => $udate_remain]);
+
 				$this->db->where('type_of_leave', $type_of_leave_data->type_id);
 				$this->db->where('staffid', $requisition_leave->staff_id);
 				$this->db->where('year', date('Y'));

@@ -465,6 +465,7 @@ $lang['lead_add_edit_source']              = 'Source';
 $lang['lead_add_edit_status']              = 'Status';
 $lang['lead_add_edit_assigned']            = 'Assigned';
 $lang['lead_add_edit_closed']              = 'Closed By';
+$lang['lead_add_edit_addform']             = 'Add By';
 $lang['lead_type']                         = 'Lead Type';
 $lang['lead_add_edit_datecontacted']       = 'Date Contacted';
 $lang['lead_add_edit_contacted_today']     = 'Contacted Today';

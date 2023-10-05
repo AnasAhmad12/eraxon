@@ -132,6 +132,16 @@ class Eraxon_wallet_model extends App_Model
      
    }
 
+   public function update_transaction($tid, $amount)
+   {
+      $this->db->where('id', $tid);
+      $this->db->update(db_prefix() .'wallet_transaction',['amount'=>$amount]);
+
+      $wallet_id = $this->db->where('id',$tid)->get(db_prefix() .'wallet_transaction')->row()->wallet_id;
+      $this->update_wallet($wallet_id ,'');
+
+   }
+
    public function delete_transaction($id)
    {
       $this->db->where('id', $id);

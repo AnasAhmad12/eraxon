@@ -41,12 +41,10 @@ class Reports_products_model extends CI_Model
         $qry='SELECT CAST(MONTHNAME(order_date) AS CHAR(3)),
                 SUM(total) AS total_sales, order_type
                 FROM '.db_prefix().'order_master
-                join '.db_prefix().'order_items on '.db_prefix().'order_items.order_id = '.db_prefix().'order_master.id 
-                join '.db_prefix().'product_master on '.db_prefix().'order_items.product_id = '.db_prefix().'product_master.id 
                 where `order_date` 
                 BETWEEN (select date_sub(CURDATE(),INTERVAL 1 MONTH)) 
                 AND CURDATE()
-                GROUP BY order_date, order_type';
+                GROUP BY order_type';
         $query      = $this->db->query($qry);
         $array      = $query->result_array();
         $chart_data = [];

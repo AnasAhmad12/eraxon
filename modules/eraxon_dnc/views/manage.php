@@ -62,13 +62,14 @@ $(function()
     
     function manage_dnc_form(form) 
     {
+         $(':input[type="submit"]').prop('disabled', true);
         var data = $(form).serialize();
         var url = form.action;
         $.post(url, data).done(function(response) {
             var response = $.parseJSON(response);
             console.log(response);
             $("#dnc_result").append(`<tr><td>${response.number}</td><td style="color:${response.color}">${response.result}</td></tr>`);
-
+             $(':input[type="submit"]').prop('disabled', false);
         });
         return false;
     }

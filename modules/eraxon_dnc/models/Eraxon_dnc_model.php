@@ -34,4 +34,24 @@ class Eraxon_dnc_model extends App_Model
         return $this->db->get(db_prefix() . 'dnc_request')->result_array();
     }
 
+    public function verifyfromdb($phone)
+    {
+        $this->db->where('phonenumber',$phone);
+        $this->db->get(db_prefix().'dnc_request');
+
+        if($this->db->affected_rows() > 0)
+        {
+            return 1;
+        }
+        return 0;
+    }
+
+    public function get_data_by_number($phone)
+    {
+        $this->db->where('phonenumber',$phone);
+        $this->db->limit(1);
+        $query = $this->db->get(db_prefix().'dnc_request')->row();
+        return $query;
+    }
+
 }

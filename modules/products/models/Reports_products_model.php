@@ -11,7 +11,7 @@ class Reports_products_model extends CI_Model
                 where `order_date` 
                 BETWEEN (select date_sub(CURDATE(),INTERVAL 1 WEEK)) 
                 AND CURDATE()
-                GROUP BY order_date, order_type';
+                GROUP BY  order_type';
         $query      = $this->db->query($qry);
         $array      = $query->result_array();
         $chart_data = [];
@@ -71,13 +71,11 @@ class Reports_products_model extends CI_Model
     {
         $qry='SELECT YEAR(order_date),
                 SUM(total) AS total_sales, order_type
-                FROM '.db_prefix().'order_master
-                join '.db_prefix().'order_items on '.db_prefix().'order_items.order_id = '.db_prefix().'order_master.id 
-                join '.db_prefix().'product_master on '.db_prefix().'order_items.product_id = '.db_prefix().'product_master.id 
+                FROM '.db_prefix().'order_master 
                 where `order_date` 
                 BETWEEN (select date_sub(CURDATE(),INTERVAL 1 YEAR)) 
                 AND CURDATE()
-                GROUP BY order_date, order_type';
+                GROUP BY order_type';
         $query      = $this->db->query($qry);
         $array      = $query->result_array();
         $chart_data = [];
@@ -138,7 +136,7 @@ class Reports_products_model extends CI_Model
         return $year_chart;
     }
 
-   public function year_recieveables(){
+public function year_recieveables(){
         
 
         $table_data = [];

@@ -9,7 +9,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 Module Name: Eraxon Payroll
 Description: Eraxon Payroll Module (Allownces, Deductions)
 Version: 1.0.0
-Author: Waqar Hussain
+Author: Anus Ahmad
 */
 
 define('Eraxon_payroll', 'eraxon_payroll');

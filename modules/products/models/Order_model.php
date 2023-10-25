@@ -75,9 +75,6 @@ class Order_model extends CI_Model
     }
 
 
-
-
-
     public function add_order($data)
     {
         $data['datecreated'] = date('Y-m-d H:i:s');
@@ -239,19 +236,19 @@ class Order_model extends CI_Model
             $this->db->where(db_prefix() . 'order_master.id', $id);
         }
         $this->db->select('
-    ' . db_prefix() . 'order_items.rate,
-    ' . db_prefix() . 'order_items.product_id,
-    ' . db_prefix() . 'order_items.qty,
-    ' . db_prefix() . 'order_master.*,
-    ' . db_prefix() . 'product_master.product_name,
-    ' . db_prefix() . 'product_master.quantity_number,
-    ' . db_prefix() . 'product_variations.id as variation_id,
-    ' . db_prefix() . 'product_variations.quantity_number as variant_qty,
+            ' . db_prefix() . 'order_items.rate,
+            ' . db_prefix() . 'order_items.product_id,
+            ' . db_prefix() . 'order_items.qty,
+            ' . db_prefix() . 'order_master.*,
+            ' . db_prefix() . 'product_master.product_name,
+            ' . db_prefix() . 'product_master.quantity_number,
+            ' . db_prefix() . 'product_variations.id as variation_id,
+            ' . db_prefix() . 'product_variations.quantity_number as variant_qty,
 
-    ' . db_prefix() . 'variation_values.value,
-    
+            ' . db_prefix() . 'variation_values.value,
+            
 
-');
+        ');
         $this->db->join('order_master', db_prefix() . 'order_master.id=' . db_prefix() . 'order_items.order_id', 'LEFT');   
         $this->db->join('product_master', db_prefix() . 'product_master.id=' . db_prefix() . 'order_items.product_id', 'LEFT');
         $this->db->join('product_variations', db_prefix() . 'product_variations.id=' . db_prefix() . 'order_items.product_variation_id', 'LEFT');
@@ -808,14 +805,14 @@ class Order_model extends CI_Model
 
     $this->db->select('
     
-    ' . db_prefix() . 'order_master.id,
-    ' . db_prefix() . 'order_master.clientid,
-    ' . db_prefix() . 'order_master.status,
-    ' . db_prefix() . 'order_master.total,
-    ' . db_prefix() . 'order_master.order_date,
-    ' . db_prefix() . 'staff.firstname,
-    ' . db_prefix() . 'staff.lastname,
-');
+        ' . db_prefix() . 'order_master.id,
+        ' . db_prefix() . 'order_master.clientid,
+        ' . db_prefix() . 'order_master.status,
+        ' . db_prefix() . 'order_master.total,
+        ' . db_prefix() . 'order_master.order_date,
+        ' . db_prefix() . 'staff.firstname,
+        ' . db_prefix() . 'staff.lastname,
+    ');
 
     $this->db->where('status',1);
     $current_date = date('Y-m-d');  
@@ -838,7 +835,7 @@ class Order_model extends CI_Model
 
 
 
-// $html .='<td>'.$this->get_order_status_label($order->status).'</td>';
+    // $html .='<td>'.$this->get_order_status_label($order->status).'</td>';
    
 
    return $orders;

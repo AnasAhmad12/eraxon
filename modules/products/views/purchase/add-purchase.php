@@ -337,7 +337,7 @@
             }
         });
 
-        $(document).on('change','.quantity',function(e){
+        $(document).on('input','.quantity',function(e){
             e.preventDefault();
             var ele = $(this);
             var id=ele.parents("tr").attr("data-id");

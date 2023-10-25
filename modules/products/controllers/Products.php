@@ -8,7 +8,7 @@ class Products extends AdminController
     {
         parent::__construct();
         $this->load->library('form_validation');
-        $this->load->model(['products_model', 'variations_model', 'Reports_model', 'taxes_model','order_model','reports_products_model']);
+        $this->load->model(['products_model', 'variations_model', 'Reports_model', 'taxes_model','order_model','reports_products_model','currencies_model']);
     }
 
     public function index()
@@ -255,7 +255,13 @@ class Products extends AdminController
 
     public function order_report_products()
     {
+        $base_currency = $this->currencies_model->get_base_currency();
+        $this->load->vars('base_currency',$base_currency);
 
+
+        $role_id = $this->roles_model->get_roleid_by_name('CSR');
+        $staff_members = $this->staff_model->get('', ['active' => 1,'role' => $role_id]);
+        $this->load->vars('staff_members',$staff_members);
 
         $chart_week_data = $this->reports_products_model->chart_orders_of_the_week();
         $this->load->vars('categories', toPlainArray($chart_week_data['days']));
@@ -395,6 +401,25 @@ class Products extends AdminController
         // }
 
         // echo $html;
+    }
+
+      public function staff_report_kiosk(){
+        $posted_data       = $this->input->post();
+        $staff_id          = $posted_data['staff_id'];
+        $from_date         = $posted_data['from'];
+        $to_date           = $posted_data['to'];
+        $from_date_st      = strtotime($from_date);
+        $to_date_st        = strtotime($to_date);
+
+        if ($from_date_st > $to_date_st) {
+            $return_data['status'] = 'error';
+        } else {
+            $return_data['data'] = $this->reports_products_model->staff_kiosk_report($staff_id, $from_date, $to_date);
+        }
+
+
+        echo json_encode($return_data);
+
     }
 
 

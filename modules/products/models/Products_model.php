@@ -363,7 +363,7 @@ class Products_model extends App_Model
             }
 
         }
-    }else if ($name) {
+        }else if ($name) {
             
             $this->db->like('product_name', $name);
             

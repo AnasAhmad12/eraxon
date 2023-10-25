@@ -66,9 +66,9 @@ foreach ($rResult as $aRow) {
         $options .=  '<a href="'.admin_url('products/pos/edit_pos/'.$aRow['id']).'" type="button" class="btn btn-success">'."Edit".'</a> &nbsp;';
         }
     }*/
-    if (has_permission('POS', '', 'delete')) 
+    if (has_permission('POS', '', 'delete') || is_admin()) 
     {
-        if($aRow['order_type']=="POS"){
+        if($aRow['order_type']=="POS-Wallet" || $aRow['order_type']=="POS-Cash"){
         $options .=  '<a type="button" onclick="pos_delete(this,'.$aRow['id'].')" class="btn btn-success">'."Delete".'</a> &nbsp;';
         }
     }
@@ -77,9 +77,11 @@ foreach ($rResult as $aRow) {
     {
         $options .= '<button class="btn btn-warning" onclick="cancel(this,'.$aRow['id'].')">Cancel</button>&nbsp;';
     }*/
-    if (has_permission('kiosk', '', 'delete') && $aRow['status'] != 2) 
+    if ((has_permission('kiosk', '', 'delete') && $aRow['status'] != 2) || is_admin()) 
     {
+        if($aRow['order_type']=="KIOSK"){
         $options .= '<button class="btn btn-danger" onclick="order_delete(this,'.$aRow['id'].')">Delete</button>';
+       }
     }
     $row   = [];
     $row[] = '<a href="'.admin_url('products/kiosk/staff_invoice/'.$aRow['id']).'" target="_blank">'.$aRow['id'].'</a>';

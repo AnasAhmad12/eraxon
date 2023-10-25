@@ -183,7 +183,7 @@ $(document).on('click','#purchase-button',function(e){
     console.log("Order",order_typ);
     
 
-    if(order_item.every(item => item.qty <= item.max_qty)){
+    if(order_item.every(item => parseInt(item.qty) <= parseInt(item.max_qty))){
         $.ajax({
                     url: site_url+'products/pos/add_order',
                     type: "POST",

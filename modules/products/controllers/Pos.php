@@ -231,7 +231,7 @@ public function add_order(){
        $order_master= $this->db->get(db_prefix().'order_master')->result();
        $this->db->where('order_id',$order_master[0]->id);
        $this->db->delete(db_prefix().'order_items');
-       if($order_master[0]->trans_id!=0){
+       if($order_master[0]->trans_id!=null){
         $this->eraxon_wallet_model->delete_transaction($order_master[0]->trans_id);
        }
 

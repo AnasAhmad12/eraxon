@@ -189,5 +189,20 @@ class Purchase extends AdminController{
 
 
     }
+    public function update_error(){
+
+         $purchases=   $this->db->get(db_prefix().'product_purchases')->result();
+            foreach($purchases as $p){
+                $this->db->select_sum('subtotal');
+                $this->db->where('purchase_id',$p->id);
+                $subtotal=$this->db->get(db_prefix().'product_purchase_items')->result()[0]->subtotal;
+                $this->db->where('id',$p->id);
+                $this->db->update(db_prefix().'product_purchases',['grand_total'=>$subtotal]);
+
+            }
+
+           echo json_encode($subtotal);
+   
+        }  
 
 }

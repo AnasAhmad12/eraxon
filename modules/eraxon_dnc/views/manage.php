@@ -13,7 +13,7 @@
                     </div>
                     <div class="clearfix"></div>
                     <div class="row">
-                        <?php echo form_open(admin_url('eraxon_dnc/get_dnc')); ?>
+                        <?php echo form_open(admin_url('eraxon_dnc/get_dnc_verified')); ?>
 
                         <div class="col-md-12">
                              <div class="form-group">

@@ -163,4 +163,24 @@ public function year_recieveables(){
 
         return $table_data;
     }
+     public function staff_kiosk_report($staff_id,$from,$to){
+        $qry = 'SELECT id, order_date, total
+        FROM ' . db_prefix() . 'order_master
+        WHERE `order_date` BETWEEN "' . $from . '" AND "' . $to . '"
+        AND `status` = 2
+        AND `clientid` = ' . $staff_id . '
+        AND (`order_type` = "KIOSK" OR `order_type` = "POS-Wallet")';
+
+        $query           = $this->db->query($qry);
+        
+        if(!$query){
+            return  $this->db->error();
+        }
+        else{
+            $array           = $query->result_array();
+
+            return $array;
+        }
+       
+    }
 }

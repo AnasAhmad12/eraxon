@@ -34,6 +34,105 @@ class Eraxon_dnc extends AdminController
         $data['requests'] = $this->eraxon_dnc_model->get_dnc_request();
         $this->load->view('eraxon_dnc/requests',$data);
     }
+    public function get_dnc_verified()
+    {   
+        $phonenumber = '';
+        $message = '';
+        $response = '';
+        $data = [];
+        $username = 'Trextech';
+        $pass = 'Trextech123';
+
+
+            if ($this->input->post()) 
+            {
+                    $phonenumber = $this->input->post('verify_number');
+                    $client  = new GuzzleHttp\Client(['cookies' => true]);
+                    $jar     = new \GuzzleHttp\Cookie\CookieJar;
+                    $auth = 'Basic '. base64_encode ($username . ':' . $pass);
+                    $options = [
+                    'multipart' => [
+                      [
+                        'name' => 'upload',
+                        'contents' => $phonenumber
+                      ]
+                    ]];
+
+                    $headers = ['Authorization' => $auth];
+          
+                    $request = new Request('POST', 'https://portal.scrublists.com/api/upload?filtersetId=1', $headers);
+                  
+                    $res = $client->sendAsync($request, $options)->wait();
+
+                    $json_query = $res->getBody()->getContents(true);
+                    $result = json_decode($json_query,true);
+
+                    $ans = '';
+                    $color = '';
+                    $check = false;
+                    if($result['results']['Good']['count'] > 0)
+                    {
+                        $ans = 'Good';
+                        $color = '#2da000';
+
+                    }else if($result['results']['Bad']['count'] > 0)
+                    {
+                        $ans = 'Bad';
+                        $color = '#ff0000';
+
+                    }else if($result['results']['invalid']['count'] > 0)
+                    {
+                        $ans = 'Invalid';
+                        $color = '#1486ff';
+                    }else
+                    {
+                        $ans = 'error';
+                        $color = '#ff0000';
+                    }
+                    
+                    $data['number'] = $phonenumber;
+                    $data['result'] = $ans;
+                    $data['color']  = $color;
+
+                    $verified = $this->eraxon_dnc_model->verifyfromdb($phonenumber);
+
+                    if($verified)
+                    {
+                        $result2 =  $this->eraxon_dnc_model->get_data_by_number($phonenumber);
+
+                            if($result2->result != $ans)
+                            {
+                                $request = array(
+                                'id_staff' => get_staff_user_id(),
+                                'phonenumber' => $phonenumber,
+                                'result' => $ans,
+                                'json_query' => $json_query
+                            );
+
+                             $update_id = $this->eraxon_dnc_model->update_dnc_request($result2->id,$request);
+                            }
+
+                    }else
+                    {
+                        $request = array(
+                                'id_staff' => get_staff_user_id(),
+                                'phonenumber' => $phonenumber,
+                                'result' => $ans,
+                                'json_query' => $json_query);
+
+                        $insert_id = $this->eraxon_dnc_model->add_dnc_request($request);
+
+                    }
+
+
+                echo json_encode($data);    
+
+            }        
+
+
+
+
+    }
     public function get_dnc()
     {
 

@@ -50,6 +50,16 @@ function eraxon_wallet_init_menu_items()
         'badge'    => [],
     ]);
 
+     
+
+        $CI->app_menu->add_sidebar_children_item('er_wallet', [
+        'slug'     => 'eraxon_wallet_reporting',
+        'name'     => 'Reporting',
+        'href'     => admin_url('eraxon_wallet/wallet_reporting'),
+        'position' => 2,
+        'badge'    => [],
+    ]);
+
     
     /*$CI->app_menu->add_sidebar_children_item('er_wallet', [
         'slug'     => 'eraxon_my_transaction',

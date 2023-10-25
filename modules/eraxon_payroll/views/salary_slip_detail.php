@@ -17,6 +17,7 @@ $pdfName ='';
                  <button class="btn btn-primary" id="create_pdf" data-html2canvas-ignore="true">Download PDF</button>
             </div>
             <div class="clearfix"></div>
+            <?php //var_dump($salary_details); ?>
             <?php if(!empty($salary_details)) { 
                 foreach($salary_details as $salary_detail) { 
 
@@ -47,6 +48,7 @@ $pdfName ='';
                             <td>Salary Month</td>
                             <td><?php echo date('F Y', strtotime($salary_detail->date)).' <span class="">('.$salary_detail->status.')</span>'; ?></td>
                         </tr>
+                      
                     </table>
                     
 
@@ -165,6 +167,14 @@ $pdfName ='';
                                     <td><?php echo number_format($adjustment->amount,0,".",","); ?></td>
                                 </tr>
                             <?php }}} ?>
+                            <tr>
+                                <td class="text-right">
+                                    Wallet Deducted Amount
+                                </td>
+                                <td >
+                                    <?php echo number_format($salary_detail->total_wallet_deduct_amount,0,".",","); ?>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="text-right">
                                     Leaves

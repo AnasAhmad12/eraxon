@@ -5,7 +5,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Purchase_model extends App_Model{
 
 
-    public function add_purchase_item_db($purchase_items){
+    public function add_purchase_item_db($purchase_items)
+    {
         $table_name =db_prefix() . 'product_purchase_items' ; 
         $products=[];
         $this->db->select('*');
@@ -23,10 +24,7 @@ class Purchase_model extends App_Model{
             
             $this->db->where('product_id',$purchase_items['product_id']);
             $this->db->update(db_prefix() . 'product_purchase_items', array('quantity' => $products[0]->quantity+1,'subtotal'=> ($products[0]->quantity+1)*$products[0]->net_unit_cost));
-        }
-
-
-      
+        }   
     }
 
     public function get_purchase_item_db($session_id){

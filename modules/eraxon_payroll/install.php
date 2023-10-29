@@ -24,6 +24,7 @@ if (!$CI->db->table_exists(db_prefix() . 'deductions'))
     ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
 }
 
+
 if (!$CI->db->table_exists(db_prefix() . 'targets')) 
 {
     $CI->db->query('CREATE TABLE `' . db_prefix() . "targets` (
@@ -93,6 +94,20 @@ if (!$CI->db->table_exists(db_prefix() . 'salary_details_to_allowances'))
       PRIMARY KEY (`id`)
       ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
 }
+
+if (!$CI->db->table_exists(db_prefix() . 'salary_details_to_adjustments')) 
+{
+    $CI->db->query('CREATE TABLE `' . db_prefix() . "salary_details_to_adjustments` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `salary_details_id` int(11) NOT NULL,
+      `name` varchar(300) NOT NULL,
+      `type` varchar(50) NOT NULL,
+      `amount` decimal(50,4) NOT NULL,
+      `created_at` datetime NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
+}
+
 
 if (!$CI->db->table_exists(db_prefix() . 'salary_details')) 
 {

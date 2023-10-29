@@ -142,7 +142,6 @@
             </div>
 
             <ul class="nav navbar-nav navbar-right">
-                <?php do_action_deprecated('after_render_top_search', [], '3.0.0', 'admin_navbar_start'); ?>
                 <?php hooks()->do_action('admin_navbar_start'); ?>
                 <?php if (is_staff_member()) { ?>
                 <li class="icon header-newsfeed">

@@ -13,6 +13,7 @@ Author: Anas Ahmad
 */
 define('Eraxon_wallet', 'eraxon_wallet');
 
+register_payment_gateway('eraxon_wallet_gateway', Eraxon_wallet);
 
 register_activation_hook(Eraxon_wallet,'eraxon_wallet_activation_hook');
 

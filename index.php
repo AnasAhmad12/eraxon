@@ -3,7 +3,7 @@ if( ! ini_get('date.timezone') )
 {
    date_default_timezone_set('GMT');
 }
-$allow = array("58.65.163.73", "206.84.130.13","115.186.190.12");
+/*$allow = array("58.65.163.73", "206.84.130.13","115.186.190.12");
 $ip = $_SERVER["REMOTE_ADDR"];//file_get_contents('https://api.ipify.org');
 
 if(!in_array($ip, $allow))
@@ -11,7 +11,7 @@ if(!in_array($ip, $allow))
    echo ' <h1 align="center" style="padding:10% 0;">Access denied.  This page is not accessible outside of the premises.</h1>';
    exit();
 }
-
+*/
 /**
  * CodeIgniter
  *
@@ -27,10 +27,10 @@ if(!in_array($ip, $allow))
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -66,7 +66,7 @@ if(!in_array($ip, $allow))
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', 'production');
+	define('ENVIRONMENT', 'development');
 
 /*
  *---------------------------------------------------------------

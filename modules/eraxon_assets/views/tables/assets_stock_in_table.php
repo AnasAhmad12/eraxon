@@ -39,10 +39,10 @@ foreach ($rResult as $aRow) {
     $row        = [];
     $outputName=$aRow['purchase_date'];
     
-    if (has_permission('assets-stock-in', '', 'delete')) { 
+    if (has_permission('asset-purchase', '', 'delete')) { 
         $options .= '<a href="'.admin_url('eraxon_assets/eraxon_assets_stock_in/delete/'.$aRow['id']).'"class="btn btn-danger")">Delete</a> &nbsp;'; 
     }
-    if (has_permission('assets-stock-in', '', 'delete')) { 
+    if (has_permission('asset-purchase', '', 'edit')) { 
         $options .= '<a href="'.admin_url('eraxon_assets/eraxon_assets_stock_in/edit/'.$aRow['id']).'"class="btn btn-success")">Edit</a> &nbsp;'; 
     }
 

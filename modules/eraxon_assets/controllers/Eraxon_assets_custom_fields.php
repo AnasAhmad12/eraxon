@@ -15,7 +15,7 @@ class Eraxon_assets_custom_fields extends AdminController
     public function index()
     {
         //fix permissions
-        if (!has_permission('asset-custom-fields', '', 'view')) {
+        if (!has_permission('asset-custom_fields', '', 'view')) {
             access_denied('Custom Fields');
         }
         close_setup_menu();
@@ -28,11 +28,11 @@ class Eraxon_assets_custom_fields extends AdminController
 
     public function add()
     {
-        if (!has_permission('asset-custom-fields', '', 'view')) {
+        if (!has_permission('asset-custom_fields', '', 'create')) {
             access_denied('products View');
         }
         close_setup_menu();
-        if (has_permission('asset-custom-fields', '', 'view')) {
+        if (has_permission('asset-custom_fields', '', 'create')) {
             $post          = $this->input->post();
             if (!empty($post)) {
                 $this->form_validation->set_rules('cf_name', 'variation name', 'required|is_unique[assets_custom_field.name]');
@@ -72,11 +72,11 @@ class Eraxon_assets_custom_fields extends AdminController
 
     public function edit($id)
     {
-        if (!has_permission('asset-custom-fields', '', 'view')) {
+        if (!has_permission('asset-custom_fields', '', 'edit')) {
             access_denied('Custom Field View');
         }
         close_setup_menu();
-        if (has_permission('asset-custom-fields', '', 'view')) {
+        if (has_permission('asset-custom_fields', '', 'edit')) {
             $original_custom_fields = $data['variation'] = $this->Eraxon_assets_custom_fields_model->get($id, true);
             if (empty($original_custom_fields)) {
                 set_alert('danger', "Not Found");

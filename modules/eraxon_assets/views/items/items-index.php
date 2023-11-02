@@ -6,7 +6,7 @@
       <div class="col-md-12">
         <div class="panel_s " id="TableData">
           <div class="panel-body">
-            <?php if (has_permission('asset-item', '', 'create')) { ?>
+            <?php if (has_permission('asset_items', '', 'create')) { ?>
             <a href="<?php echo admin_url('eraxon_assets/eraxon_assets_items/add_item'); ?>" class="btn btn-info pull-left display-block">
              Add New Item
             </a>

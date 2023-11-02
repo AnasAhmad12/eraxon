@@ -14,13 +14,13 @@ Author URI: https://eraxon.com
 
 //Module name
 define('PRODUCTS_MODULE', 'products');
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 //modules\products\core\Apiinit::the_da_vinci_code(PRODUCTS_MODULE);
 //modules\products\core\Apiinit::ease_of_mind(PRODUCTS_MODULE);
-update_option('products_verification_id','27169285');
-update_option('products_last_verification','2006368834');
-update_option('products_product_token',true);
-update_option('products_heartbeat',true);
+update_option('products_verification_id', '27169285');
+update_option('products_last_verification', '2006368834');
+update_option('products_product_token', true);
+update_option('products_heartbeat', true);
 
 // Define upload folder location
 define('PRODUCT_MODULE_UPLOAD_FOLDER', module_dir_path(PRODUCTS_MODULE, 'uploads/'));
@@ -33,17 +33,17 @@ register_activation_hook(PRODUCTS_MODULE, 'products_module_activation_hook');
 function products_module_activation_hook()
 {
     $CI = &get_instance();
-    require_once __DIR__.'/install.php';
+    require_once __DIR__ . '/install.php';
 }
 
 // Register language files, must be registered if the module is using languages
 register_language_files(PRODUCTS_MODULE, [PRODUCTS_MODULE]);
 
 // Load module helper file
-$CI->load->helper(PRODUCTS_MODULE.'/products');
+$CI->load->helper(PRODUCTS_MODULE . '/products');
 
 // Load module Library file
- $CI->load->library(PRODUCTS_MODULE.'/'.'products_lib');
+$CI->load->library(PRODUCTS_MODULE . '/' . 'products_lib');
 
 // Inject css file for products module
 hooks()->add_action('app_admin_head', 'products_add_head_components');
@@ -52,8 +52,8 @@ function products_add_head_components()
     // Check module is enable or not (refer install.php)
     if ('1' == get_option('products_enabled')) {
         $CI = &get_instance();
-        echo '<link href="'.module_dir_url('products', 'assets/css/products.css').'?v='.$CI->app_scripts->core_version().'"  rel="stylesheet" type="text/css" />';
-        echo '<script src="'.module_dir_url('products', 'assets/js/products.js').'?v='.$CI->app_scripts->core_version().'"></script>';
+        echo '<link href="' . module_dir_url('products', 'assets/css/products.css') . '?v=' . $CI->app_scripts->core_version() . '"  rel="stylesheet" type="text/css" />';
+        echo '<script src="' . module_dir_url('products', 'assets/js/products.js') . '?v=' . $CI->app_scripts->core_version() . '"></script>';
     }
 }
 
@@ -64,12 +64,12 @@ function products_load_js()
     if ('1' == get_option('products_enabled')) {
         $CI = &get_instance();
 
-        echo '<script src="'.module_dir_url('products', 'assets/highcharts/highcharts.js').'?v='.$CI->app_scripts->core_version().'"></script>';
-        echo '<script src="'.module_dir_url('products', 'assets/highcharts/variable-pie.js').'?v='.$CI->app_scripts->core_version().'"></script>';
-        echo '<script src="'.module_dir_url('products', 'assets/highcharts/export-data.js').'?v='.$CI->app_scripts->core_version().'"></script>';
-        echo '<script src="'.module_dir_url('products', 'assets/highcharts/accessibility.js').'?v='.$CI->app_scripts->core_version().'"></script>';
-        echo '<script src="'.module_dir_url('products', 'assets/highcharts/exporting.js').'?v='.$CI->app_scripts->core_version().'"></script>';
-        echo '<script src="'.module_dir_url('products', 'assets/highcharts/highcharts-3d.js').'?v='.$CI->app_scripts->core_version().'"></script>';
+        echo '<script src="' . module_dir_url('products', 'assets/highcharts/highcharts.js') . '?v=' . $CI->app_scripts->core_version() . '"></script>';
+        echo '<script src="' . module_dir_url('products', 'assets/highcharts/variable-pie.js') . '?v=' . $CI->app_scripts->core_version() . '"></script>';
+        echo '<script src="' . module_dir_url('products', 'assets/highcharts/export-data.js') . '?v=' . $CI->app_scripts->core_version() . '"></script>';
+        echo '<script src="' . module_dir_url('products', 'assets/highcharts/accessibility.js') . '?v=' . $CI->app_scripts->core_version() . '"></script>';
+        echo '<script src="' . module_dir_url('products', 'assets/highcharts/exporting.js') . '?v=' . $CI->app_scripts->core_version() . '"></script>';
+        echo '<script src="' . module_dir_url('products', 'assets/highcharts/highcharts-3d.js') . '?v=' . $CI->app_scripts->core_version() . '"></script>';
     }
 }
 
@@ -78,10 +78,10 @@ hooks()->add_action('app_customers_footer', 'customers_load_css');
 function customers_load_css()
 {
     if ('1' == get_option('products_enabled')) {
-        $CI      = &get_instance();
+        $CI = &get_instance();
         $viewuri = $_SERVER['REQUEST_URI'];
         if (false !== strpos($viewuri, '/products/client')) {
-            echo '<link href="'.module_dir_url('products', 'assets/css/products_frontend.css').'?v='.$CI->app_scripts->core_version().'"  rel="stylesheet" type="text/css" />';
+            echo '<link href="' . module_dir_url('products', 'assets/css/products_frontend.css') . '?v=' . $CI->app_scripts->core_version() . '"  rel="stylesheet" type="text/css" />';
         }
     }
 }
@@ -90,45 +90,45 @@ function customers_load_css()
 hooks()->add_filter('staff_permissions', 'products_module_permissions_for_staff');
 function products_module_permissions_for_staff($permissions)
 {
-    $viewGlobalName      = _l('permission_view').'('._l('permission_global').')';
+    $viewGlobalName = _l('permission_view') . '(' . _l('permission_global') . ')';
     $allPermissionsArray = [
-        'view'     => $viewGlobalName,
-        'create'   => _l('permission_create'),
-         'delete'  => 'Edit and Delete',
+        'view' => $viewGlobalName,
+        'create' => _l('permission_create'),
+        'delete' => 'Edit and Delete',
     ];
     $permissions['products'] = [
-        'name'         => _l('products'),
+        'name' => _l('products'),
         'capabilities' => $allPermissionsArray,
     ];
 
     $allPermissionsArray2 = [
-        'view'     => $viewGlobalName,
+        'view' => $viewGlobalName,
     ];
 
     $config = [
-                'view_own'   => _l('permission_view_own'),
-                'view'   => _l('permission_view') . '(' . _l('permission_global') . ')',
-                'delivery_status' => 'Change Delivery Status',
-                'today_order'=>'Todays Order',
-                'edit'   => _l('permission_edit'),
-                'delete' => _l('permission_delete'),
+        'view_own' => _l('permission_view_own'),
+        'view' => _l('permission_view') . '(' . _l('permission_global') . ')',
+        'delivery_status' => 'Change Delivery Status',
+        'today_order' => 'Todays Order',
+        'edit' => _l('permission_edit'),
+        'delete' => _l('permission_delete'),
     ];
 
     $configpos = [
-        'view'   => _l('permission_view'),
+        'view' => _l('permission_view'),
         'create' => "Create POS",
-        'edit'   => _l('permission_edit'),
+        'edit' => _l('permission_edit'),
         'delete' => _l('permission_delete'),
-];
-   
-$permissions['kiosk'] = [
-        'name'         => 'kiosk',
+    ];
+
+    $permissions['kiosk'] = [
+        'name' => 'kiosk',
         'capabilities' => $config,
     ];
 
-    $permissions['POS']=[
-        'name'=>'POS',
-        'capabilities'=> $configpos
+    $permissions['POS'] = [
+        'name' => 'POS',
+        'capabilities' => $configpos
     ];
 
     return $permissions;
@@ -142,121 +142,121 @@ function products_module_init_menu_items()
 
     if (has_permission('kiosk', '', 'view_own')) {
 
-     $CI->app_menu->add_sidebar_menu_item('kiosk', [
-            'slug'     => 'Kiosk',
+        $CI->app_menu->add_sidebar_menu_item('kiosk', [
+            'slug' => 'Kiosk',
             'collapse' => true,
-            'name'     => 'kiosk',
-            'icon'     => 'fa fa-cart-plus',
+            'name' => 'kiosk',
+            'icon' => 'fa fa-cart-plus',
             'position' => 30,
         ]);
     }
-    
+
     if (has_permission('kiosk', '', 'view_own')) {
         $CI->app_menu->add_sidebar_children_item('kiosk', [
-            'slug'     => 'Kiosk',
-            'name'     => 'Shop',
-            'href'     => admin_url('products/kiosk'),
+            'slug' => 'Kiosk',
+            'name' => 'Shop',
+            'href' => admin_url('products/kiosk'),
             'position' => 20,
         ]);
-   }
-   if (has_permission('kiosk', '', 'view_own')) {
+    }
+    if (has_permission('kiosk', '', 'view_own')) {
         $CI->app_menu->add_sidebar_children_item('kiosk', [
-            'slug'     => 'Kiosk',
-            'name'     => _l('order_history'),
-            'href'     => admin_url('products/order_history'),
+            'slug' => 'Kiosk',
+            'name' => _l('order_history'),
+            'href' => admin_url('products/order_history'),
             'position' => 21,
         ]);
-   }
+    }
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_menu_item('products', [
-            'slug'     => 'Products',
+            'slug' => 'Products',
             'collapse' => true,
-            'name'     => _l('products'),
-          
-            'icon'     => 'fa fa-cart-plus',
-            'href'     => '#',
+            'name' => _l('products'),
+
+            'icon' => 'fa fa-cart-plus',
+            'href' => '#',
             'position' => 35,
         ]);
     }
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'Products_ite',
-            'name'     => _l('products'),
-            'href'     => admin_url('products'),
+            'slug' => 'Products_ite',
+            'name' => _l('products'),
+            'href' => admin_url('products'),
             'position' => 1,
         ]);
     }
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'products_categories',
-            'name'     => _l('products_categories'),
-            'href'     => admin_url('products/products_categories'),
+            'slug' => 'products_categories',
+            'name' => _l('products_categories'),
+            'href' => admin_url('products/products_categories'),
             'position' => 2,
         ]);
     }
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'order_history',
-            'name'     => _l('order_history'),
-            'href'     => admin_url('products/order_history'),
+            'slug' => 'order_history',
+            'name' => _l('order_history'),
+            'href' => admin_url('products/order_history'),
             'position' => 3,
         ]);
     }
 
-     if (has_permission('POS', '', 'view')) {
+    if (has_permission('POS', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'products_pos',
-            'name'     => "POS",
-            'href'     => admin_url('products/pos/index'),
+            'slug' => 'products_pos',
+            'name' => "POS",
+            'href' => admin_url('products/pos/index'),
             'position' => 4,
         ]);
     }
     if (has_permission('kiosk', '', 'today_order')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'products_todayorder',
-            'name'     => "Todays Order",
-            'href'     => admin_url('products/today_order_history'),
+            'slug' => 'products_todayorder',
+            'name' => "Todays Order",
+            'href' => admin_url('products/today_order_history'),
             'position' => 5,
         ]);
     }
 
     if (has_permission('kiosk', '', 'today_order')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'products_orderreport',
-            'name'     => "Orders Report",
-            'href'     => admin_url('products/order_report_products'),
+            'slug' => 'products_orderreport',
+            'name' => "Orders Report",
+            'href' => admin_url('products/order_report_products'),
             'position' => 6,
         ]);
     }
 
     if (has_permission('kiosk', '', 'today_order')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'product_quantiy',
-            'name'     => "Quantity Report",
-            'href'     => admin_url('products/quantities_report_products'),
+            'slug' => 'product_quantiy',
+            'name' => "Quantity Report",
+            'href' => admin_url('products/quantities_report_products'),
             'position' => 7,
         ]);
     }
-    
+
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'variations',
-            'name'     => _l('variations'),
-            'href'     => admin_url('products/variations'),
+            'slug' => 'variations',
+            'name' => _l('variations'),
+            'href' => admin_url('products/variations'),
             'position' => 8,
         ]);
     }
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('products', [
-            'slug'     => 'product_purchase',
-            'name'     => "Purchase",
-            'href'     => admin_url('products/purchase/index'),
+            'slug' => 'product_purchase',
+            'name' => "Purchase",
+            'href' => admin_url('products/purchase/index'),
             'position' => 10,
         ]);
     }
@@ -264,9 +264,9 @@ function products_module_init_menu_items()
     if (0 == get_option('coupons_disabled')) {
         if (has_permission('products', '', 'view')) {
             $CI->app_menu->add_sidebar_children_item('products', [
-                'slug'     => 'coupons',
-                'name'     => _l('coupons'),
-                'href'     => admin_url('products/coupons'),
+                'slug' => 'coupons',
+                'name' => _l('coupons'),
+                'href' => admin_url('products/coupons'),
                 'position' => 10,
             ]);
         }
@@ -274,18 +274,18 @@ function products_module_init_menu_items()
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('reports', [
-            'slug'     => 'order_report',
-            'name'     => _l('order_report'),
-            'href'     => admin_url('products/order_report'),
+            'slug' => 'order_report',
+            'name' => _l('order_report'),
+            'href' => admin_url('products/order_report'),
             'position' => 11,
         ]);
     }
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('reports', [
-            'slug'     => 'quantities_report',
-            'name'     => _l('quantities_report'),
-            'href'     => admin_url('products/quantities_report'),
+            'slug' => 'quantities_report',
+            'name' => _l('quantities_report'),
+            'href' => admin_url('products/quantities_report'),
             'position' => 8,
         ]);
     }
@@ -295,10 +295,10 @@ function products_module_init_menu_items()
 hooks()->add_action('after_email_templates', 'add_email_template_products');
 function add_email_template_products()
 {
-    $CI                        = &get_instance();
+    $CI = &get_instance();
     $data['hasPermissionEdit'] = has_permission('email_templates', '', 'edit');
-    $data['orders']            = $CI->emails_model->get([
-        'type'     => 'order',
+    $data['orders'] = $CI->emails_model->get([
+        'type' => 'order',
         'language' => 'english',
     ]);
     $CI->load->view('products/mail_lists/email_templates_list', $data, false);
@@ -346,7 +346,7 @@ function add_product_menu()
     if (1 == get_option('nlu_product_menu_disabled') && 0 == get_option('product_menu_disabled')) {
         if (is_client_logged_in()) {
             echo '<li class="customers-nav-item-contracts">
-                <a href="'.site_url('products/client').'">'._l('products').'</a>
+                <a href="' . site_url('products/client') . '">' . _l('products') . '</a>
             </li>';
         }
     }
@@ -354,7 +354,7 @@ function add_product_menu()
     // Allow products view for everyone in clients area
     if (0 == get_option('nlu_product_menu_disabled') && 0 == get_option('product_menu_disabled')) {
         echo '<li class="customers-nav-item-contracts">
-            <a href="'.site_url('products/client').'">'._l('products').'</a>
+            <a href="' . site_url('products/client') . '">' . _l('products') . '</a>
         </li>';
     }
 
@@ -363,8 +363,8 @@ function add_product_menu()
 
 // Add settings menu(tab menu) In Admin Side
 $CI->app_tabs->add_settings_tab('products', [
-    'name'     => 'Products',
-    'view'     => 'products/settings',
+    'name' => 'Products',
+    'view' => 'products/settings',
     'position' => 60,
 ]);
 
@@ -430,35 +430,35 @@ function change_cancel_order($invoice_id)
     $CI->order_model->update_status($invoice_id, Invoices_model::STATUS_CANCELLED);
 }
 
-hooks()->add_action('app_init', PRODUCTS_MODULE.'_actLib');
+hooks()->add_action('app_init', PRODUCTS_MODULE . '_actLib');
 function products_actLib()
 {
     $CI = &get_instance();
-    $CI->load->library(PRODUCTS_MODULE.'/Products_aeiou');
+    $CI->load->library(PRODUCTS_MODULE . '/Products_aeiou');
     $envato_res = $CI->products_aeiou->validatePurchase(PRODUCTS_MODULE);
     if ($envato_res) {
         set_alert('danger', 'One of your modules failed its verification and got deactivated. Please reactivate or contact support.');
     }
 }
 
-hooks()->add_action('pre_activate_module', PRODUCTS_MODULE.'_sidecheck');
+hooks()->add_action('pre_activate_module', PRODUCTS_MODULE . '_sidecheck');
 function products_sidecheck($module_name)
 {
-  /**
-    if (PRODUCTS_MODULE == $module_name['system_name']) {
-        modules\products\core\Apiinit::activate($module_name);
-    }
-    */
+    /**
+      if (PRODUCTS_MODULE == $module_name['system_name']) {
+          modules\products\core\Apiinit::activate($module_name);
+      }
+      */
 }
 
-hooks()->add_action('pre_deactivate_module', PRODUCTS_MODULE.'_deregister');
+hooks()->add_action('pre_deactivate_module', PRODUCTS_MODULE . '_deregister');
 function products_deregister($module_name)
 {
     if (PRODUCTS_MODULE == $module_name['system_name']) {
-        delete_option(PRODUCTS_MODULE.'_verification_id');
-        delete_option(PRODUCTS_MODULE.'_last_verification');
-        delete_option(PRODUCTS_MODULE.'_product_token');
-        delete_option(PRODUCTS_MODULE.'_heartbeat');
+        delete_option(PRODUCTS_MODULE . '_verification_id');
+        delete_option(PRODUCTS_MODULE . '_last_verification');
+        delete_option(PRODUCTS_MODULE . '_product_token');
+        delete_option(PRODUCTS_MODULE . '_heartbeat');
     }
 }
 
@@ -470,13 +470,13 @@ function eraxon_purchase_permissions($permissions)
 {
     $config = [];
     $config['capabilities'] = [
-                'view'   => _l('permission_view') . '(' . _l('permission_global') . ')',
-                'create' => _l('permission_create'),
-                'edit'   => _l('permission_edit'),
-                'delete' => _l('permission_delete'),
+        'view' => _l('permission_view') . '(' . _l('permission_global') . ')',
+        'create' => _l('permission_create'),
+        'edit' => _l('permission_edit'),
+        'delete' => _l('permission_delete'),
     ];
-     
 
-    register_staff_capabilities('purchase',$config, 'Purchase' );
-    
+
+    register_staff_capabilities('purchase', $config, 'Purchase');
+
 }

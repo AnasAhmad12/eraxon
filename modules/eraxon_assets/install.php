@@ -139,8 +139,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
 			`serial_number` INT(11) NOT NULL,
 			`request_status` INT NOT NULL DEFAULT "0",
 			`item_status` INT NOT NULL DEFAULT "0",
-
 			`last_updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=' . $CI->db->char_set . ';');
+	}
+
+	if (!$CI->db->table_exists(db_prefix() . 'assets_request_inventory')) {
+		$CI->db->query('CREATE TABLE `' . db_prefix() . 'assets_request_inventory` (
+			`id` INT(11) NOT NULL AUTO_INCREMENT,
+			`status` INT(11) NOT NULL,
+			`staff_id` INT(11) NOT NULL,
+			`item_id` INT(11) NOT NULL,
+			`serial_number`  VARCHAR(255) NOT NULL,
+			`qty` INT NOT NULL DEFAULT "1",
+ 			PRIMARY KEY (`id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=' . $CI->db->char_set . ';');
 	}

@@ -15,9 +15,10 @@ class Eraxon_assets_allocation extends AdminController
 
     public function index()
     {
-        if (!has_permission('asset-allocation', '', 'view')) {
+        if (!has_permission('asset-allocation', '', 'view_own') && !has_permission('asset-allocation', '', 'view')) {
             access_denied('Assets allocation');
         }
+
 
         if ($this->input->is_ajax_request()) {
             $this->app->get_table_data(module_views_path('eraxon_assets', 'tables/assets_allocation_table'));
@@ -28,11 +29,11 @@ class Eraxon_assets_allocation extends AdminController
 
     public function add_allocation()
     {
-        if (!has_permission('assets-allocation', '', 'view')) {
+        if (!has_permission('asset-allocation', '', 'create')) {
             access_denied('Allocation View');
         }
         close_setup_menu();
-        if (has_permission('assets-allocation', '', 'view')) {
+        if (has_permission('asset-allocation', '', 'create')) {
             $post = $this->input->post();
             if (!empty($post)) {
 
@@ -92,13 +93,14 @@ class Eraxon_assets_allocation extends AdminController
         //  $this->load->model('staff_model');
 
         $data = $this->Eraxon_assets_allocation_model->get_by_id_allocation($id);
-    
-         $this->load->view('allocation/user_allocateditems',$data);
+
+        $this->load->view('allocation/user_allocateditems', $data);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $this->Eraxon_assets_allocation_model->delete_allocation($id);
-        set_alert('success',"Allocation Deleted");
+        set_alert('success', "Allocation Deleted");
         redirect(admin_url('eraxon_assets/eraxon_assets_allocation'));
 
     }

@@ -28,7 +28,7 @@
                             </thead>
                             <tbody>
                             	<?php foreach ($advance_salary as $as) { ?>
-                                <tr>
+                                <tr >
                                 	<?php if(has_permission('advance_salary','','view') || is_admin()){ ?>
                                 		<td><?php echo $as['firstname'].' '.$as['lastname'].' ('.get_custom_field_value($as['staffid'],'staff_pseudo','staff',true).')'; ?></td>
                                 	<?php } ?>

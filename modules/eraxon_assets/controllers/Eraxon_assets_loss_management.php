@@ -17,13 +17,13 @@ class eraxon_assets_loss_management extends AdminController
 
     public function index()
     {
-        if (!has_permission('asset-loss', '', 'view')) {
+        if (!has_permission('asset-loss', '', 'view')&&!has_permission('asset-loss', '', 'view_own')) {
             access_denied('Assets Loss Management');
         }
 
 
 
-        $staff_id=63;
+        $staff_id=get_staff_user_id();
         $staffAllocatedItems = $this->Eraxon_assets_allocation_model->get_staff_items($staff_id);
         $data["staff_items"]=$staffAllocatedItems;
         $data['staff_id']=$staff_id;
@@ -53,12 +53,10 @@ class eraxon_assets_loss_management extends AdminController
             $this->Eraxon_assets_loss_model->post_loss_db($post_loss_data);
 
             $followers_id = get_option('stock_loss_approval');
-            $staffid = get_current_user() ;
-            $subject = "Loss Reported ".$item_id." ".$serial_number;
-            $link = 'eraxon_myform/others';
+            $subject = "Loss Reported Item ID : ".$item_id." Serial Number".$serial_number;
+            $link = '';
 
-            if ($followers_id != '') {
-                if ($staffid != $followers_id) {
+            
                     $notification_data = [
                         'description' => $subject,
                         'touserid' => $followers_id,
@@ -73,8 +71,7 @@ class eraxon_assets_loss_management extends AdminController
                         pusher_trigger_notification([$followers_id]);
                     }
 
-                }
-            }
+                
 
             set_alert('success', "Loss Reported");
 

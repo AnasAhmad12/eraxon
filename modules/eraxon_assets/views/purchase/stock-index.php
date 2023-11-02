@@ -6,7 +6,7 @@
       <div class="col-md-12">
         <div class="panel_s " id="TableData">
           <div class="panel-body">
-            <?php if (has_permission('asset-item', '', 'create')) { ?>
+            <?php if (has_permission('asset-purchase', '', 'create')) { ?>
               <a href="<?php echo admin_url('eraxon_assets/eraxon_assets_stock_in/add_stock_in'); ?>"
                 class="btn btn-info pull-left display-block">
                 Stock In

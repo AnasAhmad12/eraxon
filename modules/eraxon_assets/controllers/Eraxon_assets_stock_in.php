@@ -21,7 +21,7 @@ class Eraxon_assets_stock_in extends AdminController
             access_denied('Assets Purchase');
         }
         close_setup_menu();
-        if (has_permission('assets-items', '', 'view')) {
+        if (has_permission('asset-purchase', '', 'view')) {
             if ($this->input->is_ajax_request()) {
                 $this->app->get_table_data(module_views_path('eraxon_assets', 'tables/assets_stock_in_table'));
             }
@@ -32,11 +32,11 @@ class Eraxon_assets_stock_in extends AdminController
 
     public function add_stock_in()
     {
-        if (!has_permission('asset-stock-in', '', 'view')) {
+        if (!has_permission('asset-purchase', '', 'create')) {
             access_denied('Stock In View');
         }
         close_setup_menu();
-        if (has_permission('asset- custom-fields', '', 'view')) {
+        if (has_permission('asset-purchase', '', 'create')) {
             $post = $this->input->post();
             if (!empty($post)) {
                 $is_serial_no = $this->input->post('has_serial');
@@ -128,12 +128,12 @@ class Eraxon_assets_stock_in extends AdminController
 
     public function edit($id)
     {
-        if (!has_permission('assets-stock-in', '', 'view')) {
-            access_denied('Items View');
+        if (!has_permission('asset-purchase', '', 'edit')) {
+            access_denied('Stock In Edit');
         }
         close_setup_menu();
 
-        if (has_permission('assets-stock-in', '', 'view')) {
+        if (has_permission('asset-purchase', '', 'edit')) {
             $original_product = $data['item'] = $this->Eraxon_assets_stock_in_model->get_by_id_stock_purchase($id);
             if (empty($original_product)) {
                 set_alert('danger', _l('not_found_products'));

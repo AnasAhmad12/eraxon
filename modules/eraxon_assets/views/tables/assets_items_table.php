@@ -13,7 +13,6 @@ $filter       = [];
 $where        = [];
 $statusIds    = [];
 $join         = [
-    // 'LEFT JOIN '.db_prefix().'assets_categories ON '.db_prefix().'assets_categories.assets_category_id='.db_prefix().'assets_items_master.assets_category_id',
 ];
 $result  = data_tables_init($aColumns, $sIndexColumn, $sTable, $join, $where, ['id','assets_category_id']);
 $output  = $result['output'];
@@ -28,8 +27,11 @@ foreach ($rResult as $aRow) {
     $row        = [];
     $outputName = '<a href="#">'.$aRow['item_name'].'</a>';
     $outputName .= '<div class="row-options">';
-    if (has_permission('products', '', 'delete')) {
+   
+    if (has_permission('asset_items', '', 'edit')) {
         $outputName .= ' <a href="'.admin_url('eraxon_assets/eraxon_assets_items/edit/'.$aRow['id']).'" class="_edit">'._l('edit').'</a>';
+    }
+    if (has_permission('asset_items', '', 'delete')) {
         $outputName .= '| <a href="'.admin_url('eraxon_assets/eraxon_assets_items/delete/'.$aRow['id']).'" class="text-danger _delete">'._l('delete').'</a>';
     }
     $outputName .= '</div>';

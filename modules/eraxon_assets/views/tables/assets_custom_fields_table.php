@@ -22,10 +22,14 @@ foreach ($rResult as $aRow) {
     $row        = [];
     $outputName = '<a href="#">'.$aRow['name'].'</a>';
     $outputName .= '<div class="row-options">';
-    if (has_permission('products', '', 'delete')) {
+    if (has_permission('asset-custom_fields', '', 'edit')) {
         $outputName .= ' <a href="'.admin_url('eraxon_assets/eraxon_assets_custom_fields/edit/'.$aRow['id']).'" class="_edit">'._l('edit').'</a>';
-        $outputName .= '| <a href="'.admin_url('eraxon_assets/eraxon_assets_custom_fields/delete/'.$aRow['id']).'" class="text-danger _delete">'._l('delete').'</a>';
     }
+    if (has_permission('asset-custom_fields', '', 'delete')) {
+    $outputName .= '| <a href="'.admin_url('eraxon_assets/eraxon_assets_custom_fields/delete/'.$aRow['id']).'" class="text-danger _delete">'._l('delete').'</a>';
+    }
+
+
     $outputName .= '</div>';
     $row[]              = $outputName;
     $row[]              = get_catogory_values($aRow['id']);

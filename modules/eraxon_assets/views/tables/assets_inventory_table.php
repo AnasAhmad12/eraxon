@@ -6,7 +6,8 @@ $aColumns = [
     'item_name',
     'item_id',
     'qty',
-    'serial_number'
+    'serial_number',
+    'price'
     //  db_prefix().'assets_available_inventory.*',
 ];
 $sIndexColumn = 'item_id';

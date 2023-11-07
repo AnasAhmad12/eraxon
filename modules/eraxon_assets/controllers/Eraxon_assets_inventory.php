@@ -14,7 +14,7 @@ class Eraxon_assets_inventory extends AdminController
     public function index()
     {
 
-        if (!has_permission('asset-inventory', '', 'view')) {
+        if (!has_permission('asset_inventory', '', 'view')) {
             access_denied('Assets Inventory');
         }
         

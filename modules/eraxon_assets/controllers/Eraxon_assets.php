@@ -21,8 +21,12 @@ class Eraxon_assets extends AdminController
 	}
 
 	public function settings(){
+		if(!has_permission('asset-setting','','view')){
+			access_denied('Setting');
+		}
+		
 		$role_id = $this->roles_model->get_roleid_by_name('CSR');
-        $data['staff_members'] = $this->staff_model->get('', ['active' => 1,'role' => $role_id]);
+        $data['staff_members'] = $this->staff_model->get('', ['active' => 1]);
 		$this->load->view('setting',$data);
 	}
 

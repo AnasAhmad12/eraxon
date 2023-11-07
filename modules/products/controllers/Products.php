@@ -291,6 +291,9 @@ class Products extends AdminController
         }
 
         $total_recieveables=$this->reports_products_model->year_recieveables();
+
+        var_dump($total_recieveables);
+        return 0;
   
        
         if (!empty($total_recieveables)) {

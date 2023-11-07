@@ -148,7 +148,7 @@ class Reports_products_model extends CI_Model
                 ->select_sum('total')
                 ->select('YEAR(order_date) as year')
                 ->from(db_prefix() . 'order_master')
-                ->where('MONTH(order_date)', date('m', strtotime($m))) 
+                ->where('MONTH(order_date)', $m) 
                 ->where('status', 2)
                 ->where('(order_type = "POS-Wallet" OR order_type = "KIOSK")', null, false)
                 ->group_by('YEAR(order_date)') 

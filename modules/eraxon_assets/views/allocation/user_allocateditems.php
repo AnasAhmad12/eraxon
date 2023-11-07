@@ -21,14 +21,15 @@
                                     <tr>
                                         <td>Full Name</td>
                                         <td>
-
-                                           <?php echo  get_staff_full_name($allocation_master[0]->staff_id) ?> 
+                                            <?php echo get_staff_full_name($allocation_master[0]->staff_id) ?>
                                         </td>
                                     </tr>
                                     <tr>
-                                    <td>Allocation Date</td>
-                                    <td><?php echo date('Y-M-d', strtotime($allocation_master[0]->allocation_date)); ?></td>
-                                </tr>
+                                        <td>Allocation Date</td>
+                                        <td>
+                                            <?php echo date('Y-M-d', strtotime($allocation_master[0]->allocation_date)); ?>
+                                        </td>
+                                    </tr>
 
                                 </table>
                             </div>
@@ -46,27 +47,36 @@
                                             <th>#</th>
                                             <th class="description" width="38%">Item</th>
                                             <th>Serial Number</th>
-                                            <th >Qty</th>
+                                            <th>Qty</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
-                                        <?php $count=0; foreach($allocation_item as $ai){ ?>
-                                            
+                                        <?php $count = 0;
+                                        foreach ($allocation_item as $ai) { ?>
+
                                             <tr>
-                                            <td> <?php echo $count=$count+1; ?> </td>
-                                            <td > <?php echo $ai->item_name; ?> </td>
-                                            <td> <?php echo   $ai->serial_number; ?> </td>
-                                            <td> <?php echo   $ai->qty; ?> </td>
+                                                <td>
+                                                    <?php echo $count = $count + 1; ?>
+                                                </td>
+                                                <td>
+                                                    <?php echo $ai->item_name; ?>
+                                                </td>
+                                                <td>
+                                                    <?php echo $ai->serial_number; ?>
+                                                </td>
+                                                <td>
+                                                    <?php echo $ai->qty; ?>
+                                                </td>
 
                                             </tr>
-                                        
+
                                         <?php } ?>
 
                                     </tbody>
                                 </table>
                             </div>
-                           
+
                         </div>
 
                     </div>

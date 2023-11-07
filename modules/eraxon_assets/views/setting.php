@@ -69,6 +69,34 @@
 <?php init_tail(); ?>
 
 <script>
+$(document).ready(function() {
+    var purchase_approval="<?php echo get_option("stock_in_purchase_approval")?>"
+    var loss_approval="<?php echo get_option("stock_loss_approval")?>"
+    setDefaultOptionByStatus(purchase_approval,loss_approval)
+});
 
+
+
+function setDefaultOptionByStatus(purchase,loss) {
+        var selectElement = $('select[name="purchase_approval"]');
+        selectElement.find('option').each(function () {
+            if ($(this).val() === purchase) {
+                $(this).prop('selected', true);
+            } else {
+                $(this).prop('selected', false);
+            }
+        });
+        selectElement.selectpicker('refresh');
+
+        var item = $('select[name="loss_approval"]');
+        item.find('option').each(function () {
+            if ($(this).val() === loss) {
+                $(this).prop('selected', true);
+            } else {
+                $(this).prop('selected', false);
+            }
+        });
+        item.selectpicker('refresh');
+    }
 
  </script>

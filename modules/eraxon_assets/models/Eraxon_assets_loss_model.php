@@ -20,7 +20,9 @@ class Eraxon_assets_loss_model extends App_Model
     public function get_loss()
     {
         $data = $this->db->get(db_prefix() . 'assets_lost_inventory')->result();
-
+    if(has_permission('asset-loss','','view_own') && !is_admin()){
+        $this->db->where('staff_id',get_staff_user_id());
+    }
         $this->db->select('tblassets_lost_inventory.*, item_name');
         $this->db->from(db_prefix() . 'assets_lost_inventory');
         $this->db->join(db_prefix() . 'assets_items_master', db_prefix() . 'assets_items_master.id =' . db_prefix() . 'assets_lost_inventory.item_id', 'left');

@@ -21,7 +21,7 @@ class Eraxon_assets_stock_in extends AdminController
             access_denied('Assets Purchase');
         }
         close_setup_menu();
-        if (has_permission('assets-items', '', 'view')) {
+        if (has_permission('asset-purchase', '', 'view')) {
             if ($this->input->is_ajax_request()) {
                 $this->app->get_table_data(module_views_path('eraxon_assets', 'tables/assets_stock_in_table'));
             }
@@ -32,11 +32,11 @@ class Eraxon_assets_stock_in extends AdminController
 
     public function add_stock_in()
     {
-        if (!has_permission('asset-stock-in', '', 'view')) {
+        if (!has_permission('asset-purchase', '', 'create')) {
             access_denied('Stock In View');
         }
         close_setup_menu();
-        if (has_permission('asset- custom-fields', '', 'view')) {
+        if (has_permission('asset-purchase', '', 'create')) {
             $post = $this->input->post();
             if (!empty($post)) {
                 $is_serial_no = $this->input->post('has_serial');
@@ -69,7 +69,6 @@ class Eraxon_assets_stock_in extends AdminController
                         $item = $this->Eraxon_assets_items_model->get_by_id_product($i);
                         $temp = array(
                             "item_id" => $i,
-                            'purchase_date' => date('Y-m-d'),
                             "serial_number" => $serial_number[$index],
                             "purchase_price" => $rate[$index],
                             "quantity_added" => $quantity[$index]
@@ -97,11 +96,14 @@ class Eraxon_assets_stock_in extends AdminController
                         'status' => "success",
                         "message" => "Data Successfully Sent"
                     ];
+
+
                 }
                 echo json_encode($response);
                 return 0;
             }
             $data['title'] = "Add Stock Purchase";
+            $data['approval']="";
 
             $this->load->view('purchase/stock-in', $data);
         } else {
@@ -113,6 +115,7 @@ class Eraxon_assets_stock_in extends AdminController
      $serial_numbers=$this->input->post('serial-number');
     if (is_array($serial_numbers)) {
         foreach ($serial_numbers as $serial_number) {
+        
             return $this->Eraxon_assets_stock_in_model->is_serial_number_unique($serial_number);
            
         }
@@ -128,12 +131,12 @@ class Eraxon_assets_stock_in extends AdminController
 
     public function edit($id)
     {
-        if (!has_permission('assets-stock-in', '', 'view')) {
-            access_denied('Items View');
+        if (!has_permission('asset-purchase', '', 'edit')) {
+            access_denied('Stock In Edit');
         }
         close_setup_menu();
 
-        if (has_permission('assets-stock-in', '', 'view')) {
+        if (has_permission('asset-purchase', '', 'edit')) {
             $original_product = $data['item'] = $this->Eraxon_assets_stock_in_model->get_by_id_stock_purchase($id);
             if (empty($original_product)) {
                 set_alert('danger', _l('not_found_products'));
@@ -186,7 +189,6 @@ class Eraxon_assets_stock_in extends AdminController
                         $temp = array(
                             "item_id" => $i,
                             "stock_in_master_id"=>$master_id,
-                            'purchase_date' => date('Y-m-d'),
                             "serial_number" => $serial_number[$index],
                             "purchase_price" => $rate[$index],
                             "quantity_added" => $quantity[$index]
@@ -226,6 +228,7 @@ class Eraxon_assets_stock_in extends AdminController
             }
 
             $data['title'] = "Edit Stock Purchase";
+            $data['approval']=get_option('stock_in_purchase_approval');
             $this->load->view('purchase/stock-in', $data);
         } else {
             access_denied('Edit Stock In');

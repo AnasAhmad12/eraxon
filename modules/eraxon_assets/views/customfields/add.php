@@ -15,7 +15,19 @@
             
             <div class="row">
             <div class="col-md-5">
-                <?php echo render_select('custom_field_category', $custom_field_categories, ['assets_category_id', 'assets_category_name'], 'Category', !empty(set_value('assets_category_id')) ? set_value('assets_category_id') : $variation->assets_category_id ?? ''); ?>
+            <div class="form-group">
+              <label> Select Category </label>
+                <select name="custom_field_category" data-live-search="true"
+                    class="form-control selectpicker">
+                    <?php foreach ($custom_field_categories as $cf) { ?>
+                      <option value="<?php echo $cf->assets_category_id?>">
+                            <?php echo $cf->assets_category_name ; ?>
+                        </option>
+                    <?php } ?>
+                </select>
+
+            </div>
+                      
               </div>
 
               <div class="col-md-12">
@@ -97,7 +109,9 @@
 <script type="text/javascript">
   $(function () {
     appValidateForm($('form'), {
+      custom_field_category:"required",
       cf_name : "required",
+
     });
     
     init_items_sortable();

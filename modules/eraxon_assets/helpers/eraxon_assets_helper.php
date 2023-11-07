@@ -20,7 +20,7 @@ function get_catogory_values($id)
     $values = '';
     foreach ($custom_field_values as $c)
     {
-        $values .= '<span class="label label-success">' . $c['assets_category_name'] . '</span>';
+        $values .= '<span class="label label-success">' . $c->assets_category_name . '</span>';
     }
     return $values;
 }

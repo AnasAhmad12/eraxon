@@ -7,7 +7,7 @@
         <div class="panel_s " id="TableData">
           <div class="panel-body">
           
-            <?php if (has_permission('assets-custom-fields', '', 'create')) { ?>
+            <?php if (has_permission('asset-custom_fields', '', 'create')) { ?>
               <a href="<?php echo admin_url('eraxon_assets/eraxon_assets_custom_fields/add'); ?>" class="btn btn-info pull-left display-block">
                 <?php echo "New Custom Field"?>
               </a>

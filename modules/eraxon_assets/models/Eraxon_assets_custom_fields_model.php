@@ -26,8 +26,7 @@ class Eraxon_assets_custom_fields_model extends App_Model
             $this->db->where('id', $id);
             $category = $this->db->get(db_prefix() . 'assets_custom_field')->result();
             $this->db->where('assets_category_id',$category[0]->assets_category_id);
-            $data = $this->db->get(db_prefix() . 'assets_categories')->result_array();
-            // $data=$category[0]->assets_category_id;?
+            $data = $this->db->get(db_prefix() . 'assets_categories')->result();
             return $data;
         }
         return [];
@@ -97,7 +96,12 @@ class Eraxon_assets_custom_fields_model extends App_Model
     public function get_custom_field_by_category($id){
         $this->db->where('assets_category_id',$id);
         $cf_id = $this->db->get(db_prefix() . 'assets_custom_field')->result()[0]->id;
-        return $this->get($cf_id,true);
+        if($cf_id){
+            return $this->get($cf_id,true);
+        }
+        else{
+            return [];
+        }
 
 
     }

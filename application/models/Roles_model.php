@@ -163,4 +163,10 @@ class Roles_model extends App_Model
 
         return $this->db->get(db_prefix() . 'staff')->result_array();
     }
+
+    public function get_staff_role($role_id){
+        $this->db->where('roleid',$role_id);
+        $role=$this->db->get(db_prefix().'roles')->result();
+        return $role;
+    }
 }

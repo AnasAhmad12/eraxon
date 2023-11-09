@@ -91,6 +91,8 @@ class Eraxon_assets_items extends AdminController
             $data['title']              = "Add New Item";
             $data['action']             = "Items";
             $data['item_categories'] = $this->Eraxon_assets_category_model->get();
+           
+           
             $this->load->view('items/add-item', $data); 
         } else {
             access_denied('products');

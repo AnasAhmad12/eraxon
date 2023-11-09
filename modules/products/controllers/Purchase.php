@@ -9,7 +9,7 @@ class Purchase extends AdminController{
     {
         parent::__construct();
         $this->load->library('form_validation');
-        $this->load->model(['products_model','purchase_model','currencies_model']);
+        $this->load->model(['products_model','purchase_model','currencies_model','reports_products_model']);
         
     }
 
@@ -20,6 +20,7 @@ class Purchase extends AdminController{
         $purchase_data['purchases']=$this->purchase_model->get_purchase_list();
         $this->load->view('products/purchase/purchase-view',$purchase_data);
     }
+
 
 
     public function get_product_master(){
@@ -66,93 +67,48 @@ class Purchase extends AdminController{
 
     public function add_purchase(){
         $product['products']=$this->products_model->get_by_id_product();
-        $product['session_id'] = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
         $product['base_currency']      = $this->currencies_model->get_base_currency();
         $this->load->view('products/purchase/add-purchase',$product);
     }
 
-    public function add_purchase_item(){
+    public function add_purchase_new(){
+           
+        $purchase_items=$this->input->post('purchase_items');
+        $payment_status=$this->input->post('payment_status');
+        $payment_date=$this->input->post('payment_date');
+        $total=$this->input->post('total');
+
+        $staff_id=get_staff_user_id();
+
+        $master_purchase=array(
+            "date"=>$payment_date,
+            "grand_total"=>$total,
+            "created_by"=>get_staff_full_name($staff_id),
+            "payment_status"=>$payment_status
+        );
+        $purchase_items_post=[];
+        foreach($purchase_items as $oi){ 
+                    $temp_pro=array(
+                        'product_id'  => $oi['product_id'],
+                        'product_name' => $oi['product_name'],
+                        'net_unit_cost'=>$oi['rate'],
+                        'quantity'=>$oi['qty'],
+                        'subtotal' =>$oi['subtotal'],
+                    );
+                
+                    array_push($purchase_items_post,$temp_pro);
+                }
+        $response=$this->purchase_model->add_purchase_to_db($master_purchase,$purchase_items_post,$payment_status);
+        $url=admin_url('products/purchase');
+        echo json_encode($url);
+        return 0;
     
-        $purchase_items= array(
-            'product_id'  => $this->input->post("id"),
-            'product_name' => $this->input->post("product_name"),
-            'net_unit_cost'=>$this->input->post("rate"),
-            'quantity'=>1.0,
-            'subtotal' =>$this->input->post("rate"),
-            'session_id'=>$this->input->post("sessionId"),
-        );
 
-
-       
-        $variations=$this->input->post("variations");
-        
-        foreach($variations as $variation){
-            if($variation['variation_value']==$this->input->post("selectedVariation")){
-                $variation_id=$variation['variation_id'];
-                $variation_value_id=$variation['variation_value_id'];
-                $product_variant=$variation['variation_value'];
-                $purchase_items['net_unit_cost']=$variation['rate'];
-                $purchase_items['subtotal']=$purchase_items['net_unit_cost']*$purchase_items['quantity'];
-         }
-        }
-        
-        $purchase_items['product_variant']=$product_variant;
-        $purchase_items['product_variation_value_id']= $variation_value_id;
-        $purchase_items['product_variant_id']= $variation_id;
+}
     
-        $this->purchase_model->add_purchase_item_db($purchase_items);
-        echo json_encode($purchase_items);
-    }
 
+   
 
-    public function update_purchase_item_quantity(){
-
-        $this->purchase_model->update_quantity($this->input->post("id"),$this->input->post("val"));
-        echo json_encode("Updated");
-    }
-
-    public function delete_purchase_item(){
-        $this->purchase_model->delete_item($this->input->post("id"));
-        echo json_encode($this->input->post("id"));
-    }
-
-    public function make_purchase(){
-        
-        $purchase_detail= array(
-            'grand_total'  => $this->input->post("grand_total"),
-            'created_by' => $this->input->post("created_by"),
-            'payment_status'=>$this->input->post("payment_status")
-        );
-
-        $date=$this->input->post("date");
-        $timestamp = strtotime(str_replace('/', '-', $date));
-        $new_date= date("Y-m-d H:i:s", $timestamp);
-        $purchase_detail['date']=$new_date;
-
-        $session_id=$this->input->post("session_id");
-      $test= $this->purchase_model->make_purchase_to_db($session_id,$purchase_detail);
-        echo json_encode($test);
-    }
-
-    public function update_purchase(){
-
-        $purchase_detail= array(
-            'grand_total'  => $this->input->post("grand_total"),
-            'updated_by' => $this->input->post("created_by"),
-            'payment_status'=>$this->input->post("payment_status")
-        );
-        $purchase_id=$this->input->post("id");
-
-        $date=$this->input->post("date");
-        $timestamp = strtotime(str_replace('/', '-', $date));
-        $new_date= date("Y-m-d H:i:s", $timestamp);
-        $purchase_detail['date']=$new_date;
-
-        $session_id=$this->input->post("session_id");
-
-         $this->purchase_model->update_purchase_to_db($session_id,$purchase_detail,$purchase_id);
-        echo json_encode($purchase_detail);
-    }
 
     public function delete_purchase(){
         $purchase_id=$this->input->post("id");
@@ -179,18 +135,29 @@ class Purchase extends AdminController{
 
     public function edit_purchase(){
 
-      
         $id = $this->input->get('id');
         $data= $this->purchase_model->edit_purchase($id);
-       
-
-
+        var_dump($data);
+        return 0;
         $this->load->view('products/purchase/edit-add-purchase',$data);
 
 
     }
     
 
+    public function purchase_report(){
+        $this->load->view('products/reports/purchase_report');
+    }
+
+    public function generate_purchase_report(){
+      $from_date= $this->input->post('from_date');
+      $to_date= $this->input->post('to_date');
+    
+      $response=$this->reports_products_model->purchase_report($from_date,$to_date);
+
+
+      echo json_encode($response);
+    }
 
 
     public function update_error(){
@@ -208,6 +175,8 @@ class Purchase extends AdminController{
            echo json_encode($subtotal);
    
         }  
+
+
 
     
 

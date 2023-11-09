@@ -69,7 +69,6 @@ class Eraxon_assets_stock_in extends AdminController
                         $item = $this->Eraxon_assets_items_model->get_by_id_product($i);
                         $temp = array(
                             "item_id" => $i,
-                            'purchase_date' => date('Y-m-d'),
                             "serial_number" => $serial_number[$index],
                             "purchase_price" => $rate[$index],
                             "quantity_added" => $quantity[$index]
@@ -97,11 +96,14 @@ class Eraxon_assets_stock_in extends AdminController
                         'status' => "success",
                         "message" => "Data Successfully Sent"
                     ];
+
+
                 }
                 echo json_encode($response);
                 return 0;
             }
             $data['title'] = "Add Stock Purchase";
+            $data['approval']="";
 
             $this->load->view('purchase/stock-in', $data);
         } else {
@@ -113,6 +115,7 @@ class Eraxon_assets_stock_in extends AdminController
      $serial_numbers=$this->input->post('serial-number');
     if (is_array($serial_numbers)) {
         foreach ($serial_numbers as $serial_number) {
+        
             return $this->Eraxon_assets_stock_in_model->is_serial_number_unique($serial_number);
            
         }
@@ -186,7 +189,6 @@ class Eraxon_assets_stock_in extends AdminController
                         $temp = array(
                             "item_id" => $i,
                             "stock_in_master_id"=>$master_id,
-                            'purchase_date' => date('Y-m-d'),
                             "serial_number" => $serial_number[$index],
                             "purchase_price" => $rate[$index],
                             "quantity_added" => $quantity[$index]
@@ -226,6 +228,7 @@ class Eraxon_assets_stock_in extends AdminController
             }
 
             $data['title'] = "Edit Stock Purchase";
+            $data['approval']=get_option('stock_in_purchase_approval');
             $this->load->view('purchase/stock-in', $data);
         } else {
             access_denied('Edit Stock In');

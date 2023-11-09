@@ -28,9 +28,7 @@ class Eraxon_assets_categories extends AdminController
 
     public function category()
     {
-        if (!is_admin()  || !has_permission('asset-category','','create')) {
-            access_denied('Item Category');
-        }
+       
         $this->load->library('form_validation');
         if ($this->input->is_ajax_request()) {
             $data              = $this->input->post();

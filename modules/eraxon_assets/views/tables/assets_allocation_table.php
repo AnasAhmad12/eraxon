@@ -33,11 +33,13 @@ foreach ($rResult as $aRow) {
     $row        = [];
     $outputName = "";
     $row[] = $aRow['id'];
+    //Have to Detail page 
     $row[] = '<a href="' . admin_url('eraxon_assets/eraxon_assets_allocation/staff_allocated_items/' . $aRow['id']) . '">' . get_staff_full_name($aRow['staff_id']) . ' (' . get_custom_field_value($aRow['staff_id'], 'staff_pseudo', 'staff', true) . ')</a>';
     $row[] = $aRow['allocation_date'];
 
-    // $outputName .= '<div class="row-options">';
+
     if (has_permission('asset-allocation', '', 'edit')) {
+
         $outputName .= ' <a href="' . admin_url('eraxon_assets/eraxon_assets_allocation/edit/' . $aRow['id']) . '" class="_edit">' . _l('edit') . '</a>';
     }
     if (has_permission('asset-allocation', '', 'delete')) {

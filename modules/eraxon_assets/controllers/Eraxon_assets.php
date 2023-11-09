@@ -26,7 +26,7 @@ class Eraxon_assets extends AdminController
 		}
 		
 		$role_id = $this->roles_model->get_roleid_by_name('CSR');
-        $data['staff_members'] = $this->staff_model->get('', ['active' => 1,'role' => $role_id]);
+        $data['staff_members'] = $this->staff_model->get('', ['active' => 1]);
 		$this->load->view('setting',$data);
 	}
 

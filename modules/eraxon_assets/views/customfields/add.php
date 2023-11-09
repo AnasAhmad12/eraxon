@@ -15,7 +15,19 @@
             
             <div class="row">
             <div class="col-md-5">
-                <?php echo render_select('custom_field_category', $custom_field_categories, ['assets_category_id', 'assets_category_name'], 'Category', !empty(set_value('assets_category_id')) ? set_value('assets_category_id') : $variation->assets_category_id ?? ''); ?>
+
+            <div class="form-group">
+                                    <label> Select Category </label>
+                                    <select name="purchase_approval" data-live-search="true" id="staffid"
+                                        class="form-control selectpicker">
+                                        <?php foreach ($custom_field_categories as $cf) { ?>
+                                            <option value="1">
+                                                <?php echo $cf->assets_category_name  ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+              <?php var_dump($custom_field_categories) ?>
               </div>
 
               <div class="col-md-12">

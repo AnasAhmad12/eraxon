@@ -55,25 +55,11 @@ class Purchase_model extends App_Model{
         $this->db->delete($table_name);
     }
 
-    public function make_purchase_to_db($id,$purchase_detail){
+    public function change_purchase_status($status,$purchase_id){
 
-        $table_name_item =db_prefix() . 'product_purchase_items' ; 
-        $table_name =db_prefix() . 'product_purchases' ; 
-
-        $this->db->insert(db_prefix() . 'product_purchases', $purchase_detail);
-        $st= $this->db->insert_id();
-
-        $this->db->where('session_id',$id);
-        $this->db->update($table_name_item,['purchase_id'=>$st]);
-
-        log_activity('Purchase Created [  Purchase ID : '.$st.' Staff id '.get_staff_user_id().']');
-
-
-        if($purchase_detail['payment_status']=="Approved"){
-           
-            $this->db->where('session_id',$id);
-            // $pr=  $this->db->get($table_name_item)->result();
-            $products=$this->db->get($table_name_item)->result();
+        if($status=="Approved"){
+            $this->db->where('purchase_id',$purchase_id);
+            $products=$this->db->get(db_prefix().'product_purchase_items')->result();
             $quantity_count=0;
             foreach($products as $pr){
                
@@ -112,15 +98,12 @@ class Purchase_model extends App_Model{
             }
 
         }
-        else if($purchase_detail['payment_status']=="Initial"){
-            $this->db->where('session_id',$id);
-            
-            $products=$this->db->get($table_name_item)->result();
-            
+        else if($status=="Initial"){
+            $this->db->where('purchase_id',$purchase_id);
+            $products=$this->db->get(db_prefix().'product_purchase_items')->result(); 
             foreach($products as $pr){
                
                  if($pr->product_variant!=null){
-                    
                     $this->db->where('product_id',$pr->product_id);
                     $this->db->where('variation_value_id',$pr->product_variation_value_id);
                     $this->db->where('product_id',$pr->product_id);
@@ -131,22 +114,29 @@ class Purchase_model extends App_Model{
                 
                 }
                 else if($pr->product_variant==null){
-
                     $this->db->where('id',$pr->product_id);
                     $this->db->update(db_prefix() . 'product_master',['quantity_number'=>$pr->quantity]);
-
                 }
 
 
             }
-
-            $this->db->where('id',$st);
-            $this->db->update($table_name,['payment_status'=>"Approved"]);
         }
 
         return  $quantity_count;
 
     }
+
+    public function add_purchase_to_db($master_purchase,$purchase_items,$status){
+        $this->db->insert(db_prefix().'product_purchases',$master_purchase);
+        $master_id=$this->db->insert_id();
+        foreach($purchase_items as &$pi){
+            $pi['purchase_id']=$master_id;
+        }
+        $this->db->insert_batch(db_prefix().'product_purchase_items',$purchase_items);
+        $this->change_purchase_status($status,$master_id);
+        return $this->db->error();
+    }
+
 
     public function update_purchase_to_db($id,$purchase_detail,$p_id){
 
@@ -231,10 +221,9 @@ class Purchase_model extends App_Model{
 
         $data['purchase_detail']= $this->db->get(db_prefix() . 'product_purchases')->result();
         
-
         $this->db->select('*');
         $this->db->where('purchase_id',$data['purchase_detail'][0]->id);
-        $data['session_id']= $this->db->get(db_prefix() . 'product_purchase_items')->result()[0]->session_id;
+        $data['purchase_item']= $this->db->get(db_prefix() . 'product_purchase_items')->result();
        return $data;
 
     }

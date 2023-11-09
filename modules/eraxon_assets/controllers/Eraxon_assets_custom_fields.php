@@ -28,11 +28,9 @@ class Eraxon_assets_custom_fields extends AdminController
 
     public function add()
     {
-        if (!has_permission('asset-custom_fields', '', 'create')) {
-            access_denied('products View');
-        }
+       
         close_setup_menu();
-        if (has_permission('asset-custom_fields', '', 'create')) {
+       
             $post          = $this->input->post();
             if (!empty($post)) {
                 $this->form_validation->set_rules('cf_name', 'variation name', 'required|is_unique[assets_custom_field.name]');
@@ -61,13 +59,11 @@ class Eraxon_assets_custom_fields extends AdminController
             }
             $data['title']              ="Add New Custom Fields";
             $data['action']             = "Custom Fields";
-            $data['custom_field_categories']=$this->Eraxon_assets_category_model->get();
-            // var_dump($this->Eraxon_assets_category_model->get());
-            // var_dump($data);
+            $data['custom_field_categories']=$this->Eraxon_assets_category_model->get_category_for_custom_fields();
+            // var_dump($data['custom_field_categories']);
+            // return 0;
             $this->load->view('customfields/add', $data);
-        } else {
-            access_denied('variations');
-        }
+        
     }
 
     public function edit($id)
@@ -109,8 +105,9 @@ class Eraxon_assets_custom_fields extends AdminController
                 }
             }
             $data['title']              = _l('edit', 'variation');
-            $data['custom_field_categories']=$this->Eraxon_assets_category_model->get();
+            $data['custom_field_categories']=$this->Eraxon_assets_category_model->get_category_for_custom_fields();
             // var_dump($data);
+            // return 0;
             $this->load->view('customfields/add', $data);
         } else {
             access_denied('products');

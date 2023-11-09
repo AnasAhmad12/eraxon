@@ -23,7 +23,7 @@
             </div>
 
             <div class="row" id="custom-fields">
-                
+              
             </div>
           
             <div class="row">
@@ -80,22 +80,21 @@
   </div>
 </div>
 <?php init_tail(); ?>
-<script type="text/javascript">
-  var mode = '<?php echo $this->uri->segment(3, 0); ?>';
-  (mode == 'add_product') ? $('input[type="file"]').prop('required',true) : $('input[type="file"]').prop('required',false);
+<script type="text/javascript">  
   $(function () {
-    
-    appValidateForm($('form'), {
-      product_name        : "required",
-      // product_code        : "required",
-      product_description : "required",
-      product_category_id : "required",
-      rate                : "required",
-      quantity_number     : "required"
-    });
+    alert("Shoaib Tariq ")
+    // appValidateForm($('form'), {
+    //   product_name        : "required",
+    //   // product_code        : "required",
+    //   product_description : "required",
+    //   product_category_id : "required",
+    //   rate                : "required",
+    //   quantity_number     : "required"
+    // });
 
     var selectedOption = $("#assets_category_id").val();
-    
+    console.log("Selected Category",selectedOption)
+
 
     if(selectedOption){
       $("#assets_category_id").prop("disabled",true)
@@ -122,14 +121,7 @@
       </div> 
     `;
     document.getElementById("custom-fields").innerHTML +=field_data;
-      var custom_fields= <?php echo json_encode($item->custom_fields) ?> 
-      console.log("Custom Field data",custom_fields);
-
-      custom_fields.forEach(function(value, index) {
-       
-        $(`input[name="cf_value[]"][id="${value.custom_field_name}"]`).val(value.value);
-       
-    });
+    
 
         });
        

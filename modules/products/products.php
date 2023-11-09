@@ -261,6 +261,15 @@ function products_module_init_menu_items()
         ]);
     }
 
+    if (has_permission('products', '', 'view')) {
+        $CI->app_menu->add_sidebar_children_item('products', [
+            'slug' => 'product_purchase_report',
+            'name' => "Purchase Report",
+            'href' => admin_url('products/purchase/purchase_report'),
+            'position' => 11,
+        ]);
+    }
+
     if (0 == get_option('coupons_disabled')) {
         if (has_permission('products', '', 'view')) {
             $CI->app_menu->add_sidebar_children_item('products', [
@@ -280,6 +289,9 @@ function products_module_init_menu_items()
             'position' => 11,
         ]);
     }
+
+   
+
 
     if (has_permission('products', '', 'view')) {
         $CI->app_menu->add_sidebar_children_item('reports', [

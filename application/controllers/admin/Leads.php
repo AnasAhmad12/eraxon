@@ -15,6 +15,7 @@ class Leads extends AdminController
     {
         parent::__construct();
         $this->load->model('leads_model');
+        $this->load->model('eraxon_quality/eraxon_quality_model');
     }
 
     /* List all leads */
@@ -81,6 +82,8 @@ class Leads extends AdminController
         if ($this->input->post()) {
             if ($id == '') {
                 $id      = $this->leads_model->add($this->input->post());
+                $leaddata = $this->input->post();
+                $this->eraxon_quality_model->add_orignal_lead_data($leaddata,$id);
                 $message = $id ? _l('added_successfully', _l('lead')) : '';
 
                 echo json_encode([

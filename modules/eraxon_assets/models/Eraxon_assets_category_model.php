@@ -23,6 +23,18 @@ class Eraxon_assets_category_model extends App_Model
         return $categories;
     }
 
+    public function get_category_for_custom_fields()
+    {
+        $this->db->select(db_prefix().'assets_categories.*');
+        $this->db->from(db_prefix().'assets_categories');
+        $this->db->join(db_prefix().'assets_custom_field', db_prefix().'assets_custom_field.assets_category_id ='.db_prefix().'assets_categories.assets_category_id','left');
+        $this->db->where(db_prefix().'assets_custom_field.assets_category_id',null);
+        $categories = $this->db->get()->result_array();
+
+        return json_encode($categories);
+    }
+
+
     
     public function add($data)
     {

@@ -32,6 +32,17 @@ function eraxon_assets_activation_hook()
 
 define('ASSET_MODULE_UPLOAD_FOLDER', module_dir_path(Eraxon_assets, 'uploads/'));
 
+// hooks()->add_action('app_admin_head', 'asset_add_head_components');
+function asset_add_head_components()
+{
+   
+    
+        $CI = &get_instance();
+        echo '<script src="'.module_dir_url('eraxon_assets', 'assets/js/autcomplete.js').'?v='.$CI->app_scripts->core_version().'"></script>';
+    
+}
+
+
 
 hooks()->add_filter('get_upload_path_by_type', 'item_upload_folder', 10, 2);
 function item_upload_folder($path, $type)

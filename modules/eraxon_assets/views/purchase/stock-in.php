@@ -21,11 +21,13 @@
         <div class="panel_s section-heading section-products">
             <div class="panel-body align-content-center">
                 <div class="col-md-6">
+                   
+
                     <div class="form-group">
                         <label for="payment_status">Select Status</label>
                         <select class="form-control" name="payment_status">
                             <option selected value="0">Pending</option>
-                            <?php if( is_admin() || get_option('asset_stock_in_purchase_approval')==get_staff_user_id()){ ?>
+                            <?php if( is_admin() || $approval == get_staff_user_id()){ ?>
                             <option value="1">Approved</option>
                             <?php }?>
                         </select>
@@ -42,7 +44,7 @@
                 <div class="col-md-12 input-group">
                     <span class="input-group-addon">
                         <i class="fas fa-barcode"></i></span>
-                    <?php echo render_input('item-code', "", "", "", ["Placeholder" => "Enter Item Name ",], ); ?>
+                    <?php echo render_input('item-code', "", "", "", ["Placeholder" => "Enter Item Name ","id"=>"item_code"], ); ?>
                 </div>
 
             </div>
@@ -204,20 +206,4 @@
 </div>
 <?php echo form_close(); ?>
 <?php init_tail(); ?>
-
-<script type="text/javascript" src="<?php echo base_url('assets/plugins/accounting.js/accounting.js'); ?>"></script>
-<script type="text/javascript">
-    "use strict";
-    // var base_currency = <?php echo htmlspecialchars($base_currency->id); ?>
-</script>
-<?php if (!empty($message)) { ?>
-    <script type="text/javascript">
-        $(function () {
-            // alert_float('warning','<?php echo $message; ?>',6000);
-        });
-    </script>
-<?php } ?>
-
-
-
-<?php require('modules/Eraxon_assets/assets/js/stock_in_js.php'); ?>
+<?php require('modules/eraxon_assets/assets/js/stock_in_js.php'); ?>

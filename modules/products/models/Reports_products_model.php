@@ -185,4 +185,17 @@ class Reports_products_model extends CI_Model
         }
        
     }
+
+    public function purchase_report($from_date,$to_date){
+       
+        $this->db->select('*');
+        $this->db->from(db_prefix().'product_purchases');
+        $this->db->where('date >=', $from_date);
+        $this->db->where('date <=', $to_date);
+        $this->db->where('payment_status','Approved');
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return $result;
+    }
 }

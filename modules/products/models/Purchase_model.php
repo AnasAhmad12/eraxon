@@ -215,13 +215,27 @@ class Purchase_model extends App_Model{
         return $data;
     }
 
+    public function update_purchase($master_update,$id,$purchase_items){
+            $this->db->where('id',$id);
+            $this->db->update(db_prefix().'product_purchases',$master_update);
+            $this->db->where('purchase_id',$id);
+            $this->db->delete(db_prefix().'product_purchase_items');
+            foreach($purchase_items as &$pi){
+                $pi['purchase_id']=$id;
+            }
+            $this->db->insert_batch(db_prefix().'product_purchase_items',$purchase_items);
+           
+           $this->change_purchase_status($master_update['payment_status'],$id);
+            return $this->db->error();
+        }
+
     public function edit_purchase($id){ 
         $this->db->select('*');
         $this->db->where('id',$id);
 
         $data['purchase_detail']= $this->db->get(db_prefix() . 'product_purchases')->result();
         
-        $this->db->select('*');
+        $this->db->select('subtotal,product_name,product_id as id,product_variant as variation,net_unit_cost as rate,product_id,quantity as qty');
         $this->db->where('purchase_id',$data['purchase_detail'][0]->id);
         $data['purchase_item']= $this->db->get(db_prefix() . 'product_purchase_items')->result();
        return $data;

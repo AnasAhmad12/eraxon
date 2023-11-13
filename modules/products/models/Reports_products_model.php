@@ -198,4 +198,25 @@ class Reports_products_model extends CI_Model
 
         return $result;
     }
+
+    public function profit_loss_report($from_date,$to_date){
+        $this->db->select_sum('grand_total');
+        $this->db->from(db_prefix().'product_purchases');
+        $this->db->where('date >=', $from_date);
+        $this->db->where('date <=', $to_date);
+        $this->db->where('payment_status','Approved');
+        $query = $this->db->get();
+        $result['purchase_total'] = $query->result();
+
+        $this->db->select_sum('total');
+        $this->db->from(db_prefix().'order_master');
+        $this->db->where('order_date >=', $from_date);
+        $this->db->where('order_date <=', $to_date);
+        $this->db->where('status','2');
+        $query = $this->db->get();
+        $result['sale_total'] = $query->result();
+
+
+        return $result;
+    }
 }

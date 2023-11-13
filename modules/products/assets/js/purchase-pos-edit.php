@@ -16,10 +16,8 @@ $(document).ready(function() {
                         url: site_url+'products/pos/update_order',
                         type: "POST",
                         data: {
-                    
                             order_item:invoice,
                             subtotal:subTotalInvoice
-                          
                         },
                         success: function (response) {
                             window.location.replace(admin_url+'products/pos/index/');

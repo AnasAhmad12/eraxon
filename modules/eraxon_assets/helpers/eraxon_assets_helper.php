@@ -52,7 +52,6 @@ function handle_item_upload($item_id)
             _maybe_create_upload_path($path);
             if (move_uploaded_file($tmpFilePath, $newFilePath)) {
                 $CI->Eraxon_assets_items_model->edit_item(['item_image' => $filename], $item_id);
-
                 return true;
             }
         }

@@ -231,32 +231,27 @@ class Eraxon_quality extends AdminController
 
     public function get_campaign_sheet($id)
     {
-        if ($this->input->post()) {
-            $date = $this->input->post('filter_date');
 
-        } else {
-            $date = date("Y-m-d");
-        }
+        if ($this->input->get()) {
+            $flag = $this->input->get('flag');
+            $date = $this->input->get('date');
+            $staff_id=get_staff_user_id();
 
-
-        $camp_col = $this->eraxon_quality_model->get_campaign_columns($id);
-        $leads = $this->eraxon_quality_model->get_leads($id, $date);
-        $col_width = array();
-        if ($leads) {
-            for ($i = 0; $i < count($leads[0]); $i++) {
-                $col_width[] = 120;
+            if ($flag == "all") {
+                $camp_col = $this->eraxon_quality_model->get_campaign_columns($id);
+                $status_col = $this->eraxon_quality_model->get_status_col();
+                $data['camp_col'] = $camp_col;
+                $data['status_col'] = $status_col;
             }
+            $leads = $this->eraxon_quality_model->get_leads($id, $date, $flag,$staff_id);
+            $data['leads'] = $leads;
+            $data['id'] = $id;
+            $data['flag']=$flag;
+            echo json_encode($data);
+            return 0;
         }
-        $status_col = $this->eraxon_quality_model->get_status_col();
 
-        $data['camp_col'] = $camp_col;
-        $data['leads'] = $leads;
-        $data['status_col'] = $status_col;
         $data['id'] = $id;
-        $data['col_width']=$col_width;
-
-
-
         $this->load->view('eraxon_quality/campaign_sheet', $data);
     }
 
@@ -265,11 +260,9 @@ class Eraxon_quality extends AdminController
         $complete_lead = $this->input->post('data');
         $id = $this->input->post('id');
         $response = $this->eraxon_quality_model->update_complete_lead($complete_lead, $id);
-
-
         echo json_encode($response);
     }
-    //event
+
 
 
 }

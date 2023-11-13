@@ -137,10 +137,7 @@ class Purchase extends AdminController{
 
         $id = $this->input->get('id');
         $data= $this->purchase_model->edit_purchase($id);
-        var_dump($data);
-        return 0;
         $this->load->view('products/purchase/edit-add-purchase',$data);
-
 
     }
     
@@ -157,6 +154,41 @@ class Purchase extends AdminController{
 
 
       echo json_encode($response);
+    }
+
+    public function update_purchase(){
+        $purchase_items=$this->input->post('purchase_items');
+        $payment_status=$this->input->post('payment_status');
+        $payment_date=$this->input->post('payment_date');
+        $total=$this->input->post('total');
+        $id=$this->input->post('id');
+
+
+
+        $master_update= array(
+            "date"=>$payment_date,
+            "grand_total"=>$total,
+            "payment_status"=>$payment_status
+        );
+
+        $purchase_items_post=[];
+        foreach($purchase_items as $oi){ 
+                    $temp_pro=array(
+                        'product_id'  => $oi['product_id'],
+                        'product_name' => $oi['product_name'],
+                        'net_unit_cost'=>$oi['rate'],
+                        'quantity'=>$oi['qty'],
+                        'subtotal' =>$oi['subtotal'],
+                    );
+                    array_push($purchase_items_post,$temp_pro);
+                }
+$response=$this->purchase_model->update_purchase($master_update,$id,$purchase_items_post,$payment_status);
+        
+            
+        echo json_encode($purchase_items);
+
+
+        
     }
 
 

@@ -197,38 +197,48 @@ class Eraxon_quality_model extends App_Model
         return $col;
     }
 
-    public function get_leads($id,$date)
+    public function get_leads($id, $date, $flag,$staff_id)
     {
 
         $campaign_sheet_lead = [];
-       
-        
+
         $this->db->where('lead_type', $id);
-        $this->db->where('DATE(lead_date)',$date);
+        $this->db->where('DATE(lead_date)', $date);
+        $this->db->where('assigned_staff',$staff_id);
+        
+        
+        if ($flag != 'all') {
+            $this->db->where('added_sheet!=', 0);
+        }
+
         $lead = $this->db->get(db_prefix() . 'qa_lead')->result();
+        $this->db->where('lead_type', $id);
+        $this->db->where('DATE(lead_date)', $date);
+        $this->db->where('assigned_staff',$staff_id);
+        
+        $this->db->update(db_prefix().'qa_lead',['added_sheet'=>0]);
         foreach ($lead as $l) {
 
-            if(has_permission('qa_person','','view') && !is_admin()){
+            if (has_permission('qa_person', '', 'view') && !is_admin()) {
                 $newObjects = [
                     'qa_status' => $l->qa_status,
-                    'forwardable_comments'=>$l->forwardable_comments,
-                    'qa_comments'=> $l->qa_comments
+                    'forwardable_comments' => $l->forwardable_comments,
+                    'qa_comments' => $l->qa_comments
                 ];
-            }
-            else{
+            } else {
                 $newObjects = [
                     'lead_status' => $l->lead_status,
                     'qa_status' => $l->qa_status,
                     'reviewer_status' => $l->review_status,
-                    'forwardable_comments'=>$l->forwardable_comments,
-                    'qa_comments'=> $l->qa_comments,
-                    'rejection_comments'=>$l->rejection_comments
+                    'forwardable_comments' => $l->forwardable_comments,
+                    'qa_comments' => $l->qa_comments,
+                    'rejection_comments' => $l->rejection_comments
                 ];
             }
             $col = json_decode($l->complete_lead, true);
 
 
-            
+
             $combinedObject = [];
 
             $col[] = $newObjects;
@@ -240,9 +250,61 @@ class Eraxon_quality_model extends App_Model
             array_push($campaign_sheet_lead, $combinedObject);
         }
 
-        
 
-        
+
+
+
+        return $campaign_sheet_lead;
+
+    }
+
+    public function get_leads_new($id, $date)
+    {
+
+        $campaign_sheet_lead = [];
+
+
+        $this->db->where('lead_type', $id);
+        $this->db->where('added_sheet', 1);
+        $this->db->where('DATE(lead_date)', $date);
+
+        $lead = $this->db->get(db_prefix() . 'qa_lead')->result();
+        foreach ($lead as $l) {
+
+            if (has_permission('qa_person', '', 'view') && !is_admin()) {
+                $newObjects = [
+                    'qa_status' => $l->qa_status,
+                    'forwardable_comments' => $l->forwardable_comments,
+                    'qa_comments' => $l->qa_comments
+                ];
+            } else {
+                $newObjects = [
+                    'lead_status' => $l->lead_status,
+                    'qa_status' => $l->qa_status,
+                    'reviewer_status' => $l->review_status,
+                    'forwardable_comments' => $l->forwardable_comments,
+                    'qa_comments' => $l->qa_comments,
+                    'rejection_comments' => $l->rejection_comments
+                ];
+            }
+            $col = json_decode($l->complete_lead, true);
+
+
+
+            $combinedObject = [];
+
+            $col[] = $newObjects;
+
+            foreach ($col as $object) {
+                $combinedObject = array_merge($combinedObject, $object);
+            }
+            array_splice($combinedObject, 0, 0, ['id' => $l->id]);
+            array_push($campaign_sheet_lead, $combinedObject);
+        }
+
+
+
+
 
         return $campaign_sheet_lead;
 
@@ -252,7 +314,7 @@ class Eraxon_quality_model extends App_Model
     {
         $qa_status = [];
         $qa_review_status = [];
-        $qa= $this->db->get(db_prefix() . 'qa_review_status')->result();
+        $qa = $this->db->get(db_prefix() . 'qa_review_status')->result();
         $review = $this->db->get(db_prefix() . 'qa_status')->result();
 
         foreach ($review as $a) {
@@ -267,9 +329,10 @@ class Eraxon_quality_model extends App_Model
 
     }
 
-    public function update_complete_lead($col,$id){
-        $this->db->where('id',$id);
-        $this->db->update(db_prefix().'qa_lead',["complete_lead"=>json_encode($col)]);
+    public function update_complete_lead($col, $id)
+    {
+        $this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'qa_lead', ["complete_lead" => json_encode($col)]);
 
         return $this->db->error();
     }

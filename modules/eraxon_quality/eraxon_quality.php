@@ -97,7 +97,17 @@ function eraxon_quality_permissions($permissions)
         'delete' => _l('permission_delete'),
     ];
 
+    $config2['capabilities'] = [
+        'view_own' => _l('permission_view_own'),
+        'view' => _l('permission_view') . '(' . _l('permission_global') . ')',
+        'create' => _l('permission_create'),
+        'edit' => _l('permission_edit'),
+        'delete' => _l('permission_delete'),
+    ];
+
     register_staff_capabilities('eraxon_qa', $config, 'QA Compatabiliy');
+    register_staff_capabilities('qa_person', $config2, 'QA Person');
+
 }
 
 function eraxon_quality_load_js()

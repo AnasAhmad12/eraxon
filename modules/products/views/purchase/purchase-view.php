@@ -36,7 +36,7 @@
                     <?php foreach ($purchases as $row): ?>
                       <tr data-id=<?php echo $row->id ?>>
                         <td>
-                          <?php echo time_ago($row->date); ?>
+                          <?php echo date(substr($row->date,0,10)); ?>
                         </td>
                         <td><b>
                             <?php echo $row->grand_total; ?> PKR

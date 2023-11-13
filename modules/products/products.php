@@ -270,6 +270,15 @@ function products_module_init_menu_items()
         ]);
     }
 
+    if (has_permission('products', '', 'view')) {
+        $CI->app_menu->add_sidebar_children_item('products', [
+            'slug' => 'product_profit_loss',
+            'name' => "Profit Loss",
+            'href' => admin_url('products/kiosk/profitloss'),
+            'position' => 12,
+        ]);
+    }
+
     if (0 == get_option('coupons_disabled')) {
         if (has_permission('products', '', 'view')) {
             $CI->app_menu->add_sidebar_children_item('products', [

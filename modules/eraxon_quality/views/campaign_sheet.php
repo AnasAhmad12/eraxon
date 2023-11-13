@@ -4,7 +4,6 @@
     .handsontable-container {
         width: 100%;
         height: 400px;
-        /* Set the desired height */
         overflow: auto;
     }
 </style>
@@ -15,12 +14,11 @@
             <div class="panel-body">
                 <div class="clearfix">
                     <div class="row filter_by">
-                        <?php echo form_open(admin_url('eraxon_quality/get_campaign_sheet/'.$id),["id"=>"myform"])?>
                         <div class="col-md-2 leads-filter-column">
                             <?php echo render_input('filter_date', 'Date', date('Y-m-d'), 'date'); ?>
                         </div>
-                        <button type="submit" id="submit_btn" style="margin-top:22px;" class="btn btn-primary"> Get Leads </button>
-                        <?php echo form_close()?>
+                        <button type="button" id="submit_btn" style="margin-top:22px;" class="btn btn-primary"> Get
+                            Leads </button>
 
                     </div>
 
@@ -35,238 +33,247 @@
     </div>
 </div>
 </div>
+<?php init_tail(); ?>
 
 <script>
-   
+    var hot = "";
+    var id = <?php echo json_encode($id); ?>;
+    date = ""
+    $(document).ready(function ($) {
 
-   
-  
-    qa_status = function (value, callback) {
-        setTimeout(function () {
-            if (value == 'pending' || value == 'approved' || value == 'reject') {
-                callback(true);
-            }
-            else {
-                callback(false);
-            }
-        }, 200);
-    };
+        var date = $("#filter_date").val();
 
-    lead_status = function (value, callback) {
-        setTimeout(function () {
-            if (value == 'pending' || value == 'approved' || value == 'reject') {
-                callback(true);
-            }
-            else {
-                callback(false);
-            }
-        }, 200);
-    };
-
-    rev_status = function (value, callback) {
-        setTimeout(function () {
-            if (value == 'reject' || value == 'approved' || value == 'reject') {
-                callback(true);
-            }
-            else {
-                callback(false);
-            }
-        }, 200);
-    };
-
-
-
-
-    var camp_col = <?php echo json_encode($camp_col); ?>;
-    var lead = <?php echo json_encode($leads); ?>;
-    var qa_status_col = <?php echo json_encode($status_col); ?>
-
-    newa = [];
-    <?php if (has_permission('qa_person', '', 'view') && !is_admin()) { ?>
-
-        camp_col.push({
-            title: 'QA Status',
-            data: 'qa_status',
-            type: 'dropdown',
-            source: qa_status_col.qa_status,
-            validator: qa_status,
-            allowInvalid: false
-        },
-        {
-            title: 'Forwardable Comments',
-            data: 'forwardable_comments',
-            type: 'text',
-            // source: qa_status_col.qa_status,
-            // validator: qa_status,
-            // allowInvalid: false
-        },
-        {
-            title: 'QA Comments',
-            data: 'qa_comments',
-            type: 'text',
-            // source: qa_status_col.qa_status,
-            // validator: qa_status,
-            // allowInvalid: false
-        },
-
-        );
-
-    <?php } else { ?>
-
-        camp_col.push({
-            title: 'Lead Status',
-            data: 'lead_status',
-            type: 'dropdown',
-            validator: lead_status,
-            allowInvalid: false,
-            source: ['Pending', 'Approved', 'Reject']
-        }, {
-            title: 'QA Status',
-            data: 'qa_status',
-            type: 'dropdown',
-            source: qa_status_col.qa_status,
-            validator: qa_status,
-            allowInvalid: false
-        }, {
-            title: 'Reviewer Status',
-            data: 'reviewer_status',
-            type: 'dropdown',
-            validator: rev_status,
-            allowInvalid: false,
-            source: qa_status_col.qa_review_status
-        },
-        {
-            title: 'Forwardable Comments',
-            data: 'forwardable_comments',
-            type: 'text',
-            // source: qa_status_col.qa_status,
-            // validator: qa_status,
-            // allowInvalid: false
-        },
-        {
-            title: 'QA Comments',
-            data: 'qa_comments',
-            type: 'text',
-            // source: qa_status_col.qa_status,
-            // validator: qa_status,
-            // allowInvalid: false
-        },
-        {
-            title: 'Rejection Comments',
-            data: 'rejection_comments',
-            type: 'text',
-            // source: qa_status_col.qa_status,
-            // validator: qa_status,
-            // allowInvalid: false
-        },
-        
-        );
-
-    <?php } ?>
-
-
-    var col_width= new Array(camp_col.length).fill(120);
-
-    var container = document.getElementById('campaign_sheet');
-    var hot = new Handsontable(container, {
-        data: lead,
-
-        columns: camp_col,
-        allowEmpty: true,
-        hiddenColumns: {
-            columns: [0],
-
-        },
-        contextMenu: false,
-        manualRowMove: false,
-        manualColumnMove: false,
-        autoWrapRow: true,
-        className: 'custom-table',
-        licenseKey: 'non-commercial-and-evaluation',
-        fillHandle: false,
-        startRows: 0,
-        startCols: 0,
-        minSpareRows: 0,
-        width: '100%',
-        autoColumnSize: {
-            samplingRatio: 23
-        },
-        manualColumnResize: true,
-        colWidths: col_width,
-        rowHeaders: true,
-        filters: false,
-        dropdownMenu: false,
-        afterChange: (changes, source) => {
-
-            if (source === 'loadData') {
-                return; //don't save this change
-            }
-            if (changes) {
-                var row = changes[0][0];
-                value=hot.getDataAtRow(row);// row
-                var columnHeaders = []; // columns
-                for (var columnIndex = 0; columnIndex < hot.countCols(); columnIndex++) {
-                    var columnSlug = hot.getColHeader(columnIndex);
-                    columnHeaders.push(columnSlug);
-                }
-
-                var complete_lead = value.map((value, index) => {
-                    if(index==0){
-                    }else{
-                    return { [columnHeaders[index].toString().toLowerCase().replace(/ /g, '_')]: value };
-                    }
-                  
-                });
-                complete_lead=complete_lead.slice(1,-3);
-
-                $.ajax({
-                    url: site_url + 'eraxon_quality/update_qa_lead',
-                    type: "POST",
-                    data: {
-                        id:value[0],
-                        data: complete_lead,
-                    },
-                    success: function (response) {
-                        console.log("Sa", response)
-                    }
-
-                });
-            }
-
-        },
-    });
-
-    Handsontable.dom.addEvent(save, 'click', function () {
-        console.log(JSON.stringify({ data: hot.getData() }));
-    });
-
-    document.querySelector('.btn').addEventListener('click', function () {
-        var col = hot.countRows();
-        hot.alter('insert_row', col, 1);
-        /*hot.setDataAtCell(col, 0, '2023-10-25');
-        hot.setDataAtCell(col, 1, 'Agent name');
-        hot.setDataAtCell(col, 5, '+92134653232')*/
-        hot.setDataAtRowProp([[col, 'date', '2023-10-25'], [col, 'agent_name', 'Agent name'], [col, 'phone_number', '+92134653232']]);
-    });
-
-    Handsontable.dom.addEvent(load, 'click', function () {
-        $.ajax({
-            url: 'json/load.json',
-            dataType: 'json',
-            type: 'GET',
-            success: function (res) {
-                var db = JSON.stringify(res.data);
-
-                var data = JSON.parse(db);
-                console.log(data);
-                hot.loadData(data);
-                //hot.render();
-                setTimeout(function () {
-                    hot.render();
-                }, 100);
-            }
+        $("#submit_btn").click(function () {
+            date = $("#filter_date").val();
+            get_leads_and_col();
         });
+
+
+
+
+        function get_leads_and_col() {
+
+            $.get(admin_url + "eraxon_quality/get_campaign_sheet/" + id, { id: id, date: date, flag: "all" }, function (data, status) {
+                var data = JSON.parse(data);
+                qa_status = function (value, callback) {
+                    setTimeout(function () {
+                        if (value == 'pending' || value == 'approved' || value == 'reject') {
+                            callback(true);
+                        }
+                        else {
+                            callback(false);
+                        }
+                    }, 200);
+                };
+
+                lead_status = function (value, callback) {
+                    setTimeout(function () {
+                        if (value == 'pending' || value == 'approved' || value == 'reject') {
+                            callback(true);
+                        }
+                        else {
+                            callback(false);
+                        }
+                    }, 200);
+                };
+
+                rev_status = function (value, callback) {
+                    setTimeout(function () {
+                        if (value == 'reject' || value == 'approved' || value == 'reject') {
+                            callback(true);
+                        }
+                        else {
+                            callback(false);
+                        }
+                    }, 200);
+                };
+
+                <?php if (has_permission('qa_person', '', 'view') && !is_admin()) { ?>
+
+                    console.log("QA Person")
+                    data.camp_col.push(
+                        {
+                            title: 'Forwardable Comments',
+                            data: 'forwardable_comments',
+                            type: 'text',
+                            // source: qa_status_col.qa_status,
+                            // validator: qa_status,
+                            // allowInvalid: false
+                        },
+                        {
+                            title: 'QA Comments',
+                            data: 'qa_comments',
+                            type: 'text',
+                            // source: qa_status_col.qa_status,
+                            // validator: qa_status,
+                            // allowInvalid: false
+                        }, {
+                        title: 'QA Status',
+                        data: 'qa_status',
+                        type: 'dropdown',
+                        source: data.status_col.qa_status,
+                        validator: qa_status,
+                        allowInvalid: false
+                    },
+
+                    );
+
+                <?php } else { ?>
+                    console.log("QA Review Person")
+
+                    data.camp_col.push(
+                        {
+                            title: 'Forwardable Comments',
+                            data: 'forwardable_comments',
+                            type: 'text',
+                            // source: qa_status_col.qa_status,
+                            // validator: qa_status,
+                            // allowInvalid: false
+                        },
+                        {
+                            title: 'QA Comments',
+                            data: 'qa_comments',
+                            type: 'text',
+                            // source: qa_status_col.qa_status,
+                            // validator: qa_status,
+                            // allowInvalid: false
+                        },
+                        {
+                            title: 'Rejection Comments',
+                            data: 'rejection_comments',
+                            type: 'text',
+                            // source: qa_status_col.qa_status,
+                            // validator: qa_status,
+                            // allowInvalid: false
+                        },
+                        {
+                            title: 'Lead Status',
+                            data: 'lead_status',
+                            type: 'dropdown',
+                            validator: lead_status,
+                            allowInvalid: false,
+                            source: ['Pending', 'Approved', 'Reject']
+                        }, {
+                        title: 'QA Status',
+                        data: 'qa_status',
+                        type: 'dropdown',
+                        source: data.status_col.qa_status,
+                        validator: qa_status,
+                        allowInvalid: false
+                    }, {
+                        title: 'Reviewer Status',
+                        data: 'reviewer_status',
+                        type: 'dropdown',
+                        validator: rev_status,
+                        allowInvalid: false,
+                        source: data.status_col.qa_review_status
+                    },
+
+                    );
+
+                <?php } ?>
+
+                var col_width = new Array(data.camp_col.length).fill(120);
+                var container = document.getElementById('campaign_sheet');
+                container.innerHTML = "";
+                hot = new Handsontable(container, {
+                    data: data.leads,
+
+                    columns: data.camp_col,
+                    allowEmpty: true,
+                    hiddenColumns: {
+                        columns: [0],
+
+                    },
+                    contextMenu: false,
+                    manualRowMove: false,
+                    manualColumnMove: false,
+                    autoWrapRow: true,
+                    className: 'custom-table',
+                    licenseKey: 'non-commercial-and-evaluation',
+                    fillHandle: false,
+                    startRows: 0,
+                    startCols: 0,
+                    minSpareRows: 0,
+                    width: '100%',
+                    autoColumnSize: {
+                        samplingRatio: 23
+                    },
+                    manualColumnResize: true,
+                    colWidths: col_width,
+                    rowHeaders: true,
+                    filters: false,
+                    dropdownMenu: false,
+                    afterChange: (changes, source) => {
+
+                        if (source === 'loadData') {
+                            return; //don't save this change
+                        }
+                        if (changes) {
+                            var row = changes[0][0];
+                            value = hot.getDataAtRow(row);// row
+                            var columnHeaders = []; // columns
+                            for (var columnIndex = 0; columnIndex < hot.countCols(); columnIndex++) {
+                                var columnSlug = hot.getColHeader(columnIndex);
+                                columnHeaders.push(columnSlug);
+                            }
+
+                            var complete_lead = value.map((value, index) => {
+                                if (index == 0) {
+                                } else {
+                                    return { [columnHeaders[index].toString().toLowerCase().replace(/ /g, '_')]: value };
+                                }
+
+                            });
+                            complete_lead = complete_lead.slice(1, -3);
+
+                            $.ajax({
+                                url: site_url + 'eraxon_quality/update_qa_lead',
+                                type: "POST",
+                                data: {
+                                    id: value[0],
+                                    data: complete_lead,
+                                },
+                                success: function (response) {
+                                }
+
+                            });
+                        }
+
+                    },
+                });
+
+            });
+
+            get_orders_data();
+        }
+
+        get_leads_and_col();
+
     });
+
+    function get_orders_data() {
+        setTimeout(function () {
+            var date = $("#filter_date").val();
+            $.get(admin_url + "eraxon_quality/get_campaign_sheet/" + id, { id: id, date: date, flag: "none" }, function (data, status) {
+                var data = JSON.parse(data);
+                var col = hot.countRows();
+                if (data.leads.length != 0) {
+                    let resultArray = Object.entries(data.leads[0]).map(([key, value]) => [col, key, value]);
+                    hot.alter('insert_row', col, 1);
+                    hot.setDataAtRowProp(resultArray);
+                }
+                get_orders_data();
+            });
+
+        }, 10000);
+    }
+    function campaign_sheet(data) {
+
+
+    }
+
+
+
 
 </script>
-<?php init_tail(); ?>

@@ -128,147 +128,59 @@
         });
     </script>
 <?php } ?>
-<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
+
 <script>
-        
-
-        $(function() {
-
-           
-            
-        const session_id = <?php echo  json_encode($session_id); ?>;
-        localStorage.setItem('sessionId_edit', session_id)
-        let sessionData={'sessionId':localStorage.getItem('sessionId_edit')};
 
 
-        const purchase_detail = <?php echo  json_encode($purchase_detail); ?>;
-        console.log(purchase_detail);
+    $(function () {
 
-        let subTotal;
+        const purchase_items = <?php echo json_encode($purchase_item); ?>;
+        const purchase_details = <?php echo json_encode($purchase_detail); ?>;
 
+        console.log("Purchase Detail", purchase_details[0]);
+        console.log("Purchase Items", purchase_items);
 
+        $('#status').text(purchase_details[0].payment_status)
+        $('#date_se').text(purchase_details[0].date.slice(0, 10))
 
-        $('#create_pdf').on('click', function (){ 
-              add_data_to_table();
-            var element = document.getElementById('pdf_file');         
-            var opt = {
-            margin:       0,
-            filename:     'Purchse-'+purchase_detail[0].id+'-'+purchase_detail[0].date+'.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, ignoreElements:'true' },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
+        add_data_to_table();
 
+        function add_data_to_table() {
+            document.getElementById("table-body").innerHTML = "";
+            subTotal = 0;
+            console.log("Table Intialized");
+            product_data_table = $("#table-body");
+            var table_data = "";
+            count = 0;
+            purchase_items.forEach(item => {
+                count = count + 1;
+                const table_data = `<tr data-id="${item.id}"> <td> ${count} </td>   <td> ${item.product_name}  </td> <td> <input type="number" class="quantity" name="quantity" readonly value="${item.qty}" style="padding:0.4rem;"min="1" max="100"> </td> <td>${item.variation == null ? "N/A" : item.variation} </td> <td align="right"> <input type="number" class="rate" readonly style="padding:0.4rem;" value="${item.rate}" > </td> <td align="right">${item.subtotal} </td> </tr>`;
+                document.getElementById("table-body").innerHTML += table_data;
+                subTotal = subTotal + parseFloat(item.subtotal);
             });
 
-    
-
-        get_purchase_item(sessionData)
-        .then(function(purchase_items) {
-        // Handle the data here
-        console.log("Data received:", purchase_items);
-        add_data_to_table();
-    })
-    .catch(function(error) {
-        // Handle errors here
-        console.error("Error:", error);
-    });
-
-       
-        
-        
-
-        function post_product_data(post_data = {}) {
-                    $.ajax({
-                        url: site_url+'products/purchase/add_purchase_item',
-                        type: 'POST',
-                        dataType: 'json',
-                        data : post_data,
-                        success : function (data) {
-                            alert_float('success', "Item Added"); 
-                            get_purchase_item(sessionData)
-                        }
-                    })
+            document.getElementById('items-subtotal').innerHTML = `<?= $base_currency->name ?> ${subTotal}`;
+            document.getElementById('payable-amount').innerHTML = `<?= $base_currency->name ?> ${subTotal}`;
         }
 
-        function get_purchase_item(post_data = {}) {
-        return new Promise(function(resolve, reject) {
-        $.ajax({
-            url: site_url + 'products/purchase/get_purchase_item',
-            type: 'POST',
-            dataType: 'json',
-            data: post_data,
-            success: function(data) {
-                purchase_items = data;
-                console.log("Purchase Updated", purchase_items);
-                add_data_to_table();
-                resolve(purchase_items);
 
-            },
-            error: function(xhr, status, error) {
-                reject(error);
-            }
-        });
-    });
-    }
 
-    
-        function add_data_to_table() {
-         
-            document.getElementById("table-body").innerHTML="";
-            subTotal=0;
-            console.log("Table Intialized");
-            product_data_table=$("#table-body");
-            var table_data="";
-            count=0;
-            purchase_items.forEach(item => {
-                count=count+1;
-            const table_data=`<tr data-id="${item.id}"> <td> ${count} </td>   <td> ${item.product_name} </td> <td> ${item.quantity} </td> <td>${item.product_variant==null?"N/A":item.product_variant} </td> <td align="right">${item.net_unit_cost} </td> <td align="right">${item.subtotal} </tr>`;
-            document.getElementById("table-body").innerHTML +=table_data;
-            subTotal=subTotal+parseFloat(item.subtotal);
-           
-        });
        
-            document.getElementById('items-subtotal').innerHTML=`<?=$base_currency->name?> ${subTotal}`;
-            document.getElementById('payable-amount').innerHTML=`<?=$base_currency->name?> ${subTotal}`;
-   
-        }
 
       
-        const [year, month, day] = purchase_detail[0].date.split(" ")[0].split("-");
-        const dateObject = new Date(year, month - 1, day); 
-        const formattedDate = dateObject.toISOString().split("T")[0];
-        $("#date_se").html(formattedDate);
-        $("#status").html(purchase_detail[0].payment_status);
+
+       
 
 
-        
+       
 
 
 
-
-        $(document).on('click','#purchase-print-button',function(e){
-            e.preventDefault();
-             alert("printed")
-        });
-
- 
      
-        
 
 
+      
     });
 
 
-
-
-
- </script>
-<script type="text/javascript" src="<?php echo module_dir_url('products', 'assets/js/html2canvas.js'); ?>"></script>
-<script type="text/javascript" src="<?php echo module_dir_url('products', 'assets/js/es6-promise.auto.min.js'); ?>"></script>
-<script type="text/javascript" src="<?php echo module_dir_url('products', 'assets/js/jspdf.debug.js'); ?>"></script>
-<script type="text/javascript" src="<?php echo module_dir_url('products', 'assets/js/html2pdf.bundle.min.js'); ?>"></script>
-
-
+</script>

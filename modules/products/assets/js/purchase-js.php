@@ -205,81 +205,10 @@
 
     });
 
-    $(document).on('change', '#staffid', function (e) {
-        if ($(this).val() == 0) {
-            $("#flexRadioDefault2").prop("disabled", true);
-        }
-        else {
-            $("#flexRadioDefault2").prop("disabled", false);
-        }
-    });
+    
 
 
-    $(document).ready(function () {
-
-
-        const purchase_item = <?php echo json_encode($data); ?>;
-        console.log(purchase_item);
-
-        
-        $("#item-code").focus();
-
-        function invoice_table() {
-
-            console.log();
-            document.getElementById("table-body-invoice").innerHTML = "";
-            subTotalInvoice = 0;
-
-            product_data_table = $("#table-body-invoice");
-            var table_data = "";
-            count = 0;
-            invoice.forEach(item => {
-                console.log(count)
-                const table_data = `
-         <tr data-id="${item.id}">
-                                        
-                                        <td align="center" width="5%">${++count}</td>
-                                        <td class="description" align="left;" width="33%">
-                                        <span style="font-size:px;">
-                                        <strong>${item.product_name + " " + item.value}</strong>
-                                        </span>
-                                        </td>
-                                        <td align="right" width="9%">
-                                        <input type="number" class="invquantity" name="quantity" value="${item.qty}" style="padding:0.4rem;"min="1" max="100">
-                                        </td>
-                                        <td align="right" width="9%">${item.rate}</td>
-                                        <td class="amount" align="right" width="9%">${item.qty * item.rate}</td>
-                            
-                                    </tr>
-         `
-                document.getElementById("table-body-invoice").innerHTML += table_data;
-                subTotalInvoice = subTotalInvoice + parseFloat(item.subtotal);
-
-
-            });
-
-            document.getElementById("subtotal2").innerHTML = `<?= $base_currency->name ?> ${subTotalInvoice}`;
-            document.getElementById("total2").innerHTML = `<?= $base_currency->name ?> ${subTotalInvoice}`;
-
-
-        }
-
-
-
-
-
-
-
-
-        staffId = $('select[name="staff_id"]').val()
-        console.log('sta', staffId);
-        if (staffId == 0) {
-            console.log("SSSSS");
-            $("#flexRadioDefault2").prop("disabled", true);
-        }
-
-
-    });
+    
 
 
 

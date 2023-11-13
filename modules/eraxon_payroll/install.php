@@ -220,3 +220,9 @@ if (!$CI->db->table_exists(db_prefix() . 'eraxon_payroll_exception'))
       ) ENGINE=InnoDB DEFAULT CHARSET=" . $CI->db->char_set . ';');
 }
 
+//ALTER TABLE `tblsalary_details` ADD `total_wallet_deduct_amount` DECIMAL(50,4) NOT NULL AFTER `total_late`;
+
+if (!$CI->db->field_exists('total_wallet_deduct_amount', db_prefix() . 'salary_details')) {
+    $CI->db->query('ALTER TABLE `' . db_prefix() . 'salary_details`
+        ADD COLUMN `total_wallet_deduct_amount` DECIMAL(50,4) NOT NULL `total_late`;');
+}

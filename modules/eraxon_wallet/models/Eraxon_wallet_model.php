@@ -13,13 +13,17 @@ class Eraxon_wallet_model extends App_Model
    }
 
 
-   public function get_staff()
+   public function get_staff($role_id = '')
    {
         $this->db->select(db_prefix().'staff.*, jp.position_name, jp.position_id, jp.basic_salary, jp.basic_target');
         $this->db->from(db_prefix().'staff');
         $this->db->join(db_prefix().'hr_job_position as jp', db_prefix().'staff.job_position = jp.position_id', 'left');
         $this->db->where(db_prefix().'staff.active', 1);
         $this->db->where(db_prefix().'staff.admin', 0);
+        if(!empty($role_id))
+        {
+         $this->db->where(db_prefix().'staff.role', $role_id);
+        }
         //$this->db->where(db_prefix().'staff.role', $role_id);
         $query = $this->db->get();
 
@@ -213,5 +217,72 @@ class Eraxon_wallet_model extends App_Model
       $this->db->limit(3);
       return $this->db->get(db_prefix().'wallet_transaction')->result_array();
    }
+
+    public function get_total_transactions_amount($staff_id,$from,$to)
+    {
+         $wallet_row =  $this->get_wallet_row_by_staff_id($staff_id);
+         $wallet_id = $wallet_row->id;
+
+         $sql = 'SELECT *
+                 FROM ' . db_prefix() . 'wallet_transaction
+                 WHERE DATE(created_datetime) BETWEEN "' . $from . '" AND "' . $to . '"
+                 AND `wallet_id` = ' . $wallet_id ;
+
+         $query  = $this->db->query($sql);   
+         
+         $transactions  = $query->result_array();
+
+         $total_amount = 0;
+         foreach($transactions as $transaction)
+         {  
+            /*if($transaction['in_out'] == 'in')
+            {
+                  $total_amount += $transaction['amount'];
+
+            }else*/ if($transaction['in_out'] == 'out'){
+
+                  $total_amount += $transaction['amount'];
+            }
+         }
+
+         return $total_amount;
+
+    }
+
+   public function wallet_report($staff_id,$from,$to){
+
+        $wallet_row =  $this->get_wallet_row_by_staff_id($staff_id);
+        $wallet_id = $wallet_row->id;
+
+        $qry = 'SELECT *
+        FROM ' . db_prefix() . 'wallet_transaction
+        WHERE DATE(created_datetime) BETWEEN "' . $from . '" AND "' . $to . '"
+        AND `wallet_id` = ' . $wallet_id ;
+
+        $query           = $this->db->query($qry);
+        
+        if(!$query){
+            return  $this->db->error();
+        }
+        else{
+            $array           = $query->result_array();
+
+            return $array;
+        }
+       
+    }
+
+    public function wallet_exist($staff_id)
+    {
+       $this->db->where('staff_id', $staff_id);
+       $query = $this->db->get(db_prefix().'wallet');
+       if($query->num_rows() > 0 )
+       {
+         return true;
+       }
+
+       return false;
+
+    }
 
 }

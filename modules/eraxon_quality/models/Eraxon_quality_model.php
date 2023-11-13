@@ -336,4 +336,78 @@ class Eraxon_quality_model extends App_Model
 
         return $this->db->error();
     }
+    public function calculateTimeDifferenceInMinutes($startTime, $endTime) 
+    {
+        // Convert the start and end times to DateTime objects
+        $startDateTime = new DateTime($startTime);
+        $endDateTime = new DateTime($endTime);
+
+        // Calculate the difference in minutes
+        $interval = $startDateTime->diff($endDateTime);
+        $minutes = $interval->format('%i');
+
+        return $minutes;
+    }
+
+    public function get_qa_present_staff($qa_staffs,$today)
+    {
+        $available_staff = array();
+        $counter = 1;
+        foreach($qa_staffs as $key => $qa_staff)
+        {
+            $this->db->where('staff_id',$qa_staff['staff_id']);
+            $this->db->where('date_format(date, "%Y-%m-%d") = "'.$today.'"');
+            $this->db->get(db_prefix().'check_in_out');    
+            if($this->db->affected_rows() > 0)
+            {
+                $qa_staffs[$key]['check-in'] = 1;
+                if($counter == 1)
+                {
+                    $qa_staffs[$key]['pointer'] = "p";
+                    $counter++; 
+                }
+                $available_staff [] = $qa_staffs[$key];
+            }else
+            {
+                $qa_staffs[$key]['check-in'] = 0;
+                $available_staff [] = $qa_staffs[$key];               
+            }
+        }
+
+        return $available_staff;
+    }
+
+    public function get_unassigned_leads($today)
+    {
+        $result = $this->db->where("assigned_staff", 0)
+                 //->where('DATE(lead_date)',$today)
+                 ->get(db_prefix().'qa_lead')->result_array();
+        return $result;         
+    }
+
+    public function assigned_lead_to($staffid, $qaleadid)
+    {
+        $this->db->where("id", $qaleadid);
+        $this->db->update(db_prefix().'qa_lead',array('assigned_staff' => $staffid));
+    }
+
+    public function get_number_of_pending_leads(&$qa_staff)
+    { 
+        $max_pending = array();
+        
+        foreach($qa_staff as $key => &$staff)
+        {
+            $this->db->where('assigned_staff', $staff['staff_id']);
+            $this->db->where('qa_status','pending');
+            $this->db->get(db_prefix().'qa_lead');
+            $pendings = $this->db->affected_rows();
+            $max_pending[] = $pendings;
+
+            $staff['pending'] = $pendings;
+            $qa_staff[$key] = $staff;
+        }
+        update_option('auto_distribution_pending_factor',max($max_pending));
+        return max($max_pending);
+    }
+
 }

@@ -45,6 +45,41 @@ class Eraxon_wallet extends AdminController
         }
     }
 
+     public function new_create_wallet()
+    {
+        $all_staff = $this->eraxon_wallet_model->get_staff();
+
+        foreach($all_staff as $staff)
+        {
+            $wallet_exist = $this->eraxon_wallet_model->wallet_exist($staff['staffid']);
+
+            if(!$wallet_exist)
+            {
+                $data = array(
+
+                    'staff_id' => $staff['staffid'],
+                    'total_balance' => 0.0,
+                    'last_balance' => 0.0,
+                    'status' => 1,
+                    'updated_datetime' => date('Y-m-d H:i:s')
+                );
+               $wallet_id = $this->eraxon_wallet_model->create_wallet($data);
+            }
+            
+            /*$transaction = array(
+                    'wallet_id' => $wallet_id,
+                    'amount_type' => 'salary',
+                    'amount' => $staff['basic_salary'],
+                    'in_out' => 'in',
+                    'created_datetime' => date('Y-m-d H:i:s')
+
+            );
+
+            $tans_id = $this->eraxon_wallet_model->add_transaction($transaction);*/
+        }
+    }
+
+
 
     public function my_wallet()
     {
@@ -72,6 +107,30 @@ class Eraxon_wallet extends AdminController
     {
         $update = $this->eraxon_wallet_model->update_wallet('','');
         redirect(admin_url("eraxon_wallet/my_wallet"));
+    }
+
+    public function wallet_reporting()
+    {
+        if ($this->input->post()) 
+        {
+            $posted_data       = $this->input->post();
+            $staff_id          = $posted_data['staff_id'];
+            $from_date         = $posted_data['from'];
+            $to_date           = $posted_data['to'];
+            $from_date_st      = strtotime($from_date);
+            $to_date_st        = strtotime($to_date);
+
+            if ($from_date_st > $to_date_st) {
+            $return_data['status'] = 'error';
+            } else {
+                $return_data['data'] = $this->eraxon_wallet_model->wallet_report($staff_id, $from_date, $to_date);
+                $return_data['total_transaction_amount'] = $this->eraxon_wallet_model->get_total_transactions_amount($staff_id, $from_date, $to_date);
+            }
+            echo json_encode($return_data);
+        }else{
+        $data['all_staff'] = $this->eraxon_wallet_model->get_staff(6);
+        $this->load->view('eraxon_wallet/reporting_my_wallet',$data);
+        }
     }
 
 

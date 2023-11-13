@@ -912,3 +912,8 @@ function get_hr_profile_upload_path_by_type($type)
 		} 
 		return $position_names;
 	}
+
+
+	
+
+

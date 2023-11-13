@@ -281,6 +281,7 @@ class Eraxon_payroll extends AdminController
         // Create start and end dates
         $startDate = clone $selected_month;
         $endDate = clone $selected_month;
+        $endDateWallet = clone $selected_month;
         // Modify start date: go to previous month and set day to 21
         $startDate->modify('-1 month');
         $startDate->setDate($startDate->format('Y'), $startDate->format('m'), 21);
@@ -288,9 +289,13 @@ class Eraxon_payroll extends AdminController
         // Modify end date: set day to 20
         $endDate->setDate($endDate->format('Y'), $endDate->format('m'), 20);
         // $data_hs = $this->set_col_tk(21, 30, 06, 2023, true,[3],'');
+
+        $endDateWallet->setDate($endDate->format('Y'), $endDate->format('m'), 20);
         
         $startDate = $startDate->format('Y-m-d');
         $endDate = $endDate->format('Y-m-d');
+
+        $endDateWallet = $endDateWallet->format('Y-m-d H:i:s');
         
         $staff = array();
         // $data['staff_members'] = $this->eraxon_payroll_model->get_staff();
@@ -302,9 +307,10 @@ class Eraxon_payroll extends AdminController
             $joining_days = 0;
             $employee_id = $member->staffid;
             $basic_salary = $member->basic_salary;
-            $staff_wallet = $this->eraxon_wallet_model->get_wallet_row_by_staff_id($member->staffid);
-            $payable_basic_salary = $staff_wallet->total_balance;
+            
 
+           /* $staff_wallet = $this->eraxon_wallet_model->get_wallet_row_by_staff_id($member->staffid);
+            $payable_basic_salary = $staff_wallet->total_balance;
             $transaction = array(
                     'wallet_id' => $staff_wallet->id,
                     'amount_type' => 'Salary ('.$month_year.')',
@@ -312,7 +318,7 @@ class Eraxon_payroll extends AdminController
                     'in_out' => 'out',
                     'created_datetime' => date('Y-m-d H:i:s'),
                     );
-            $transaction_id = $this->eraxon_wallet_model->add_transaction($transaction);
+            $transaction_id = $this->eraxon_wallet_model->add_transaction($transaction);*/
             
             $date_string = $month_year . '-01';
             $date = new DateTime($date_string);
@@ -340,8 +346,6 @@ class Eraxon_payroll extends AdminController
                 'sandwitch_timesheet' => NULL,
             );
             $id = $this->eraxon_payroll_model->add_salary_detail($data);
-            //add deduction transaction id into salary details
-            $this->eraxon_wallet_model->add_deduct_transaction($id,$transaction_id);
 
             $job_position_id = $member->job_position;
             $allowances = $this->eraxon_payroll_model->get_allowances_details($job_position_id);
@@ -377,6 +381,24 @@ class Eraxon_payroll extends AdminController
                 // echo $joining_days;exit;
             }
 
+            $staff_wallet_total_transactions_amount = $this->eraxon_wallet_model->get_total_transactions_amount($member->staffid,$start,$endDate);
+            $payable_basic_salary = $basic_salary; //- $staff_wallet_total_transactions_amount;
+            $wallet_id = $this->eraxon_wallet_model->get_walletid_by_staff_id($member->staffid);
+            //wallet transaction 
+            $transaction = array(
+                    'wallet_id' => $wallet_id,
+                    'amount_type' => 'Wallet Amount Adjustment-Salary ('.$month_year.')',
+                    'amount' => $staff_wallet_total_transactions_amount,
+                    'in_out' => 'in',
+                    'created_datetime' => $endDateWallet,
+                    );
+            if($staff_wallet_total_transactions_amount > 0.0)
+            {
+                $transaction_id = $this->eraxon_wallet_model->add_transaction($transaction);
+            }
+
+            //add deduction transaction id into salary details
+            $this->eraxon_wallet_model->add_deduct_transaction($id,$transaction_id);
 
             $short_hours = $this->calculate_short_hours_v2($employee_id,$start,$endDate);
 
@@ -395,7 +417,7 @@ class Eraxon_payroll extends AdminController
 
 
                 $gross_salary = $payable_basic_salary + $allowances_amount;
-                $net_salary = ($gross_salary - $deductions_amount) - $total_leaves_amount - $short_hours['late_amount'];
+                $net_salary = ($gross_salary - $deductions_amount)- $staff_wallet_total_transactions_amount - $total_leaves_amount - $short_hours['late_amount'];
                 $data = array(
                     'salary_details_id'=>$id,
                     'presents' => $short_hours['presents'],
@@ -420,6 +442,7 @@ class Eraxon_payroll extends AdminController
                 'total_attendance' => $total_leaves_amount,
                 'total_halfdays' => $half_days_amount,
                 'total_late' => $short_hours['late_amount'],
+                'total_wallet_deduct_amount' => $staff_wallet_total_transactions_amount,
                 'gross_salary' => $gross_salary,
                 'net_salary' => $net_salary,
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -1374,10 +1397,10 @@ class Eraxon_payroll extends AdminController
             $success = $this->eraxon_payroll_model->update_salary_slip_status($slip_id,$data2);
             if ($success) {
 
-                    if($data['status'] == 'paid')
+                    /*if($data['status'] == 'paid')
                     {
                         $this->eraxon_wallet_model->add_salary_deposit_into_wallet($slip_id); 
-                    }
+                    }*/
                    
                     echo 1;
                    // set_alert('success', _l('updated_successfully',"Stutus updated!"));

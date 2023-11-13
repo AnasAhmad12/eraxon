@@ -12,6 +12,7 @@ class Eraxon_payroll_model extends App_Model
     {
 		parent::__construct();
         $this->load->model('departments_model');
+        //$this->load->model('eraxon_wallet_model');
 	}
 
 	public function insert_allownce($allowance_name, $type, $amount) {
@@ -275,7 +276,7 @@ class Eraxon_payroll_model extends App_Model
     
     public function salary_slip_details($id)
     {
-        $this->db->select('sd.*, CONCAT(s.firstname, " ", s.lastname) as name,s.*, r.name as rolename, at.*');
+        $this->db->select('sd.*, CONCAT(s.firstname, " ", s.lastname) as name,s.*, r.name as rolename, at.presents,at.absents,at.paid_leaves,at.half_days,at.sandwitch,at.late,at.late_amount,at.absent_amount,at.half_days_amount,at.total_amount');
         $this->db->from(db_prefix() . 'salary_details as sd');
         $this->db->join(db_prefix() . 'staff as s', 's.staffid = sd.employee_id', 'left');
         $this->db->join(db_prefix() . 'roles as r', 'r.roleid = s.role', 'left');
@@ -329,6 +330,7 @@ class Eraxon_payroll_model extends App_Model
         if ($query->num_rows() > 0) {
             // record exists, get the salary_details_id
             $salary_details_id = $query->row()->id;
+            $salary_deduct_transaction_id = $query->row()->deduct_transaction_id;
 
             // delete from salary_details
             $this->db->where('id', $salary_details_id);
@@ -345,6 +347,12 @@ class Eraxon_payroll_model extends App_Model
             // delete related records from salary_details_to_attendance
             $this->db->where('salary_details_id', $salary_details_id);
             $this->db->delete(db_prefix() . 'salary_details_to_attendance');
+
+            // delete related records from salary_details_to_adjustments
+            $this->db->where('salary_details_id', $salary_details_id);
+            $this->db->delete(db_prefix() . 'salary_details_to_adjustments');
+
+            $wallet_transaction_to_delete = $this->eraxon_wallet_model->delete_transaction($salary_deduct_transaction_id);
         }
     }
 

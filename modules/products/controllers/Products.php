@@ -404,6 +404,7 @@ class Products extends AdminController
     }
 
       public function staff_report_kiosk(){
+
         $posted_data       = $this->input->post();
         $staff_id          = $posted_data['staff_id'];
         $from_date         = $posted_data['from'];
@@ -416,9 +417,34 @@ class Products extends AdminController
         } else {
             $return_data['data'] = $this->reports_products_model->staff_kiosk_report($staff_id, $from_date, $to_date);
         }
-
-
         echo json_encode($return_data);
+
+    }
+
+
+    public function monthly_report(){
+
+        if($this->input->post())
+        {
+            $posted_data       = $this->input->post();
+            $role_id           = $posted_data['role_id'];
+            $from_date         = $posted_data['from'];
+            $to_date           = $posted_data['to'];
+            $from_date_st      = strtotime($from_date);
+            $to_date_st        = strtotime($to_date);
+
+            if ($from_date_st > $to_date_st) {
+                $return_data['status'] = 'error';
+            } else {
+                $return_data['data'] = $this->reports_products_model->staff_kiosk_overall_report($role_id, $from_date, $to_date);
+            }
+            echo json_encode($return_data);
+        }else
+        {
+            $this->load->view('reports/monthly_report');
+        }
+
+        
 
     }
 

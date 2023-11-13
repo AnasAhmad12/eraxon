@@ -153,18 +153,18 @@ function products_module_init_menu_items()
     
     if (has_permission('kiosk', '', 'view_own')) {
         $CI->app_menu->add_sidebar_children_item('kiosk', [
-            'slug'     => 'Kiosk',
+            'slug'     => 'Kiosk_shop',
             'name'     => 'Shop',
             'href'     => admin_url('products/kiosk'),
-            'position' => 20,
+            'position' => 1,
         ]);
    }
    if (has_permission('kiosk', '', 'view_own')) {
         $CI->app_menu->add_sidebar_children_item('kiosk', [
-            'slug'     => 'Kiosk',
+            'slug'     => 'Kiosk_order_history',
             'name'     => _l('order_history'),
             'href'     => admin_url('products/order_history'),
-            'position' => 21,
+            'position' => 2,
         ]);
    }
 
@@ -260,6 +260,22 @@ function products_module_init_menu_items()
             'position' => 10,
         ]);
     }
+      if (has_permission('products', '', 'view')) {
+        $CI->app_menu->add_sidebar_children_item('products', [
+            'slug'     => 'kiosk_monthly_report',
+            'name'     => 'Overall CSR Report',
+            'href'     => admin_url('products/monthly_report'),
+            'position' => 9,
+        ]);
+    }
+     if (has_permission('products', '', 'view')) {
+        $CI->app_menu->add_sidebar_children_item('products', [
+            'slug' => 'product_purchase_report',
+            'name' => "Purchase Report",
+            'href' => admin_url('products/purchase/purchase_report'),
+            'position' => 11,
+        ]);
+    }
 
     if (0 == get_option('coupons_disabled')) {
         if (has_permission('products', '', 'view')) {
@@ -289,6 +305,8 @@ function products_module_init_menu_items()
             'position' => 8,
         ]);
     }
+
+  
 }
 
 // Inject email template for products module

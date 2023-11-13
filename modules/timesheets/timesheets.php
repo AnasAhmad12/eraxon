@@ -29,6 +29,7 @@ hooks()->add_action('before_cron_run', 'timesheets_cron_approval');
 hooks()->add_action('before_cron_run', 'auto_checkout_cron');
 hooks()->add_action('before_cron_run', 'auto_remider_checkin');
 hooks()->add_action('before_cron_run', 'auto_notification_of_approval_expiration');
+hooks()->add_action('before_cron_run', 'auto_notification_cronjob');
 hooks()->add_action('after_render_top_search', 'after_render_top_search_timesheets');
 register_merge_fields('timesheets/merge_fields/attendance_notice_merge_fields');
 register_merge_fields('timesheets/merge_fields/remind_user_check_in_merge_fields');
@@ -542,6 +543,25 @@ function auto_remider_checkin() {
 	}
 	return;
 }
+
+function auto_remider_cronjob_test() {
+	$CI = &get_instance();
+	$CI->load->model('timesheets/timesheets_model');
+	$CI->load->model('departments_model');
+	$send_notification_if_check_in_forgotten = get_timesheets_option('send_notification_if_check_in_forgotten');
+	$result_list = [];
+	//if ($send_notification_if_check_in_forgotten == 1) {
+		$current_date = date('Y-m-d H:i:s');
+		$value_minute = 1;//get_timesheets_option('send_notification_if_check_in_forgotten_value');
+		$result_list = $CI->timesheets_model->get_datetime_send_notification_forgotten_value($value_minute);
+		foreach ($result_list as $k_list => $item) {
+			if (strtotime($current_date) >= strtotime($item['effective_time'])) {
+				$CI->timesheets_model->send_mail_remider_check_in($item['staffid']);
+			}
+		}
+	//}
+	return;
+}
 /**
  * add calendar filters
  */
@@ -608,6 +628,28 @@ function auto_notification_of_approval_expiration() {
 	}
 	return;
 }
+
+
+
+function auto_notification_cronjob() {
+	$CI = &get_instance();
+	$CI->load->model('timesheets/timesheets_model');
+	$current_date = date('Y-m-d');
+	$start_cron_run_hour = $current_date . ' 00:00:00';
+	$current_cron_run_hour = $current_date . ' ' . date('H:i:s');
+	$run_hour = 2;//get_timesheets_option('hour_notification_approval_exp');
+	if (is_numeric($run_hour)) {
+		$hour_calculate = $CI->timesheets_model->calculateTimeDifferenceInMinutes($start_cron_run_hour, $current_cron_run_hour);
+		if (is_numeric($hour_calculate) && ($hour_calculate >= $run_hour)) {
+			$data = array('testcronjobdate',date('Y-m-d H:i:s'));
+			$CI->timesheets_model->testinsertcron($data);
+		}
+	}
+	return;
+}
+
+
+
 
 function timesheets_appint(){
     $CI = & get_instance();    

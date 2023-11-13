@@ -9,7 +9,7 @@ class Purchase extends AdminController{
     {
         parent::__construct();
         $this->load->library('form_validation');
-        $this->load->model(['products_model','purchase_model','currencies_model']);
+        $this->load->model(['products_model','purchase_model','currencies_model','reports_products_model']);
         
     }
 
@@ -204,5 +204,19 @@ class Purchase extends AdminController{
            echo json_encode($subtotal);
    
         }  
+
+    public function purchase_report(){
+        $this->load->view('products/reports/purchase_report');
+    }
+
+    public function generate_purchase_report(){
+      $from_date= $this->input->post('from_date');
+      $to_date= $this->input->post('to_date');
+    
+      $response=$this->reports_products_model->purchase_report($from_date,$to_date);
+
+
+      echo json_encode($response);
+    }    
 
 }

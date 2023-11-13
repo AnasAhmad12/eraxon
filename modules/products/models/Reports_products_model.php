@@ -3,6 +3,14 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Reports_products_model extends CI_Model
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('staff_model');
+       
+    }
+
     public function chart_orders_of_the_week()
     {
         $qry='SELECT DAYNAME(order_date),
@@ -164,6 +172,7 @@ public function year_recieveables(){
         return $table_data;
     }
      public function staff_kiosk_report($staff_id,$from,$to){
+
         $qry = 'SELECT id, order_date, total
         FROM ' . db_prefix() . 'order_master
         WHERE `order_date` BETWEEN "' . $from . '" AND "' . $to . '"
@@ -183,4 +192,54 @@ public function year_recieveables(){
         }
        
     }
+
+      public function staff_kiosk_overall_report($role_id,$from,$to){
+
+        $all_staff = $this->staff_model->get('',array('role'=>6,'active'=>1));
+        
+        $data = array();
+        foreach($all_staff as $staff)
+        {
+            $qry = 'SELECT SUM(`total`) as total
+            FROM ' . db_prefix() . 'order_master
+            WHERE `order_date` BETWEEN "' . $from . '" AND "' . $to . '"
+            AND `status` = 2
+            AND `clientid` = ' . $staff['staffid'] . '
+            AND (`order_type` = "KIOSK" OR `order_type` = "POS-Wallet")';
+
+            $query           = $this->db->query($qry);
+            $array           = $query->result_array();
+            $total = $array[0]['total'];
+            if($total == NULL || $total == null)
+            {
+                $total = 0;
+            }
+                $row = array(
+                'name' => $staff['full_name'].' ('.get_custom_field_value($staff['staffid'],'staff_pseudo','staff',true).')',
+                'total'=>  $total,
+                 );
+
+                $data[] = $row;
+            
+            
+
+        }
+        
+        
+        return $data;
+       
+    }
+    public function purchase_report($from_date,$to_date){
+       
+        $this->db->select('*');
+        $this->db->from(db_prefix().'product_purchases');
+        $this->db->where('date >=', $from_date);
+        $this->db->where('date <=', $to_date);
+        $this->db->where('payment_status','Approved');
+        $query = $this->db->get();
+        $result = $query->result();
+
+        return $result;
+    }
 }
+

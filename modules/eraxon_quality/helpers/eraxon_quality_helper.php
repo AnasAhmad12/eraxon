@@ -68,7 +68,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 	 * @param  $position_ids 
 	 * @return $staff_ids      
 	 */
-	 function hr_get_staff_ids_by_position_ids($ids)
+     /*function hr_get_staff_ids_by_position_ids($ids)
 	 {
 	 	$staff_data = array();
 
@@ -79,20 +79,83 @@ defined('BASEPATH') or exit('No direct script access allowed');
 		$hr_all_staff = $CI->db->get(db_prefix().'staff')->result_array();
 		foreach ($hr_all_staff  as $value) 
 		{
-			$daily_target = hr_get_position_target_by_jobpid($value['job_position'])/26;
+			//$daily_target = hr_get_position_target_by_jobpid($value['job_position'])/26;
 			$data = array(
 
 				'staff_id' => $value['staffid'],
 				'job_position_id' => $value['job_position'],
-				'daily_target' => $daily_target,
+				'daily_target' => 30,
+				'fix' => 0,
 				'assigned' => 0,
 				'pending' => 0,
 				'check-in' => "",
-				'pointer' => ""
+				'pointer' => "",
+                'myturn' =>0,
 			);
 			$staff_data[] = $data;
 		}
 		
 
 		return $staff_data; 
+	 }*/
+
+	function hr_get_staff_ids_by_position_ids($ids)
+	 {
+	 	$staff_data = array();
+
+		$CI = & get_instance();
+		$CI->db->select('staffid,job_position');
+		$CI->db->where('job_position IN ('. $ids.') ');
+		$CI->db->where('active',1);
+		$hr_all_staff = $CI->db->get(db_prefix().'staff')->result_array();
+		$first = 1;
+      
+		foreach ($hr_all_staff  as $value) 
+		{
+			if($first == 1)
+			{
+				$data = array(
+
+				'staff_id' => $value['staffid'],
+				'job_position_id' => $value['job_position'],
+				'daily_target' => 30,
+				'fix' => 0,
+				'assigned' => 0,
+				'pending' => 0,
+				'check-in' => 0,
+				'pointer' => "p",
+				'myturn' =>1,
+				);
+				$staff_data[] = $data;
+				$first++;
+
+			}else
+			{
+				$data = array(
+
+				'staff_id' => $value['staffid'],
+				'job_position_id' => $value['job_position'],
+				'daily_target' => 30,
+				'fix' => 0,
+				'assigned' => 0,
+				'pending' => 0,
+				'check-in' => 0,
+				'pointer' => "",
+				'myturn' =>0,
+				);
+				$staff_data[] = $data;
+			}
+			
+			
+		}
+		
+
+		return $staff_data; 
+	 }
+
+
+	 function get_campaigns_by_id($id){
+		$CI = & get_instance();
+		$CI->db->where('id',$id);
+		return $CI->db->get(db_prefix().'leads_type')->result()[0]->name;
 	 }

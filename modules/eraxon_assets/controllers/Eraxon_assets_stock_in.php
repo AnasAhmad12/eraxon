@@ -103,6 +103,7 @@ class Eraxon_assets_stock_in extends AdminController
                 return 0;
             }
             $data['title'] = "Add Stock Purchase";
+            $data['approval']="";
 
             $this->load->view('purchase/stock-in', $data);
         } else {
@@ -227,6 +228,7 @@ class Eraxon_assets_stock_in extends AdminController
             }
 
             $data['title'] = "Edit Stock Purchase";
+            $data['approval']=get_option('stock_in_purchase_approval');
             $this->load->view('purchase/stock-in', $data);
         } else {
             access_denied('Edit Stock In');

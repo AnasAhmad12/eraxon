@@ -29,7 +29,7 @@ hooks()->add_action('before_cron_run', 'timesheets_cron_approval');
 hooks()->add_action('before_cron_run', 'auto_checkout_cron');
 hooks()->add_action('before_cron_run', 'auto_remider_checkin');
 hooks()->add_action('before_cron_run', 'auto_notification_of_approval_expiration');
-hooks()->add_action('before_cron_run', 'auto_notification_cronjob');
+//hooks()->add_action('before_cron_run', 'auto_notification_cronjob');
 hooks()->add_action('after_render_top_search', 'after_render_top_search_timesheets');
 register_merge_fields('timesheets/merge_fields/attendance_notice_merge_fields');
 register_merge_fields('timesheets/merge_fields/remind_user_check_in_merge_fields');
@@ -39,6 +39,11 @@ hooks()->add_action('timesheets_init',TIMESHEETS_MODULE_NAME.'_appint');
 hooks()->add_action('pre_activate_module', TIMESHEETS_MODULE_NAME.'_preactivate');
 hooks()->add_action('pre_deactivate_module', TIMESHEETS_MODULE_NAME.'_predeactivate');
 hooks()->add_action('pre_uninstall_module', TIMESHEETS_MODULE_NAME.'_uninstall');
+
+hooks()->add_filter('hr_profile_tab_name', TIMESHEETS_MODULE_NAME.'_add_tab_name', 20);
+hooks()->add_filter('hr_profile_tab_content', TIMESHEETS_MODULE_NAME.'_add_tab_content', 20);
+hooks()->add_filter('hr_profile_load_icon', TIMESHEETS_MODULE_NAME.'_add_tab_icon',20,2);
+hooks()->add_action('hr_profile_load_js_file', TIMESHEETS_MODULE_NAME.'_add_tab_js_file');
 /*Attendance export excel path*/
 define('TIMESHEETS_PATH_EXPORT_FILE', 'modules/timesheets/uploads/attendance/');
 
@@ -281,6 +286,11 @@ function timesheets_load_js() {
 		echo '<script src="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/chosen.jquery.js') . '"></script>';
 		echo '<script src="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/handsontable-chosen-editor.js') . '"></script>';
 	}
+  
+    if (!(strpos($viewuri, '/admin/hr_profile/member') === false)) {
+		echo '<script src="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/chosen.jquery.js') . '"></script>';
+		echo '<script src="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/handsontable-chosen-editor.js') . '"></script>';
+	}
 
 	if (!(strpos($viewuri, '/admin/timesheets/setting') === false)) {
 		echo '<script src="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/chosen.jquery.js') . '"></script>';
@@ -364,6 +374,13 @@ function timesheets_add_head_components() {
 	$CI = &get_instance();
 	$viewuri = $_SERVER['REQUEST_URI'];
 	if (!(strpos($viewuri, '/admin/timesheets/timekeeping') === false)) {
+		echo '<link href="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/chosen.css') . '"  rel="stylesheet" type="text/css" />';
+		echo '<link href="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/handsontable.full.min.css') . '"  rel="stylesheet" type="text/css" />';
+		echo '<link href="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/css/attendance.css') . '"  rel="stylesheet" type="text/css" />';
+		echo '<script src="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/handsontable.full.min.js') . '"></script>';
+	}
+  
+    if (!(strpos($viewuri, '/admin/hr_profile/member') === false)) {
 		echo '<link href="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/chosen.css') . '"  rel="stylesheet" type="text/css" />';
 		echo '<link href="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/plugins/handsontable/handsontable.full.min.css') . '"  rel="stylesheet" type="text/css" />';
 		echo '<link href="' . module_dir_url(TIMESHEETS_MODULE_NAME, 'assets/css/attendance.css') . '"  rel="stylesheet" type="text/css" />';
@@ -543,25 +560,6 @@ function auto_remider_checkin() {
 	}
 	return;
 }
-
-function auto_remider_cronjob_test() {
-	$CI = &get_instance();
-	$CI->load->model('timesheets/timesheets_model');
-	$CI->load->model('departments_model');
-	$send_notification_if_check_in_forgotten = get_timesheets_option('send_notification_if_check_in_forgotten');
-	$result_list = [];
-	//if ($send_notification_if_check_in_forgotten == 1) {
-		$current_date = date('Y-m-d H:i:s');
-		$value_minute = 1;//get_timesheets_option('send_notification_if_check_in_forgotten_value');
-		$result_list = $CI->timesheets_model->get_datetime_send_notification_forgotten_value($value_minute);
-		foreach ($result_list as $k_list => $item) {
-			if (strtotime($current_date) >= strtotime($item['effective_time'])) {
-				$CI->timesheets_model->send_mail_remider_check_in($item['staffid']);
-			}
-		}
-	//}
-	return;
-}
 /**
  * add calendar filters
  */
@@ -629,27 +627,23 @@ function auto_notification_of_approval_expiration() {
 	return;
 }
 
-
-
+register_cron_task('auto_notification_cronjob');
 function auto_notification_cronjob() {
 	$CI = &get_instance();
 	$CI->load->model('timesheets/timesheets_model');
 	$current_date = date('Y-m-d');
 	$start_cron_run_hour = $current_date . ' 00:00:00';
 	$current_cron_run_hour = $current_date . ' ' . date('H:i:s');
-	$run_hour = 2;//get_timesheets_option('hour_notification_approval_exp');
+	$run_hour = 10;//get_timesheets_option('hour_notification_approval_exp');
 	if (is_numeric($run_hour)) {
 		$hour_calculate = $CI->timesheets_model->calculateTimeDifferenceInMinutes($start_cron_run_hour, $current_cron_run_hour);
 		if (is_numeric($hour_calculate) && ($hour_calculate >= $run_hour)) {
-			$data = array('testcronjobdate',date('Y-m-d H:i:s'));
+			$data = array('testcronjobdate'=> date('Y-m-d H:i:s'));
 			$CI->timesheets_model->testinsertcron($data);
 		}
 	}
 	return;
 }
-
-
-
 
 function timesheets_appint(){
     $CI = & get_instance();    
@@ -700,4 +694,61 @@ function timesheets_uninstall($module_name){
         $timesheets_api = new TimesheetLic();
         $timesheets_api->deactivate_license();
     }
+}
+
+/**
+ * myform add tab name
+ * @param  [type] $row  
+ * @param  [type] $aRow 
+ * @return [type]       
+ */
+function timesheets_add_tab_name($tab_names)
+{
+    $tab_names[] = 'attendance';
+    return $tab_names;
+}
+
+function timesheets_add_tab_icon($item_icon,$group_item)
+{
+	if($group_item == "attendance")
+    {
+    	$item_icon = '<span class="fa fa-calendar menu-icon"></span>';
+    }
+   return $item_icon;
+}
+
+/**
+ * myform add tab content
+ * @param  [type] $tab_content_link 
+ * @return [type]                   
+ */
+function timesheets_add_tab_content($tab_content_link)
+{
+    if(!(strpos($tab_content_link, 'hr_record/includes/attendance') === false)){
+        $tab_content_link = 'timesheets/includes/timesheets_attendance_tab_content';
+  }
+    
+    return $tab_content_link;
+}
+
+
+function timesheets_add_tab_js_file($group)
+{
+    if($group == "attendance")
+    {
+        $data = array(); 
+        $CI = &get_instance();
+       $staffid = $CI->uri->segment(4);
+        $data['staffid'] = $staffid;
+        //echo 'Staff ID: '.$staffid;
+        $result = timekeeping_widget($data);       
+       // var_dump($result);
+        $data_lack        =   $result['data_lack'];
+        $staff_row_tk     =   $result['staff_row_tk'];
+        $set_col_tk       =   $result['set_col_tk'];
+        $day_by_month_tk  =   $result['day_by_month_tk'];
+        echo require 'modules/timesheets/assets/js/timesheets.php'; 
+    }
+
+    
 }

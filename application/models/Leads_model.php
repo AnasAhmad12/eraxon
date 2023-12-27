@@ -623,8 +623,14 @@ class Leads_model extends App_Model
             return $this->db->get(db_prefix() . 'leads_type')->row();
         }
 
-        $this->db->order_by('name', 'asc');
+        $added_campaigns = $this->db->select('camp_type_id')
+                 ->get(db_prefix().'qa_campaign_column')->result_array();
 
+        $this->db->order_by('name', 'asc');
+        foreach($added_campaigns as $camp)
+        {
+            $this->db->or_where('id',$camp['camp_type_id']);
+        }
         return $this->db->get(db_prefix() . 'leads_type')->result_array();
     }
 

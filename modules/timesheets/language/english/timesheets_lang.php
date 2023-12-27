@@ -1,4 +1,5 @@
 <?php
+$lang['payslips']              = 'Payslips';
 $lang['birthplace']  = 'Birthplace';
 $lang['sex']  = 'Sex';
 $lang['marital_status']  = 'Marital status';

@@ -18,14 +18,26 @@
             case 'contacts':
             $output = '<a href="'.admin_url('clients/client/'.$_result['userid'].'?contactid='.$_result['id']).'">'.$_result['firstname'] .' ' . $_result['lastname'] .' <small>'.get_company_name($_result['userid']).'</small></a>';
             break;
-            case 'staff':
+            /*case 'staff':
             $output = '<a href="'.admin_url('staff/member/'.$_result['staffid']).'">'.$_result['firstname']. ' ' . $_result['lastname'] .'</a>';
+            break;*/
+            case 'staff':
+            $output = '<a href="'.admin_url('hr_profile/member/'.$_result['staffid']).'">'.$_result['firstname']. ' ' . $_result['lastname'] .'</a>';
+            break;
+            case 'dnc_search':
+            $output = '<a href="#">'.$_result['phonenumber'];
+            $output .= '<br />';
+            $output .= '<small>Result: '.$_result['result'].'</small>';
+            $output .= '</a>';
             break;
             case 'tickets':
             $output = '<a href="'.admin_url('tickets/ticket/'.$_result['ticketid']).'">#'.$_result['ticketid'].' - '.$_result['subject'].'</a>';
             break;
+           /* case 'knowledge_base_articles':
+            $output = '<a href="'.admin_url('knowledge_base/article/'.$_result['slug']).'">'.$_result['subject'].'</a>';
+            break;*/
             case 'knowledge_base_articles':
-            $output = '<a href="'.admin_url('knowledge_base/article/'.$_result['articleid']).'">'.$_result['subject'].'</a>';
+            $output = '<a href="'.base_url('knowledge_base/article/'.$_result['slug']).'">'.$_result['subject'].'</a>';
             break;
             case 'leads':
             $output = '<a href="#" onclick="init_lead('.$_result['id'].');return false;">'.$_result['name'].'</a>';

@@ -4,7 +4,24 @@
 } ?>lead-wrapper" <?php if (isset($lead) && ($lead->junk == 1 || $lead->lost == 1)) {
     echo 'lead-is-junk-or-lost';
 } ?>>
-<?php if (isset($lead)) { ?>
+<?php if(has_permission('leads', '', 'view')){ ?>
+ <div class="pull-right mleft5">
+        <a data-toggle="tooltip" class="btn btn-default lead-print-btn lead-top-btn lead-view"
+           onclick="print_lead_information(); return false;" data-placement="top" title="<?php echo _l('print'); ?>"
+           href="#">
+            <i class="fa fa-print"></i>
+        </a>
+    </div>
+
+    <div class="mleft5 pull-right<?php echo $lead_locked == true ? ' hide': ''; ?>">
+        <a href="#" lead-edit data-toggle="tooltip" data-title="<?php echo _l('edit'); ?>"
+            class="btn btn-default lead-top-btn">
+
+            <i class="fa-regular fa-pen-to-square"></i>
+        </a>
+    </div> 
+<?php } 
+if (isset($lead)) { ?>
     <?php
            $client                                 = false;
            $convert_to_client_tooltip_email_exists = '';

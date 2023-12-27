@@ -284,5 +284,15 @@ class Eraxon_wallet_model extends App_Model
        return false;
 
     }
+  
+    public function get_transactions_by_walletid_daterange($walletid,$start,$end)
+    {
+         $this->db->where('wallet_id',$walletid);
+         $this->db->where('created_datetime >=', $start);
+         $this->db->where('created_datetime <=', $end);
+         return $this->db->get(db_prefix() .'wallet_transaction')->result_array();
+    }
+  
+    
 
 }

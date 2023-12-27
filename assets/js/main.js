@@ -4827,6 +4827,7 @@ function validate_lead_form() {
     name: "required",
     phonenumber: "required",
     source: "required",
+    lead_type: "required",
     status: {
       required: {
         depends: function (element) {

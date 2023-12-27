@@ -132,6 +132,91 @@ class Eraxon_wallet extends AdminController
         $this->load->view('eraxon_wallet/reporting_my_wallet',$data);
         }
     }
+    
+    public function reload_wallet_byfilter()
+    {
+        $data = $this->input->post();
+
+        $month_year = $data['month'];
+        $walletid = $data['walletid'];
+        $staffid = $data['staffid'];
+
+        // Create DateTime object for the first day of the selected month
+        $selected_month = DateTime::createFromFormat('Y-m', $month_year);
+        // Create start and end dates
+        $startDate = clone $selected_month;
+        $endDate = clone $selected_month;
+        $endDateWallet = clone $selected_month;
+        // Modify start date: go to previous month and set day to 21
+        $startDate->modify('-1 month');
+        $startDate->setDate($startDate->format('Y'), $startDate->format('m'), 21);
+
+        // Modify end date: set day to 20
+        $endDate->setDate($endDate->format('Y'), $endDate->format('m'), 20);
+        // $data_hs = $this->set_col_tk(21, 30, 06, 2023, true,[3],'');
+        $endDateWallet->setDate($endDate->format('Y'), $endDate->format('m'), 20);
+            
+        $startDate = $startDate->format('Y-m-d');
+        $endDate = $endDate->format('Y-m-d');
+
+        $my_transactions = $this->eraxon_wallet_model->get_transactions_by_walletid_daterange($walletid,$startDate,$endDate);
+
+        $pos_total = 0.0;
+        $kiosk_total = 0.0;
+        $dock_total = 0.0;
+        $advance_total = 0.0;
+
+        $html = '<table class="table table-wallet dt-table"><thead>
+                <tr>
+                    <th>Full Name</th>
+                    <th>Amount Type</th>
+                    <th>Amount</th>
+                    <th>Created Date / Time</th>
+                </tr>     
+            </thead><tbody>';
+        foreach($my_transactions as $trans)
+        { 
+            if(str_contains($trans['amount_type'],'POS'))
+                {
+                    $pos_total += $trans['amount'];
+
+                }else if(str_contains($trans['amount_type'],'KIOSK'))
+                {
+                    $kiosk_total += $trans['amount'];
+
+                }else if(str_contains($trans['amount_type'],'dock'))
+                {
+                    $dock_total += $trans['amount'];
+
+                }else if(str_contains($trans['amount_type'],'Advance'))
+                {
+                    $advance_total += $trans['amount'];
+                }
+
+            $html .='<tr><td>'.get_staff_full_name($staffid).' ('.get_custom_field_value($staffid,'staff_pseudo','staff',true).')</td><td>'.$trans['amount_type'].'</td>';
+
+            if($trans['in_out'] == 'in')
+            {
+                 $html .='<td style="color:#1bef15;">+'.number_format($trans['amount'],0,".",",").'</td>';
+            }else
+            {
+                $html .='<td style="color:#f21f1f;">-'.number_format($trans['amount'],0,".",",").'</td>';
+            }
+
+            $html .='<td>'.$trans['created_datetime'].'</td></tr>';
+
+        }
+        $html .='</tbody></table>';
+        
+        $data['pos_total'] = $pos_total;
+        $data['kiosk_total'] = $kiosk_total;
+        $data['dock_total'] = $dock_total;
+        $data['advance_total'] = $advance_total;
+
+        $data['html'] = $html;
+
+        echo json_encode($data);
+    }
 
 
 }

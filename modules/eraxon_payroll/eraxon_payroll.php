@@ -16,8 +16,37 @@ define('Eraxon_payroll', 'eraxon_payroll');
 
 hooks()->add_action('admin_init','eraxon_payroll_init_menu_items');
 
+hooks()->add_filter('hr_profile_tab_name', 'payroll_add_tab_name', 20);
+hooks()->add_filter('hr_profile_tab_content', 'payroll_add_tab_content', 20);
+//hooks()->add_action('hr_profile_load_js_file', 'payroll_load_js_file');
+hooks()->add_filter('hr_profile_load_icon', 'payroll_add_tab_icon',20,2);
+
 
 register_activation_hook(Eraxon_payroll,'eraxon_payroll_activation_hook');
+
+function payroll_add_tab_name($tab_names)
+{
+    $tab_names[] = 'payslips';
+    return $tab_names;
+}
+
+function payroll_add_tab_icon($item_icon,$group_item)
+{
+    if($group_item == "payslips")
+    {
+        $item_icon = '<span class="fa fa-file"></span>';
+    }
+   return $item_icon;
+}
+
+function payroll_add_tab_content($tab_content_link)
+{
+    if(!(strpos($tab_content_link, 'hr_record/includes/payslips') === false)){
+        $tab_content_link = 'eraxon_payroll/include/payroll_tab_content';
+  }
+    
+    return $tab_content_link;
+}
 
 function eraxon_payroll_activation_hook()
 {

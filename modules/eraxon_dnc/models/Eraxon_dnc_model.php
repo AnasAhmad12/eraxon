@@ -69,4 +69,17 @@ class Eraxon_dnc_model extends App_Model
     
     }
 
+    public function update_status($id,$data)
+    {
+        $this->db->where('id', $id);
+        $this->db->update(db_prefix() . 'dnc_request', $data);
+        if ($this->db->affected_rows() > 0) {
+            log_activity('New DNC Result Updated [ID: ' . $id .']');
+
+            return true;
+        }
+
+        return false;
+    }
+
 }

@@ -91,8 +91,8 @@
                     <div class="col-md-12" id="isactive">
                           <label for="isactive" class="control-label">Status</label>
                           <select name="isactive" class="selectpicker" id="isactive_status" data-width="100%" data-none-selected-text="<?php echo _l('none_type'); ?>"> 
-                           <option value="0">Active</option>  
-                           <option value="1">Deactive</option>                                        
+                           <option value="1">Active</option>  
+                           <option value="0">Deactive</option>                                        
                          </select>
                     </div>
                 <?php } ?>

@@ -21,4 +21,13 @@ class Cron extends App_Controller
             $this->cron_model->run();
         }
     }
+
+    public function auto()
+    {
+        $last_cron_run                  = get_option('last_cron_run');
+        $seconds = hooks()->apply_filters('cron_functions_execute_seconds', 300);
+        if ($last_cron_run == '' || (time() > ($last_cron_run + $seconds))) {
+           hooks()->do_action('auto_cronjob_run');
+        }
+    }
 }

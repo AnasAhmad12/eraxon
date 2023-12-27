@@ -25,13 +25,16 @@ class Eraxon_myform_model extends App_Model {
 	  /**
      * Get All Advance Salary
      */
-    public function get_advance_salary($id = false)
+    public function get_advance_salary($id = false,$staffid="")
     {
 
     	if(has_permission('advance_salary','','view_own') && !is_admin())
     	{
     		 $this->db->where('id_staff', get_staff_user_id());
     	}
+        if($staffid!=""){
+            $this->db->where('id_staff', $staffid);
+        }
 
         if (is_numeric($id)) {
             $this->db->where('id', $id);
@@ -50,13 +53,18 @@ class Eraxon_myform_model extends App_Model {
      /**
      * Get All Other Requests
      */
-    public function get_other_requests($id = false)
+    public function get_other_requests($id = false,$staffid="")
     {
 
         if(has_permission('other_form','','view_own') && !is_admin())
         {
              $this->db->where('id_staff', get_staff_user_id());
         }
+        
+        if($staffid!=""){
+            $this->db->where('id_staff', $staffid);
+        }
+
 
         if (is_numeric($id)) {
             $this->db->where('id', $id);
@@ -317,6 +325,47 @@ class Eraxon_myform_model extends App_Model {
         }
 
         return $insert_id;
+    }
+  
+    public function update_leave_type()
+    {
+        $this->db->where('rel_type','casual-leave');
+        $this->db->where('approve',1);
+        $results = $this->db->get(db_prefix().'timesheets_approval_details')->result_array();
+
+        foreach($results as $rows)
+        {
+
+            $data = array(
+                    'type_of_leave' => 8,
+                    'type_of_leave_text' => 'Leave',
+            );
+            $this->db->where('id', $rows['rel_id']);
+            $this->db->update(db_prefix() . 'timesheets_requisition_leave', $data);
+
+            $this->db->where('id',$rows['rel_id']);
+            $leave_row = $this->db->get(db_prefix().'timesheets_requisition_leave')->row()->number_of_leaving_day;
+
+
+            $this->db->where('staffid',$rows['sender']);
+            $remain_row = $this->db->get(db_prefix().'timesheets_day_off')->row()->remain;
+            $data2 = array(
+                    'remain' => (int)$remain_row - (int)$leave_row,
+            );
+
+            $this->db->where('staffid', $rows['sender']);
+            $this->db->update(db_prefix() . 'timesheets_day_off', $data2);
+
+            $data3 = array(
+                    'rel_type'=>'Leave',
+            );
+
+            $this->db->where('id', $rows['id']);
+            $this->db->update(db_prefix() . 'timesheets_approval_details', $data3);
+
+        }
+
+        return 1;
     }
 
 

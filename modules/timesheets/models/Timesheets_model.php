@@ -2821,9 +2821,6 @@ class timesheets_model extends app_model {
 		}
 		return $result;
 	}
-
-	
-
 	/**
 	 * format date
 	 * @param  date $date
@@ -8197,8 +8194,8 @@ class timesheets_model extends app_model {
         }
         return false;
     }
-
-    public function calculateTimeDifferenceInMinutes($startTime, $endTime) 
+  
+     public function calculateTimeDifferenceInMinutes($startTime, $endTime) 
     {
 	    // Convert the start and end times to DateTime objects
 	    $startDateTime = new DateTime($startTime);

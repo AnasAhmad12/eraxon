@@ -283,7 +283,7 @@ class Misc_model extends App_Model
         return hooks()->apply_filters('get_notes', $notes, ['rel_id' => $rel_id, 'rel_type' => $rel_type]);
     }
 
-    public function add_note($data, $rel_type, $rel_id)
+    public function add_note($data, $rel_type, $rel_id)// description, lead,'lead id'
     {
         $data['dateadded']   = date('Y-m-d H:i:s');
         $data['addedfrom']   = get_staff_user_id();
@@ -552,7 +552,7 @@ class Misc_model extends App_Model
         $limit                          = get_option('limit_top_search_bar_results_to');
         $have_assigned_customers        = have_assigned_customers();
         $have_permission_customers_view = has_permission('customers', '', 'view');
-        if ($have_assigned_customers || $have_permission_customers_view) {
+       /* if ($have_assigned_customers || $have_permission_customers_view) {
 
             // Clients
             $this->db->select(implode(',', prefixed_table_fields_array(db_prefix() . 'clients')) . ',' . get_sql_select_client_company());
@@ -587,7 +587,7 @@ class Misc_model extends App_Model
                 'type'           => 'clients',
                 'search_heading' => _l('clients'),
             ];
-        }
+        }*/
 
 
         $staff_search = $this->_search_staff($q, $limit);
@@ -595,8 +595,12 @@ class Misc_model extends App_Model
             $result[] = $staff_search;
         }
 
+        $dnc_search = $this->_search_dnc($q, $limit);
+        if (count($dnc_search['result']) > 0) {
+            $result[] = $dnc_search;
+        }
 
-        $where_contacts = '';
+        /*$where_contacts = '';
         if ($have_assigned_customers && !$have_permission_customers_view) {
             $where_contacts = db_prefix() . 'contacts.userid IN (SELECT customer_id FROM ' . db_prefix() . 'customer_admins WHERE staff_id=' . get_staff_user_id() . ')';
         }
@@ -610,14 +614,14 @@ class Misc_model extends App_Model
         $tickets_search = $this->_search_tickets($q, $limit);
         if (count($tickets_search['result']) > 0) {
             $result[] = $tickets_search;
-        }
+        }*/
 
         $leads_search = $this->_search_leads($q, $limit);
         if (count($leads_search['result']) > 0) {
             $result[] = $leads_search;
         }
 
-        $proposals_search = $this->_search_proposals($q, $limit);
+      /*  $proposals_search = $this->_search_proposals($q, $limit);
         if (count($proposals_search['result']) > 0) {
             $result[] = $proposals_search;
         }
@@ -650,7 +654,7 @@ class Misc_model extends App_Model
         $contracts_search = $this->_search_contracts($q, $limit);
         if (count($contracts_search['result']) > 0) {
             $result[] = $contracts_search;
-        }
+        }*/
 
 
         if (has_permission('knowledge_base', '', 'view')) {
@@ -667,7 +671,7 @@ class Misc_model extends App_Model
         }
 
         // Tasks Search
-        $tasks = has_permission('tasks', '', 'view');
+       /* $tasks = has_permission('tasks', '', 'view');
         // Staff tasks
         $this->db->select();
         $this->db->from(db_prefix() . 'tasks');
@@ -699,10 +703,10 @@ class Misc_model extends App_Model
             'type'           => 'tasks',
             'search_heading' => _l('tasks'),
         ];
-
+        */
 
         // Payments search
-        $has_permission_view_payments     = has_permission('payments', '', 'view');
+        /*$has_permission_view_payments     = has_permission('payments', '', 'view');
         $has_permission_view_invoices_own = has_permission('invoices', '', 'view_own');
 
         if (has_permission('payments', '', 'view') || $has_permission_view_invoices_own || get_option('allow_staff_view_invoices_assigned') == '1') {
@@ -739,20 +743,20 @@ class Misc_model extends App_Model
                 'type'           => 'invoice_payment_records',
                 'search_heading' => _l('payments'),
             ];
-        }
+        }*/
 
         // Custom fields only admins
-        if ($is_admin) {
+       /* if ($is_admin) {
             $this->db->select()->from(db_prefix() . 'customfieldsvalues')->like('value', $q)->limit($limit);
             $result[] = [
                 'result'         => $this->db->get()->result_array(),
                 'type'           => 'custom_fields',
                 'search_heading' => _l('custom_fields'),
             ];
-        }
+        }*/
 
         // Invoice Items Search
-        $has_permission_view_invoices       = has_permission('invoices', '', 'view');
+       /* $has_permission_view_invoices       = has_permission('invoices', '', 'view');
         $has_permission_view_invoices_own   = has_permission('invoices', '', 'view_own');
         $allow_staff_view_invoices_assigned = get_option('allow_staff_view_invoices_assigned');
 
@@ -772,10 +776,10 @@ class Misc_model extends App_Model
                 'type'           => 'invoice_items',
                 'search_heading' => _l('invoice_items'),
             ];
-        }
+        }*/
 
         // Estimate Items Search
-        $has_permission_view_estimates       = has_permission('estimates', '', 'view');
+       /* $has_permission_view_estimates       = has_permission('estimates', '', 'view');
         $has_permission_view_estimates_own   = has_permission('estimates', '', 'view_own');
         $allow_staff_view_estimates_assigned = get_option('allow_staff_view_estimates_assigned');
         if ($has_permission_view_estimates || $has_permission_view_estimates_own || $allow_staff_view_estimates_assigned) {
@@ -794,7 +798,7 @@ class Misc_model extends App_Model
                 'type'           => 'estimate_items',
                 'search_heading' => _l('estimate_items'),
             ];
-        }
+        }*/
 
         $result = hooks()->apply_filters('global_search_result_query', $result, $q, $limit);
 
@@ -1053,6 +1057,30 @@ class Misc_model extends App_Model
             $this->db->order_by('firstname', 'ASC');
             $result['result'] = $this->db->get()->result_array();
         }
+
+        return $result;
+    }
+
+    public function _search_dnc($q, $limit = 0)
+    {
+        $result = [
+            'result'         => [],
+            'type'           => 'dnc_search',
+            'search_heading' => 'DNC Search',
+        ];
+
+       // if (has_permission('dnc_check', '', 'view')) {
+            // Staff
+            $this->db->select();
+            $this->db->from(db_prefix() . 'dnc_request');
+            $this->db->like('phonenumber', $q);
+            if ($limit != 0) {
+                $this->db->limit($limit);
+            }
+            $this->db->order_by('id', 'ASC');
+            $result['result'] = $this->db->get()->result_array();
+
+       // }
 
         return $result;
     }

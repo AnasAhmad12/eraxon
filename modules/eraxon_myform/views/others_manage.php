@@ -1,5 +1,10 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php init_head(); ?>
+<style type="text/css">
+    #mceu_21,#mceu_31{
+        display: none;
+    }
+</style>
 <div id="wrapper">
     <div class="content">
         <div class="row">
@@ -52,6 +57,7 @@
                                             <?php if(has_permission('other_form','','edit')){ ?>
                                             <a href="#"
                                                 onclick="edit_as_request(this,<?php echo $as['id']; ?>); return false"
+                                                data-staffid= "<?php echo $as['id_staff']; ?>"
                                                 data-request-type="<?php echo $as['request_type']; ?>" 
                                                 data-description="<?php echo $as['description']; ?>"
                                                 data-status="<?php echo $as['status']; ?>"
@@ -172,6 +178,7 @@
 function edit_as_request(invoker, id) {
     
  	$('#additional').append(hidden_input('id', id));
+    $('#other_requests input[name="id_staff"]').val($(invoker).data('staffid'));
     $('#other_requests select[name="request_type"]').val($(invoker).data('request-type'));
     //$('#other_requests textarea[name="description"]').val($(invoker).data('description'));
      tinyMCE.activeEditor.setContent($(invoker).data('description'));

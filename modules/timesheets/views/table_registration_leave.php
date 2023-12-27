@@ -28,6 +28,12 @@ $join = ['LEFT JOIN ' . db_prefix() . 'staff b ON b.staffid = ' . db_prefix() . 
 ];
 $where = [];
 
+$staff=$this->ci->uri->segment(4);
+if($staff){
+	array_push($where, ' AND ((' . $staff . ' in (select staffid from ' . db_prefix() . 'timesheets_approval_details where rel_type <> "additional_timesheets" and rel_id = ' . db_prefix() . 'timesheets_requisition_leave.id) or ' . db_prefix() . 'timesheets_requisition_leave.staff_id = ' . $staff . ')' . timesheet_staff_manager_query('leave_management', 'staff_id', 'OR') . ')');
+}
+
+
 if (!is_admin() && !has_permission('leave_management', '', 'view')) {
 	array_push($where, ' AND ((' . get_staff_user_id() . ' in (select staffid from ' . db_prefix() . 'timesheets_approval_details where rel_type <> "additional_timesheets" and rel_id = ' . db_prefix() . 'timesheets_requisition_leave.id) or ' . db_prefix() . 'timesheets_requisition_leave.staff_id = ' . get_staff_user_id() . ')' . timesheet_staff_manager_query('leave_management', 'staff_id', 'OR') . ')');
 }

@@ -361,6 +361,24 @@ class Eraxon_myform extends AdminController
     {
         echo json_encode($this->eraxon_myform_model->report_by_day_leads_staffs($id));
     }
+  
+    function cronjob_date_added() {
+	
+	    $this->load->model('timesheets/timesheets_model');
+		$data = array('testcronjobdate'=> date('Y-m-d H:i:s'));
+		$this->timesheets_model->testinsertcron($data);
+		
+	
+	return;
+	}
+  
+    public function update_leaves_type()
+    {
+        $result = $this->eraxon_myform_model->update_leave_type();
+
+        echo $result;
+
+    }
 
     
 }

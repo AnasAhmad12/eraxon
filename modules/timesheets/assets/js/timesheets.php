@@ -60,7 +60,18 @@
       }
     };
     var hot = new Handsontable(hotElement, hotSettings);
+	<?php if(isset($staffid)){ ?>
+     var data2 = {};
+      data2.month = $("#month_timesheets").val();
+      data2.staff = <?php if(isset($staffid)){echo $staffid; }else{ echo 0;} ?>;
+      $.post(admin_url + 'timesheets/reload_attendance_table_byfilter', data2).done(function(response){
 
+        response = JSON.parse(response);
+        $('#summary_table').html(response.summary_table);
+        $('#attendance_sheet_table').html(response.attendance_sheet_table);
+
+      });
+    <?php } ?>
     appValidateForm($('#import-timesheets-form'), {
      file_timesheets: 'required',
    })
@@ -99,6 +110,56 @@
         }
       });
     });
+    
+     $('.timesheets_filter2').on('click', function() {
+      var data = {};
+      var staffm = [<?php if(isset($staffid)){echo $staffid;}else{ echo 0;} ?>];
+      data.month = $("#month_timesheets").val();
+      data.staff = staffm;
+      data.department = $('#department_timesheets').val();
+      data.job_position = $('#job_position_timesheets').val();
+
+      $.post(admin_url + 'timesheets/reload_timesheets_byfilter', data).done(function(response) {
+        response = JSON.parse(response);
+        dataObject = response.arr;
+        dataCol = response.set_col_tk;
+        dataHeader = response.day_by_month_tk;
+        data_lack = response.data_lack;
+        hot.updateSettings({
+          data: dataObject,
+          columns: dataCol,
+          colHeaders: dataHeader,
+        })
+        $('input[name="month"]').val(response.month);
+        if(response.check_latch_timesheet){
+          $('#btn_unlatch').removeClass('hide');
+          $('#btn_latch').addClass('hide');
+          $('.edit_timesheets').addClass('hide');
+          $('.exit_edit_timesheets').addClass('hide');
+          $('.save_time_sheet').addClass('hide');
+        }else{
+          $('#btn_latch').removeClass('hide');
+          $('#btn_unlatch').addClass('hide');
+          $('.edit_timesheets').removeClass('hide');
+          $('.exit_edit_timesheets').addClass('hide');
+          $('.save_time_sheet').addClass('hide');
+        }
+      });
+
+      var data2 = {};
+      data2.month = $("#month_timesheets").val();
+      data2.staff =<?php if(isset($staffid)){echo $staffid; }else{ echo 0;} ?>;
+      $.post(admin_url + 'timesheets/reload_attendance_table_byfilter', data2).done(function(response){
+
+        response = JSON.parse(response);
+        $('#summary_table').html(response.summary_table);
+        $('#attendance_sheet_table').html(response.attendance_sheet_table);
+
+      });
+
+    });
+    
+    
     $('.save_time_sheet').on('click', function() {
      $('input[name="time_sheet"]').val(JSON.stringify(hot.getData()));
    });

@@ -17,8 +17,8 @@
     const empty_btn = new ButtonOptions("", "");
     count_id = 0;
 
-    $("input").autocomplete({
-        source: site_url + 'Eraxon_assets/Eraxon_assets_stock_in/get_item_master',
+    $("#item-code").autocomplete({
+        source: site_url + 'eraxon_assets/Eraxon_assets_stock_in/get_item_master',
         autoFocus: true,
 
         select: function (event, ui) {

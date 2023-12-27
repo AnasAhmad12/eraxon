@@ -276,7 +276,7 @@
     }
 
     $("#item-code").autocomplete({
-        source: site_url + 'Eraxon_assets/Eraxon_assets_allocation/get_item_master',
+        source: site_url + 'eraxon_assets/Eraxon_assets_allocation/get_item_master',
         autoFocus: true,
         select: function (event, ui) {
 

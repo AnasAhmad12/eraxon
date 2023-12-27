@@ -287,6 +287,20 @@ class Eraxon_payroll_model extends App_Model
 
         return $query->result();
     }
+  
+    public function salary_slip_details_by_employeeid($eid)
+    {
+        $this->db->select('sd.*, CONCAT(s.firstname, " ", s.lastname) as name,s.*, r.name as rolename, at.presents,at.absents,at.paid_leaves,at.half_days,at.sandwitch,at.late,at.late_amount,at.absent_amount,at.half_days_amount,at.total_amount');
+        $this->db->from(db_prefix() . 'salary_details as sd');
+        $this->db->join(db_prefix() . 'staff as s', 's.staffid = sd.employee_id', 'left');
+        $this->db->join(db_prefix() . 'roles as r', 'r.roleid = s.role', 'left');
+        $this->db->join(db_prefix() . 'salary_details_to_attendance as at', 'at.salary_details_id = sd.id', 'left');
+        $this->db->where('sd.employee_id', $eid);
+        $this->db->order_by('sd.id', 'DESC');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 
     public function salary_details_to_allowances($id)
     {

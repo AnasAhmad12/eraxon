@@ -40,8 +40,8 @@ class Eraxon_dnc extends AdminController
         $message = '';
         $response = '';
         $data = [];
-        $username = 'Trextech';
-        $pass = 'Trextech123';
+        $username = 'trextech';
+        $pass = 'Trextech';
 
 
             if ($this->input->post()) 
@@ -140,8 +140,8 @@ class Eraxon_dnc extends AdminController
         $message = '';
         $response = '';
         $data = [];
-        $username = 'Trextech';
-        $pass = 'Trextech123';
+        $username = 'trextech';
+        $pass = 'Trextech';
 
         if ($this->input->post()) 
         {
@@ -283,6 +283,21 @@ class Eraxon_dnc extends AdminController
         }
       }*/
       //$this->load->view('eraxon_dnc/dnc_manage', $data);
+    }
+
+
+    public function update_status()
+    {
+        if ($this->input->post()) 
+        {
+            $id = $this->input->post('id');
+            $result = $this->input->post('result');
+
+            $data = array(
+                            'result' =>$result,
+                            );  
+            $this->eraxon_dnc_model->update_status($id,$data);                         
+        }
     }
 
 }

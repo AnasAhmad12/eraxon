@@ -192,7 +192,7 @@ foreach ($rResult as $aRow) {
   $options = '<a href="Javascript:void(0);" onclick="view_additional_timesheets('.$aRow['id'].'); return false" class="btn btn-default btn-icon" data-toggle="sidebar-right" data-target=".additional-timesheets-sidebar"><i class="fa fa-eye"></i></a>';
 
 
-  if($aRow['status'] == 0 || is_admin()){
+  if($aRow['status'] == 0 || has_permission('leave_management', '', 'view') || is_admin()){
       $options .= '<a id="delete-insurance" href="'. admin_url('timesheets/delete_additional_timesheets/'.$aRow['id']).'" class="btn btn-danger btn-icon _delete mleft5"><i class="fa fa-remove"></i></a>';
   }
   $row[]   = $options;

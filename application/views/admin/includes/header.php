@@ -5,7 +5,7 @@
     <nav>
         <div class="tw-flex tw-justify-between">
             <div class="tw-flex tw-flex-1 sm:tw-flex-initial">
-               <!--  <div id="top_search"
+                 <div id="top_search"
                     class="tw-inline-flex tw-relative dropdown sm:tw-ml-1.5 sm:tw-mr-3 tw-max-w-xl tw-flex-auto"
                     data-toggle="tooltip" data-placement="bottom" data-title="<?php echo _l('search_by_tags'); ?>">
                     <input type="search" id="search_input"
@@ -21,7 +21,7 @@
                     <ul class="dropdown-menu search-results animated fadeIn search-history" id="search-history">
                     </ul>
 
-                </div> -->
+                </div> 
                <!--  <ul class="nav navbar-nav visible-md visible-lg">
                     <?php
                     $quickActions = collect($this->app->get_quick_actions_links())->reject(function ($action) {

@@ -97,6 +97,10 @@ class Leads extends AdminController
                 $proposalWarning = false;
                 $message         = '';
                 $success         = $this->leads_model->update($this->input->post(), $id);
+                $leaddata = $this->input->post();
+                $this->db->where('lead_id',$id);
+                $this->db->delete(db_prefix().'qa_lead');
+                $this->eraxon_quality_model->add_orignal_lead_data($leaddata,$id);
 
                 if ($success) {
                     $emailNow = $this->db->select('email')->where('id', $id)->get(db_prefix() . 'leads')->row()->email;

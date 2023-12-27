@@ -20,6 +20,9 @@ define('Eraxon_myform', 'eraxon_myform');
 hooks()->add_filter('hr_profile_tab_name', 'myform_add_tab_name', 20);
 hooks()->add_filter('hr_profile_tab_content', 'myform_add_tab_content', 20);
 hooks()->add_action('hr_profile_load_js_file', 'myform_load_js_file');
+hooks()->add_filter('hr_profile_load_icon', 'myform_add_tab_icon',20,2);
+
+$CI->load->helper(Eraxon_myform.'/eraxon_myform');
 
 /**
  * myform add tab name
@@ -29,8 +32,21 @@ hooks()->add_action('hr_profile_load_js_file', 'myform_load_js_file');
  */
 function myform_add_tab_name($tab_names)
 {
-    $tab_names[] = 'performance';
+    $tab_names[] = 'Performance';
+    $tab_names[] = 'Leaves';
+    $tab_names[] = 'Advance Salary';
+    $tab_names[] = 'Other Forms';
+
     return $tab_names;
+}
+
+function myform_add_tab_icon($item_icon,$group_item)
+{
+    if($group_item == "Performance")
+    {
+        $item_icon = '<span class="fa fa-tachometer-alt"></span>';
+    }
+   return $item_icon;
 }
 
 
@@ -41,9 +57,19 @@ function myform_add_tab_name($tab_names)
  */
 function myform_add_tab_content($tab_content_link)
 {
-    if(!(strpos($tab_content_link, 'hr_record/includes/performance') === false)){
+    if(!(strpos($tab_content_link, 'hr_record/includes/Performance') === false)){
         $tab_content_link = 'eraxon_myform/include/myform_performance_tab_content';
   }
+  if (!(strpos($tab_content_link, 'hr_record/includes/Leave') === false)) {
+        $tab_content_link = 'eraxon_myform/include/myform_leaves_tab';
+    }
+    if (!(strpos($tab_content_link, 'hr_record/includes/Advance%20Salary') === false)) {
+        $tab_content_link = 'eraxon_myform/include/myform_advance_salary_tab';
+    }
+    
+    if (!(strpos($tab_content_link, 'hr_record/includes/Other%20Forms') === false)) {
+        $tab_content_link = 'eraxon_myform/include/myform_other_form_tab';
+    }
     
     return $tab_content_link;
 }
@@ -56,7 +82,24 @@ function myform_add_tab_content($tab_content_link)
 function myform_load_js_file($group_name)
 {
      
-    echo  require 'modules/eraxon_myform/assets/js/performance_js.php';
+     if($group_name == 'Performance')
+    {
+       echo  require 'modules/eraxon_myform/assets/js/performance_js.php'; 
+    }
+    if($group_name == 'Leaves')
+    {   
+        $CI = get_instance();
+        $staffid = $CI->uri->segment(4);
+        $data=requisition_manage_helper($staffid);
+        echo  require 'modules/eraxon_myform/assets/js/leaves_js.php'; 
+    }
+    if($group_name == 'Advance%20Salary')
+    {   
+        $CI = &get_instance();
+        $staffid = $CI->uri->segment(4);
+        $advance_salary=advance_salary_helper($staffid)['advance_salary'];
+        echo  require 'modules/eraxon_myform/assets/js/advance_salary_js.php'; 
+    }
 
 }
 

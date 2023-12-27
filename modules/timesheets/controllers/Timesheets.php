@@ -7006,5 +7006,85 @@ public function check_in_ts() {
         $data['title'] = _l('ts_api_document');
         $this->load->view('../apidoc/index.html');
     }
+	
+  
+  public function reload_attendance_table_byfilter()
+    {
+    	$data = $this->input->post();
+    	$month_year = $data['month'];
+    	$staff_id = $data['staff'];
 
+    	// Create DateTime object for the first day of the selected month
+        $selected_month = DateTime::createFromFormat('Y-m', $month_year);
+        // Create start and end dates
+        $startDate = clone $selected_month;
+        $endDate = clone $selected_month;
+        $endDateWallet = clone $selected_month;
+        // Modify start date: go to previous month and set day to 21
+        $startDate->modify('-1 month');
+        $startDate->setDate($startDate->format('Y'), $startDate->format('m'), 21);
+
+        // Modify end date: set day to 20
+        $endDate->setDate($endDate->format('Y'), $endDate->format('m'), 20);
+        // $data_hs = $this->set_col_tk(21, 30, 06, 2023, true,[3],'');
+        $endDateWallet->setDate($endDate->format('Y'), $endDate->format('m'), 20);
+            
+        $startDate = $startDate->format('Y-m-d');
+        $endDate = $endDate->format('Y-m-d');
+
+
+        $result = calculate_attendance_timesheet($staff_id, $startDate, $endDate);
+
+        $table_summary = '<h3>Summary</h3><table class="table table-bordered">
+        		 <thead>
+        		  <tr>
+        		  	<th>Total Presents</th>
+        		  	<th>Total Absents</th>
+        		  	<th>Total Sandwitch</th>
+        		  	<th>Total Late</th>
+        		  	<th>Total Half Days</th>
+        		  </tr>
+        		 </thead>
+        		 <tbody>
+        		    <tr>	
+        		 	<td>'.$result['presents'].'</td>
+        		 	<td>'.$result['absents'].'</td>
+        		 	<td>'.$result['sandwitch'].'</td>
+        		 	<td>'.$result['late'].'</td>
+        		 	<td>'.$result['half_days'].'</td>
+        		 	</tr>
+        		 </tbody></table>';
+
+        
+        $attendance = $result['sandwitch_timesheet'];
+        $table_attendance_sheet = '<h3>Attendance</h3><table class="table table-bordered table-sm" cellspacing="0" width="100%">
+                          			<tr> <th>Date</th>';
+                foreach ($attendance as $key => $value) 
+                {
+                    foreach ($value as $field => $fieldValue) 
+                    {
+                        if($field == 'date')
+                        {
+                           $table_attendance_sheet .= '<td>'.$fieldValue.'</td>';
+                        }
+					}
+                }
+                $table_attendance_sheet .='</tr><tr><th>Attendance</th>';
+                foreach ($attendance as $key => $value) 
+                {
+                    foreach ($value as $field => $fieldValue) 
+                    {
+                        if($field == 'attendance')
+                        {
+                           $table_attendance_sheet .= '<td>'.$fieldValue.'</td>';
+                        }
+					}
+                }
+
+                 $table_attendance_sheet .= '</tr></table>';
+        $data2['summary_table'] =  $table_summary;
+        $data2['attendance_sheet_table'] = $table_attendance_sheet;
+
+        echo json_encode($data2);     		 
+	}
 }

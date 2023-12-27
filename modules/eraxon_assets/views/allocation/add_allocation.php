@@ -115,13 +115,9 @@
     <?php echo form_close(); ?>
     <?php init_tail(); ?>
 
-    <?php if (!empty($message)) { ?>
-        <script type="text/javascript">
-            $(function () {
-                // alert_float('warning','<?php echo $message; ?>',6000);
-            });
-        </script>
-    <?php } ?>
+  <script>
+    console.log("")
+  </script>
 
 
-    <?php require('modules/Eraxon_assets/assets/js/allocation_js.php'); ?>
+    <?php require('modules/eraxon_assets/assets/js/allocation_js.php'); ?>

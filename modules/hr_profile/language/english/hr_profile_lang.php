@@ -1,4 +1,5 @@
 <?php
+$lang['wallet']     												= 'Wallet';
 $lang['hr_deleted']              										= 'Deleted %s ';
 $lang['hr_added_successfully']   										= 'Added successfully %s';
 $lang['hr_dashboard']                                                  = 'Dashboard';
